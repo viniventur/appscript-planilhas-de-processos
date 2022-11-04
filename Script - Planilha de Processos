@@ -1,5 +1,8 @@
 /** @OnlyCurrentDoc */
 
+// Olá! Código feio por Vinícius - Estagíario SOP/SEPLAG/AL - insta: @vinicius.ventura_ - Github: https://github.com/viniventur
+// Última atualização: 04/11/2022
+
 function REGBASE() {
   var data = Utilities.formatDate(new Date(), "GMT-3", "dd/MM/yyyy HH:mm");
   var spreadsheet = SpreadsheetApp.getActive();
@@ -319,12 +322,14 @@ var timezone = "GMT-3";
 function atualizarnath() {
   var spreadsheet = SpreadsheetApp.getActive();
   var data = Utilities.formatDate(new Date(), "GMT-3", "dd/MM/yyyy HH:mm");
-  spreadsheet.getRange('B4').activate();
+  spreadsheet.getRange('B2').activate();
+  spreadsheet.getActiveSheet().getFilter().remove();
  spreadsheet.setActiveSheet(spreadsheet.getSheetByName('Processos Base'), true);
   spreadsheet.getRange('B5:P');
   spreadsheet.setActiveSheet(spreadsheet.getSheetByName('FILTRAGEM - NATHALIA'), true);
-  spreadsheet.getRange('B1:P1').activate();
+  spreadsheet.getRange('B2:P2').activate();
   spreadsheet.getRange('\'Processos Base\'!B5:P').copyTo(spreadsheet.getActiveRange(), SpreadsheetApp.CopyPasteType.PASTE_VALUES, false);
+  spreadsheet.getRange('B2:P').createFilter();
   spreadsheet.getRange('R1').activate();
   spreadsheet.getRange('R1').setValue(data);
   spreadsheet.getRange('B2').activate();
