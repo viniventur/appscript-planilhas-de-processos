@@ -25,6 +25,10 @@ function REGBASE() {
   // spreadsheet.getRange('G1').activate();
   // spreadsheet.getRange('G1').setValue(data);
   spreadsheet.getRange('N6').setValue(data);
+  spreadsheet.getRange('X7').activate();
+  spreadsheet.getActiveRange().autoFill(spreadsheet.getRange('X6:X7'), SpreadsheetApp.AutoFillSeries.DEFAULT_SERIES);
+  spreadsheet.getRange('X6:X7').activate();
+  spreadsheet.setCurrentCell(spreadsheet.getRange('X7'));
   spreadsheet.getRange('O7').activate();
   spreadsheet.getActiveRange().autoFill(spreadsheet.getRange('O6:O7'), SpreadsheetApp.AutoFillSeries.DEFAULT_SERIES);
   spreadsheet.getRange('O6:O7').activate();
@@ -49,6 +53,7 @@ function adlinhas() {
 
 function onEdit(event)
 { 
+  // Descrição do erro
   var timezone = "GMT-3";
   var timestamp_format = "dd/MM/yyyy HH:mm:ss"; // Timestamp Format. 
   var updateColName = "Descrição do erro";
@@ -68,6 +73,7 @@ function onEdit(event)
     cell.setValue(date);
   }
 
+// Data de recebimento
 var timezone = "GMT-3";
   var timestamp_format = "dd/MM/yyyy HH:mm:ss"; // Timestamp Format. 
   var updateColName = "Data de recebimento";
@@ -87,6 +93,7 @@ var timezone = "GMT-3";
     cell.setValue(date);
   }
 
+// Erros
 var timezone = "GMT-3";
   var timestamp_format = "dd/MM/yyyy HH:mm:ss"; // Timestamp Format. 
   var updateColName = "Erros";
@@ -106,6 +113,7 @@ var timezone = "GMT-3";
     cell.setValue(date);
   }
   
+  // OBS
   var timezone = "GMT-3";
   var timestamp_format = "dd/MM/yyyy HH:mm:ss"; // Timestamp Format. 
   var updateColName = "Observação";
@@ -125,6 +133,7 @@ var timezone = "GMT-3";
     cell.setValue(date);
   }
 
+// Objetivo
   var timezone = "GMT-3";
   var timestamp_format = "dd/MM/yyyy HH:mm:ss"; // Timestamp Format. 
   var updateColName = "Objetivo";
@@ -144,6 +153,7 @@ var timezone = "GMT-3";
     cell.setValue(date);
   }
 
+// Valor
   var timezone = "GMT-3";
   var timestamp_format = "dd/MM/yyyy HH:mm:ss"; // Timestamp Format. 
   var updateColName = "Valor";
@@ -163,6 +173,7 @@ var timezone = "GMT-3";
     cell.setValue(date);
   }
 
+// Grupo de despesas
   var timezone = "GMT-3";
   var timestamp_format = "dd/MM/yyyy HH:mm:ss"; // Timestamp Format. 
   var updateColName = "Grupo de Despesas";
@@ -182,6 +193,7 @@ var timezone = "GMT-3";
     cell.setValue(date);
   }
 
+// Fonte de Recursos
   var timezone = "GMT-3";
   var timestamp_format = "dd/MM/yyyy HH:mm:ss"; // Timestamp Format. 
   var updateColName = "Fonte de Recursos";
@@ -201,6 +213,7 @@ var timezone = "GMT-3";
     cell.setValue(date);
   }
 
+// Número do processo
   var timezone = "GMT-3";
   var timestamp_format = "dd/MM/yyyy HH:mm:ss"; // Timestamp Format. 
   var updateColName = "Nº do Processo";
@@ -220,6 +233,7 @@ var timezone = "GMT-3";
     cell.setValue(date);
   }
 
+// Órgão
   var timezone = "GMT-3";
   var timestamp_format = "dd/MM/yyyy HH:mm:ss"; // Timestamp Format. 
   var updateColName = "Órgão (UO)";
@@ -239,6 +253,7 @@ var timezone = "GMT-3";
     cell.setValue(date);
   }
 
+// Origem de Recursos
   var timezone = "GMT-3";
   var timestamp_format = "dd/MM/yyyy HH:mm:ss"; // Timestamp Format. 
   var updateColName = "Origem de Recursos";
@@ -258,6 +273,7 @@ var timezone = "GMT-3";
     cell.setValue(date);
   }
 
+// Situação
   var timezone = "GMT-3";
   var timestamp_format = "dd/MM/yyyy HH:mm:ss"; // Timestamp Format. 
   var updateColName = "Situação";
@@ -277,4 +293,39 @@ var timezone = "GMT-3";
     cell.setValue(date);
   }
 
+  // PLANILHA: GERAL - VALO UTILIZADO
+
+   var timezone = "GMT-3";
+  var timestamp_format = "dd/MM/yyyy HH:mm:ss"; // Timestamp Format. 
+  var updateColName = "Valor Utilizado";
+  var timeStampColName = "Última Atualização";
+  var sheet = event.source.getSheetByName('GERAL'); //Nome da planilha onde você vai rodar este script.
+
+
+  var actRng = event.source.getActiveRange();
+  var editColumn = actRng.getColumn();
+  var index = actRng.getRowIndex();
+  var headers = sheet.getRange(6, 1, 1, sheet.getLastColumn()).getValues();
+  var dateCol = headers[0].indexOf(timeStampColName);
+  var updateCol = headers[0].indexOf(updateColName); updateCol = updateCol+1;
+  if (dateCol > -1 && index > 1 && editColumn == updateCol) { // only timestamp if 'Last Updated' header exists, but not in the header row itself!
+    var cell = sheet.getRange(index, dateCol + 1);
+    var date = Utilities.formatDate(new Date(), timezone, timestamp_format);
+    cell.setValue(date);
+  }
+
 }
+
+function atualizarnath() {
+  var spreadsheet = SpreadsheetApp.getActive();
+  var data = Utilities.formatDate(new Date(), "GMT-3", "dd/MM/yyyy HH:mm");
+  spreadsheet.getRange('B4').activate();
+ spreadsheet.setActiveSheet(spreadsheet.getSheetByName('Processos Base'), true);
+  spreadsheet.getRange('B5:P');
+  spreadsheet.setActiveSheet(spreadsheet.getSheetByName('FILTRAGEM - NATHALIA'), true);
+  spreadsheet.getRange('B1:P1').activate();
+  spreadsheet.getRange('\'Processos Base\'!B5:P').copyTo(spreadsheet.getActiveRange(), SpreadsheetApp.CopyPasteType.PASTE_VALUES, false);
+  spreadsheet.getRange('R1').activate();
+  spreadsheet.getRange('R1').setValue(data);
+  spreadsheet.getRange('B2').activate();
+};
