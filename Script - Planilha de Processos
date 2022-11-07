@@ -1,7 +1,7 @@
 /** @OnlyCurrentDoc */
 
 // Olá! Código feio por Vinícius - Estagíario SOP/SEPLAG/AL - insta: @vinicius.ventura_ - Github: https://github.com/viniventur
-// Última atualização: 04/11/2022
+// Última atualização: 07/11/2022
 
 function REGBASE() {
   var data = Utilities.formatDate(new Date(), "GMT-3", "dd/MM/yyyy HH:mm");
@@ -62,6 +62,7 @@ function onEdit(event)
   var updateColName = "Descrição do erro";
   var timeStampColName = "Última modificação";
   var sheet = event.source.getSheetByName('Processos Base'); //Nome da planilha onde você vai rodar este script.
+  var spreadsheet = SpreadsheetApp.getActive();
 
 
   var actRng = event.source.getActiveRange();
@@ -74,6 +75,7 @@ function onEdit(event)
     var cell = sheet.getRange(index, dateCol + 1);
     var date = Utilities.formatDate(new Date(), timezone, timestamp_format);
     cell.setValue(date);
+    spreadsheet.getRange('N5').setValue('Última modificação');
   }
 
 // Data de recebimento
@@ -82,6 +84,7 @@ var timezone = "GMT-3";
   var updateColName = "Data de recebimento";
   var timeStampColName = "Última modificação";
   var sheet = event.source.getSheetByName('Processos Base'); //Nome da planilha onde você vai rodar este script.
+  var spreadsheet = SpreadsheetApp.getActive();
 
 
   var actRng = event.source.getActiveRange();
@@ -94,6 +97,7 @@ var timezone = "GMT-3";
     var cell = sheet.getRange(index, dateCol + 1);
     var date = Utilities.formatDate(new Date(), timezone, timestamp_format);
     cell.setValue(date);
+    spreadsheet.getRange('N5').setValue('Última modificação');
   }
 
 // Erros
@@ -102,6 +106,7 @@ var timezone = "GMT-3";
   var updateColName = "Erros";
   var timeStampColName = "Última modificação";
   var sheet = event.source.getSheetByName('Processos Base'); //Nome da planilha onde você vai rodar este script.
+  var spreadsheet = SpreadsheetApp.getActive();
 
 
   var actRng = event.source.getActiveRange();
@@ -114,6 +119,7 @@ var timezone = "GMT-3";
     var cell = sheet.getRange(index, dateCol + 1);
     var date = Utilities.formatDate(new Date(), timezone, timestamp_format);
     cell.setValue(date);
+    spreadsheet.getRange('N5').setValue('Última modificação');
   }
   
   // OBS
@@ -122,6 +128,7 @@ var timezone = "GMT-3";
   var updateColName = "Observação";
   var timeStampColName = "Última modificação";
   var sheet = event.source.getSheetByName('Processos Base'); //Nome da planilha onde você vai rodar este script.
+  var spreadsheet = SpreadsheetApp.getActive();
 
 
   var actRng = event.source.getActiveRange();
@@ -134,6 +141,7 @@ var timezone = "GMT-3";
     var cell = sheet.getRange(index, dateCol + 1);
     var date = Utilities.formatDate(new Date(), timezone, timestamp_format);
     cell.setValue(date);
+    spreadsheet.getRange('N5').setValue('Última modificação');
   }
 
 // Objetivo
@@ -142,6 +150,7 @@ var timezone = "GMT-3";
   var updateColName = "Objetivo";
   var timeStampColName = "Última modificação";
   var sheet = event.source.getSheetByName('Processos Base'); //Nome da planilha onde você vai rodar este script.
+  var spreadsheet = SpreadsheetApp.getActive();
 
 
   var actRng = event.source.getActiveRange();
@@ -154,6 +163,7 @@ var timezone = "GMT-3";
     var cell = sheet.getRange(index, dateCol + 1);
     var date = Utilities.formatDate(new Date(), timezone, timestamp_format);
     cell.setValue(date);
+    spreadsheet.getRange('N5').setValue('Última modificação');
   }
 
 // Valor
@@ -162,6 +172,7 @@ var timezone = "GMT-3";
   var updateColName = "Valor";
   var timeStampColName = "Última modificação";
   var sheet = event.source.getSheetByName('Processos Base'); //Nome da planilha onde você vai rodar este script.
+  var spreadsheet = SpreadsheetApp.getActive();
 
 
   var actRng = event.source.getActiveRange();
@@ -174,6 +185,7 @@ var timezone = "GMT-3";
     var cell = sheet.getRange(index, dateCol + 1);
     var date = Utilities.formatDate(new Date(), timezone, timestamp_format);
     cell.setValue(date);
+    spreadsheet.getRange('N5').setValue('Última modificação');
   }
 
 // Grupo de despesas
@@ -182,6 +194,7 @@ var timezone = "GMT-3";
   var updateColName = "Grupo de Despesas";
   var timeStampColName = "Última modificação";
   var sheet = event.source.getSheetByName('Processos Base'); //Nome da planilha onde você vai rodar este script.
+  var spreadsheet = SpreadsheetApp.getActive();
 
 
   var actRng = event.source.getActiveRange();
@@ -194,6 +207,7 @@ var timezone = "GMT-3";
     var cell = sheet.getRange(index, dateCol + 1);
     var date = Utilities.formatDate(new Date(), timezone, timestamp_format);
     cell.setValue(date);
+    spreadsheet.getRange('N5').setValue('Última modificação');
   }
 
 // Fonte de Recursos
@@ -202,6 +216,7 @@ var timezone = "GMT-3";
   var updateColName = "Fonte de Recursos";
   var timeStampColName = "Última modificação";
   var sheet = event.source.getSheetByName('Processos Base'); //Nome da planilha onde você vai rodar este script.
+  var spreadsheet = SpreadsheetApp.getActive();
 
 
   var actRng = event.source.getActiveRange();
@@ -214,6 +229,7 @@ var timezone = "GMT-3";
     var cell = sheet.getRange(index, dateCol + 1);
     var date = Utilities.formatDate(new Date(), timezone, timestamp_format);
     cell.setValue(date);
+    spreadsheet.getRange('N5').setValue('Última modificação');
   }
 
 // Número do processo
@@ -222,6 +238,7 @@ var timezone = "GMT-3";
   var updateColName = "Nº do Processo";
   var timeStampColName = "Última modificação";
   var sheet = event.source.getSheetByName('Processos Base'); //Nome da planilha onde você vai rodar este script.
+  var spreadsheet = SpreadsheetApp.getActive();
 
 
   var actRng = event.source.getActiveRange();
@@ -234,6 +251,7 @@ var timezone = "GMT-3";
     var cell = sheet.getRange(index, dateCol + 1);
     var date = Utilities.formatDate(new Date(), timezone, timestamp_format);
     cell.setValue(date);
+    spreadsheet.getRange('N5').setValue('Última modificação');
   }
 
 // Órgão
@@ -242,6 +260,7 @@ var timezone = "GMT-3";
   var updateColName = "Órgão (UO)";
   var timeStampColName = "Última modificação";
   var sheet = event.source.getSheetByName('Processos Base'); //Nome da planilha onde você vai rodar este script.
+  var spreadsheet = SpreadsheetApp.getActive();
 
 
   var actRng = event.source.getActiveRange();
@@ -254,6 +273,7 @@ var timezone = "GMT-3";
     var cell = sheet.getRange(index, dateCol + 1);
     var date = Utilities.formatDate(new Date(), timezone, timestamp_format);
     cell.setValue(date);
+    spreadsheet.getRange('N5').setValue('Última modificação');
   }
 
 // Origem de Recursos
@@ -262,6 +282,7 @@ var timezone = "GMT-3";
   var updateColName = "Origem de Recursos";
   var timeStampColName = "Última modificação";
   var sheet = event.source.getSheetByName('Processos Base'); //Nome da planilha onde você vai rodar este script.
+  var spreadsheet = SpreadsheetApp.getActive();
 
 
   var actRng = event.source.getActiveRange();
@@ -274,6 +295,7 @@ var timezone = "GMT-3";
     var cell = sheet.getRange(index, dateCol + 1);
     var date = Utilities.formatDate(new Date(), timezone, timestamp_format);
     cell.setValue(date);
+    spreadsheet.getRange('N5').setValue('Última modificação');
   }
 
 // Situação
@@ -282,6 +304,7 @@ var timezone = "GMT-3";
   var updateColName = "Situação";
   var timeStampColName = "Última modificação";
   var sheet = event.source.getSheetByName('Processos Base'); //Nome da planilha onde você vai rodar este script.
+  var spreadsheet = SpreadsheetApp.getActive();
 
 
   var actRng = event.source.getActiveRange();
@@ -294,6 +317,7 @@ var timezone = "GMT-3";
     var cell = sheet.getRange(index, dateCol + 1);
     var date = Utilities.formatDate(new Date(), timezone, timestamp_format);
     cell.setValue(date);
+    spreadsheet.getRange('N5').setValue('Última modificação');
   }
 
   // PLANILHA: GERAL - VALO UTILIZADO
