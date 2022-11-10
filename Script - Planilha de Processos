@@ -1,7 +1,7 @@
 /** @OnlyCurrentDoc */
 
-// Olá! Código feio por Vinícius - Estagíario SOP/SEPLAG/AL - insta: @vinicius.ventura_ - Github: https://github.com/viniventur
-// Última atualização: 07/11/2022
+// Olá! Código feito por Vinícius - Estagíario SOP/SEPLAG/AL - insta: @vinicius.ventura_ - Github: https://github.com/viniventur
+// Última atualização: 10/11/2022
 
 function REGBASE() {
   var data = Utilities.formatDate(new Date(), "GMT-3", "dd/MM/yyyy HH:mm");
@@ -36,7 +36,7 @@ function REGBASE() {
   spreadsheet.getActiveRange().autoFill(spreadsheet.getRange('O6:O7'), SpreadsheetApp.AutoFillSeries.DEFAULT_SERIES);
   spreadsheet.getRange('O6:O7').activate();
   spreadsheet.setCurrentCell(spreadsheet.getRange('O7'));
-   spreadsheet.getRange('P7').activate();
+  spreadsheet.getRange('P7').activate();
   spreadsheet.getActiveRange().autoFill(spreadsheet.getRange('P6:P7'), SpreadsheetApp.AutoFillSeries.DEFAULT_SERIES);
   spreadsheet.getRange('P6:P7').activate();
   spreadsheet.setCurrentCell(spreadsheet.getRange('P7'));
@@ -356,5 +356,9 @@ function atualizarnath() {
   spreadsheet.getRange('B2:P').createFilter();
   spreadsheet.getRange('R1').activate();
   spreadsheet.getRange('R1').setValue(data);
-  spreadsheet.getRange('B2').activate();
+  var criteria = SpreadsheetApp.newFilterCriteria()
+  .setHiddenValues(['', '(BLOCOS) Finalizado/Aguardando assinatura', 'Aguardando análise no CPOF', 'Aguardando publicação', 'Aprovado CPOF', 'Em análise', 'Em análise na SEFAZ', 'Em produção - Decreto', 'Em produção - Despacho', 'Na Unidade', 'Não reconhecido pela SEFAZ', 'Publicado', 'Reconhecido pela SEFAZ'])
+  .build();
+  spreadsheet.getActiveSheet().getFilter().setColumnFilterCriteria(2, criteria);
+  spreadsheet.getRange('A2').activate();
 };
