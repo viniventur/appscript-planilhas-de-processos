@@ -1,7 +1,7 @@
 /** @OnlyCurrentDoc */
 
 // Olá! Código feito por Vinícius - Estagíario SOP/SEPLAG/AL - insta: @vinicius.ventura_ - Github: https://github.com/viniventur
-// Última atualização: 10/11/2022
+// Última atualização: 11/11/2022
 
 function REGBASE() {
   var data = Utilities.formatDate(new Date(), "GMT-3", "dd/MM/yyyy HH:mm");
@@ -361,4 +361,39 @@ function atualizarnath() {
   .build();
   spreadsheet.getActiveSheet().getFilter().setColumnFilterCriteria(2, criteria);
   spreadsheet.getRange('A2').activate();
+};
+
+function atualizarfelps() {
+  var spreadsheet = SpreadsheetApp.getActive();
+  var data = Utilities.formatDate(new Date(), "GMT-3", "dd/MM/yyyy HH:mm");
+  spreadsheet.getRange('B2').activate();
+  spreadsheet.getActiveSheet().getFilter().remove();
+ spreadsheet.setActiveSheet(spreadsheet.getSheetByName('Processos Base'), true);
+  spreadsheet.getRange('B5:P');
+  spreadsheet.setActiveSheet(spreadsheet.getSheetByName('FILTRAGEM - FELLIPHY'), true);
+  spreadsheet.getRange('B2:P2').activate();
+  spreadsheet.getRange('\'Processos Base\'!B5:P').copyTo(spreadsheet.getActiveRange(), SpreadsheetApp.CopyPasteType.PASTE_VALUES, false);
+  spreadsheet.getRange('B2:P').createFilter();
+  spreadsheet.getRange('R1').activate();
+  spreadsheet.getRange('R1').setValue(data);
+  spreadsheet.getRange('A2').activate();
+};
+
+function atualizarrelatofelps() {
+  var spreadsheet = SpreadsheetApp.getActive();
+  var data = Utilities.formatDate(new Date(), "GMT-3", "dd/MM/yyyy HH:mm");
+  spreadsheet.getRange('D3').activate();
+ spreadsheet.setActiveSheet(spreadsheet.getSheetByName('FILTRAGEM - FELLIPHY'), true); //ULTIMA AQUI, FALTA FAZER OS DIRECIONAIS NA FILTRAGEM
+  spreadsheet.getRange('B2:I');
+  spreadsheet.setActiveSheet(spreadsheet.getSheetByName('RELATÓRIO - FELLIPHY'), true);
+   spreadsheet.getRange('B5:I').activate();
+  var currentCell = spreadsheet.getCurrentCell();
+  spreadsheet.getSelection().getNextDataRange(SpreadsheetApp.Direction.DOWN).activate();
+  currentCell.activateAsCurrentCell();
+  spreadsheet.getActiveRangeList().clear({contentsOnly: true, skipFilteredRows: true});
+  spreadsheet.getRange('B4:I4').activate();
+  spreadsheet.getRange('\'FILTRAGEM - FELLIPHY\'!B2:I').copyTo(spreadsheet.getActiveRange(), SpreadsheetApp.CopyPasteType.PASTE_VALUES, false);
+  spreadsheet.getRange('K2').activate();
+  spreadsheet.getRange('K2').setValue(data);
+  spreadsheet.getRange('D3').activate();
 };
