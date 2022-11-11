@@ -42,6 +42,7 @@ function REGBASE() {
   spreadsheet.setCurrentCell(spreadsheet.getRange('P7'));
   spreadsheet.getRange('B3:M3').activate();
   spreadsheet.getActiveRangeList().clear({contentsOnly: true, skipFilteredRows: true});
+  spreadsheet.getRange('N5').setValue('Última modificação');
   spreadsheet.getRange('B3').activate();
 };
 
