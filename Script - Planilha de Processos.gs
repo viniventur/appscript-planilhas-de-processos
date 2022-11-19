@@ -1,6 +1,7 @@
 /** @OnlyCurrentDoc */
 
 // Olá! Código feito por Vinícius - Estagíario SOP/SEPLAG/AL - insta: @vinicius.ventura_ - Github: https://github.com/viniventur
+// Código de Appscript do Planilhas Google (Google Sheets)
 // Última atualização: 18/11/2022
 
 function REGBASE() {
