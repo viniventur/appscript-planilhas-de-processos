@@ -2,7 +2,7 @@
 
 // Olá! Código feito por Vinícius - Estagíario SOP/SEPLAG/AL - insta: @vinicius.ventura_ - Github: https://github.com/viniventur
 // Código de Appscript do Planilhas Google (Google Sheets)
-// Última atualização: 18/11/2022
+// Última atualização: 21/11/2022
 
 function REGBASE() {
   var data = Utilities.formatDate(new Date(), "GMT-3", "dd/MM/yyyy HH:mm");
@@ -359,12 +359,26 @@ var timezone = "GMT-3";
 
 }
 
-function atualizarnath() {
+function atualizaraguarassina() {
   var spreadsheet = SpreadsheetApp.getActive();
   var data = Utilities.formatDate(new Date(), "GMT-3", "dd/MM/yyyy HH:mm");
   spreadsheet.getRange('B2').activate();
+  if (spreadsheet.getRange('B2:P2').getFilter() == null) {
+    spreadsheet.setActiveSheet(spreadsheet.getSheetByName('Processos Base'), true);
+    spreadsheet.getRange('B5:P');
+    spreadsheet.setActiveSheet(spreadsheet.getSheetByName('FILTRAGEM - NATHALIA'), true);
+    spreadsheet.getRange('B2:P2').activate();
+    spreadsheet.getRange('\'Processos Base\'!B5:P').copyTo(spreadsheet.getActiveRange(), SpreadsheetApp.CopyPasteType.PASTE_VALUES, false);
+    spreadsheet.getRange('B2:P').createFilter();
+    spreadsheet.getRange('R1').activate();
+    spreadsheet.getRange('R1').setValue(data);
+    var criteria = SpreadsheetApp.newFilterCriteria().setHiddenValues(
+      ['', '(BLOCOS) Finalizado/Aguardando assinatura', 'Aguardando análise no CPOF', 'Aguardando publicação', 'Aprovado CPOF', 'Em análise', 'Em análise na SEFAZ', 'Em produção - Decreto', 'Em produção - Despacho', 'Na Unidade', 'Não reconhecido pela SEFAZ', 'Publicado', 'Reconhecido pela SEFAZ']).build();
+    spreadsheet.getActiveSheet().getFilter().setColumnFilterCriteria(2, criteria);
+    spreadsheet.getRange('A2').activate();
+  } else {
   spreadsheet.getActiveSheet().getFilter().remove();
- spreadsheet.setActiveSheet(spreadsheet.getSheetByName('Processos Base'), true);
+  spreadsheet.setActiveSheet(spreadsheet.getSheetByName('Processos Base'), true);
   spreadsheet.getRange('B5:P');
   spreadsheet.setActiveSheet(spreadsheet.getSheetByName('FILTRAGEM - NATHALIA'), true);
   spreadsheet.getRange('B2:P2').activate();
@@ -377,38 +391,49 @@ function atualizarnath() {
   .build();
   spreadsheet.getActiveSheet().getFilter().setColumnFilterCriteria(2, criteria);
   spreadsheet.getRange('A2').activate();
-};
+}};
 
-function atualizarfelps() {
+function atualizarfiltromanual() {
   var spreadsheet = SpreadsheetApp.getActive();
   var data = Utilities.formatDate(new Date(), "GMT-3", "dd/MM/yyyy HH:mm");
   spreadsheet.getRange('B2').activate();
-  spreadsheet.getActiveSheet().getFilter().remove();
- spreadsheet.setActiveSheet(spreadsheet.getSheetByName('Processos Base'), true);
+  if (spreadsheet.getRange('B2:P2').getFilter() == null) {
+    spreadsheet.setActiveSheet(spreadsheet.getSheetByName('Processos Base'), true);
+    spreadsheet.getRange('B5:P');
+    spreadsheet.setActiveSheet(spreadsheet.getSheetByName('FILTRAGEM - Atualização Manual'), true);
+    spreadsheet.getRange('B2:P2').activate();
+    spreadsheet.getRange('\'Processos Base\'!B5:P').copyTo(spreadsheet.getActiveRange(), SpreadsheetApp.CopyPasteType.PASTE_VALUES, false);
+    spreadsheet.getRange('B2:P').createFilter();
+    spreadsheet.getRange('R1').activate();
+    spreadsheet.getRange('R1').setValue(data);
+    spreadsheet.getRange('A2').activate();
+  } else { 
+    spreadsheet.getActiveSheet().getFilter().remove();
+  spreadsheet.setActiveSheet(spreadsheet.getSheetByName('Processos Base'), true);
   spreadsheet.getRange('B5:P');
-  spreadsheet.setActiveSheet(spreadsheet.getSheetByName('FILTRAGEM - FELLIPHY'), true);
+  spreadsheet.setActiveSheet(spreadsheet.getSheetByName('FILTRAGEM - Atualização Manual'), true);
   spreadsheet.getRange('B2:P2').activate();
   spreadsheet.getRange('\'Processos Base\'!B5:P').copyTo(spreadsheet.getActiveRange(), SpreadsheetApp.CopyPasteType.PASTE_VALUES, false);
   spreadsheet.getRange('B2:P').createFilter();
   spreadsheet.getRange('R1').activate();
   spreadsheet.getRange('R1').setValue(data);
   spreadsheet.getRange('A2').activate();
-};
+}};
 
-function atualizarrelatofelps() {
+function atualizarrelatomanual() {
   var spreadsheet = SpreadsheetApp.getActive();
   var data = Utilities.formatDate(new Date(), "GMT-3", "dd/MM/yyyy HH:mm");
   spreadsheet.getRange('D3').activate();
- spreadsheet.setActiveSheet(spreadsheet.getSheetByName('FILTRAGEM - FELLIPHY'), true); //ULTIMA AQUI, FALTA FAZER OS DIRECIONAIS NA FILTRAGEM
+ spreadsheet.setActiveSheet(spreadsheet.getSheetByName('FILTRAGEM - Atualização Manual'), true); //ULTIMA AQUI, FALTA FAZER OS DIRECIONAIS NA FILTRAGEM
   spreadsheet.getRange('B2:I');
-  spreadsheet.setActiveSheet(spreadsheet.getSheetByName('RELATÓRIO - FELLIPHY'), true);
+  spreadsheet.setActiveSheet(spreadsheet.getSheetByName('RELATÓRIO EM TEXTO'), true);
    spreadsheet.getRange('B5:I').activate();
   var currentCell = spreadsheet.getCurrentCell();
   spreadsheet.getSelection().getNextDataRange(SpreadsheetApp.Direction.DOWN).activate();
   currentCell.activateAsCurrentCell();
   spreadsheet.getActiveRangeList().clear({contentsOnly: true, skipFilteredRows: true});
   spreadsheet.getRange('B4:I4').activate();
-  spreadsheet.getRange('\'FILTRAGEM - FELLIPHY\'!B2:I').copyTo(spreadsheet.getActiveRange(), SpreadsheetApp.CopyPasteType.PASTE_VALUES, false);
+  spreadsheet.getRange('\'FILTRAGEM - Atualização Manual\'!B2:I').copyTo(spreadsheet.getActiveRange(), SpreadsheetApp.CopyPasteType.PASTE_VALUES, false);
   spreadsheet.getRange('K2').activate();
   spreadsheet.getRange('K2').setValue(data);
   spreadsheet.getRange('D3').activate();
