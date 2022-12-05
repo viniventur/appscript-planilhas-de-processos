@@ -21,6 +21,9 @@ function REGBASE() {
     SpreadsheetApp.getUi().alert("Requisitos obrigatórios vazios!");
     return;
   }
+  spreadsheet.getRange('6:6').activate();
+  spreadsheet.getActiveSheet().insertRowsBefore(spreadsheet.getActiveRange().getRow(), 1);
+  spreadsheet.getActiveRange().offset(0, 0, 1, spreadsheet.getActiveRange().getNumColumns()).activate();
   spreadsheet.getRange('B3:M3').copyTo(spreadsheet.getRange('B6'), SpreadsheetApp.CopyPasteType.PASTE_VALUES, false);
   spreadsheet.getRange('N6').setValue(data);
   spreadsheet.getRange('\'BIOS\'!R2:S2').copyTo(spreadsheet.getRange('\'Processos Base\'!O6:P6'), SpreadsheetApp.CopyPasteType.PASTE_FORMULA, false);
@@ -44,272 +47,40 @@ function onEdit(event)
   // 1 - Data de recebimento
   var timezone = "GMT-3";
   var timestamp_format = "dd/MM/yyyy HH:mm:ss"; // Timestamp Format. 
-  var updateColName = "Data de recebimento";
+  var updateColName1 = "Data de recebimento";
+  var updateColName2 = "Descrição do erro";
+  var updateColName3 = "Erros";
+  var updateColName4 = "Observação";
+  var updateColName5 = "Objetivo";
+  var updateColName6 = "Valor";
+  var updateColName7 = "Grupo de Despesas";
+  var updateColName8 = "Fonte de Recursos";
+  var updateColName9 = "Nº do Processo";
+  var updateColName10 = "Órgão (UO)";
+  var updateColName11 = "Origem de Recursos";
+  var updateColName12 = "Situação";
   var timeStampColName = "Última modificação";
   var sheet = event.source.getSheetByName('Processos Base'); //Nome da planilha onde você vai rodar este script.
   var spreadsheet = SpreadsheetApp.getActive();
-
-
   var actRng = event.source.getActiveRange();
   var editColumn = actRng.getColumn();
   var index = actRng.getRowIndex();
   var headers = sheet.getRange(5, 1, 5, sheet.getLastColumn()).getValues();
   var dateCol = headers[0].indexOf(timeStampColName);
-  var updateCol = headers[0].indexOf(updateColName); updateCol = updateCol+1;
-  if (dateCol > -1 && index > 1 && editColumn == updateCol && spreadsheet.getSheetName() == 'Processos Base') { // only timestamp if 'Last Updated' header exists, but not in the header row itself!
-    var cell = sheet.getRange(index, dateCol + 1);
-    var date = Utilities.formatDate(new Date(), timezone, timestamp_format);
-    cell.setValue(date);
-    spreadsheet.getRange('N1:N4').clear({contentsOnly: true, skipFilteredRows: true});
-    spreadsheet.getRange('N5').setValue('Última modificação');
-  }
-
-// 2 - Descrição do erro
-var timezone = "GMT-3";
-  var timestamp_format = "dd/MM/yyyy HH:mm:ss"; // Timestamp Format. 
-  var updateColName = "Descrição do erro";
-  var timeStampColName = "Última modificação";
-  var sheet = event.source.getSheetByName('Processos Base'); //Nome da planilha onde você vai rodar este script.
-  var spreadsheet = SpreadsheetApp.getActive();
-
-
-  var actRng = event.source.getActiveRange();
-  var editColumn = actRng.getColumn();
-  var index = actRng.getRowIndex();
-  var headers = sheet.getRange(5, 1, 5, sheet.getLastColumn()).getValues();
-  var dateCol = headers[0].indexOf(timeStampColName);
-  var updateCol = headers[0].indexOf(updateColName); updateCol = updateCol+1;
-  if (dateCol > -1 && index > 1 && editColumn == updateCol && spreadsheet.getSheetName() == 'Processos Base') { // only timestamp if 'Last Updated' header exists, but not in the header row itself!
-    var cell = sheet.getRange(index, dateCol + 1);
-    var date = Utilities.formatDate(new Date(), timezone, timestamp_format);
-    cell.setValue(date);
-    spreadsheet.getRange('N1:N4').clear({contentsOnly: true, skipFilteredRows: true});
-    spreadsheet.getRange('N5').setValue('Última modificação');
-  }
-
-// 3 - Erros
-var timezone = "GMT-3";
-  var timestamp_format = "dd/MM/yyyy HH:mm:ss"; // Timestamp Format. 
-  var updateColName = "Erros";
-  var timeStampColName = "Última modificação";
-  var sheet = event.source.getSheetByName('Processos Base'); //Nome da planilha onde você vai rodar este script.
-  var spreadsheet = SpreadsheetApp.getActive();
-
-
-  var actRng = event.source.getActiveRange();
-  var editColumn = actRng.getColumn();
-  var index = actRng.getRowIndex();
-  var headers = sheet.getRange(5, 1, 1, sheet.getLastColumn()).getValues();
-  var dateCol = headers[0].indexOf(timeStampColName);
-  var updateCol = headers[0].indexOf(updateColName); updateCol = updateCol+1;
-  if (dateCol > -1 && index > 1 && editColumn == updateCol && spreadsheet.getSheetName() == 'Processos Base') { // only timestamp if 'Last Updated' header exists, but not in the header row itself!
-    var cell = sheet.getRange(index, dateCol + 1);
-    var date = Utilities.formatDate(new Date(), timezone, timestamp_format);
-    cell.setValue(date);
-    spreadsheet.getRange('N1:N4').clear({contentsOnly: true, skipFilteredRows: true});
-    spreadsheet.getRange('N5').setValue('Última modificação');
-  }
+  var updateCol1 = headers[0].indexOf(updateColName1); updateCol1 = updateCol+1;
+  var updateCol2 = headers[0].indexOf(updateColName2); updateCol2 = updateCol+1;
+  var updateCol3 = headers[0].indexOf(updateColName3); updateCol3 = updateCol+1;12
+  var updateCol4 = headers[0].indexOf(updateColName4); updateCol4 = updateCol+1;
+  var updateCol5 = headers[0].indexOf(updateColName5); updateCol5 = updateCol+1;
+  var updateCol6 = headers[0].indexOf(updateColName6); updateCol6 = updateCol+1;
+  var updateCol7 = headers[0].indexOf(updateColName7); updateCol7 = updateCol+1;
+  var updateCol8 = headers[0].indexOf(updateColName8); updateCol8 = updateCol+1;
+  var updateCol9 = headers[0].indexOf(updateColName9); updateCol9 = updateCol+1;
+  var updateCol10 = headers[0].indexOf(updateColName10); updateCol10 = updateCol+1;
+  var updateCol11 = headers[0].indexOf(updateColName11); updateCol11 = updateCol+1;
+  var updateCol12 = headers[0].indexOf(updateColName12); updateColX12 = updateCol+1;
   
-  // 4 - OBS
-  var timezone = "GMT-3";
-  var timestamp_format = "dd/MM/yyyy HH:mm:ss"; // Timestamp Format. 
-  var updateColName = "Observação";
-  var timeStampColName = "Última modificação";
-  var sheet = event.source.getSheetByName('Processos Base'); //Nome da planilha onde você vai rodar este script.
-  var spreadsheet = SpreadsheetApp.getActive();
-
-
-  var actRng = event.source.getActiveRange();
-  var editColumn = actRng.getColumn();
-  var index = actRng.getRowIndex();
-  var headers = sheet.getRange(5, 1, 1, sheet.getLastColumn()).getValues();
-  var dateCol = headers[0].indexOf(timeStampColName);
-  var updateCol = headers[0].indexOf(updateColName); updateCol = updateCol+1;
-  if (dateCol > -1 && index > 1 && editColumn == updateCol && spreadsheet.getSheetName() == 'Processos Base') { // only timestamp if 'Last Updated' header exists, but not in the header row itself!
-    var cell = sheet.getRange(index, dateCol + 1);
-    var date = Utilities.formatDate(new Date(), timezone, timestamp_format);
-    cell.setValue(date);
-    spreadsheet.getRange('N1:N4').clear({contentsOnly: true, skipFilteredRows: true});
-    spreadsheet.getRange('N5').setValue('Última modificação');
-  }
-
-// 5 - Objetivo
-  var timezone = "GMT-3";
-  var timestamp_format = "dd/MM/yyyy HH:mm:ss"; // Timestamp Format. 
-  var updateColName = "Objetivo";
-  var timeStampColName = "Última modificação";
-  var sheet = event.source.getSheetByName('Processos Base'); //Nome da planilha onde você vai rodar este script.
-  var spreadsheet = SpreadsheetApp.getActive();
-
-
-  var actRng = event.source.getActiveRange();
-  var editColumn = actRng.getColumn();
-  var index = actRng.getRowIndex();
-  var headers = sheet.getRange(5, 1, 1, sheet.getLastColumn()).getValues();
-  var dateCol = headers[0].indexOf(timeStampColName);
-  var updateCol = headers[0].indexOf(updateColName); updateCol = updateCol+1;
-  if (dateCol > -1 && index > 1 && editColumn == updateCol && spreadsheet.getSheetName() == 'Processos Base') { // only timestamp if 'Last Updated' header exists, but not in the header row itself!
-    var cell = sheet.getRange(index, dateCol + 1);
-    var date = Utilities.formatDate(new Date(), timezone, timestamp_format);
-    cell.setValue(date);
-    spreadsheet.getRange('N1:N4').clear({contentsOnly: true, skipFilteredRows: true});
-    spreadsheet.getRange('N5').setValue('Última modificação');
-  }
-
-// 6 - Valor
-  var timezone = "GMT-3";
-  var timestamp_format = "dd/MM/yyyy HH:mm:ss"; // Timestamp Format. 
-  var updateColName = "Valor";
-  var timeStampColName = "Última modificação";
-  var sheet = event.source.getSheetByName('Processos Base'); //Nome da planilha onde você vai rodar este script.
-  var spreadsheet = SpreadsheetApp.getActive();
-
-
-  var actRng = event.source.getActiveRange();
-  var editColumn = actRng.getColumn();
-  var index = actRng.getRowIndex();
-  var headers = sheet.getRange(5, 1, 1, sheet.getLastColumn()).getValues();
-  var dateCol = headers[0].indexOf(timeStampColName);
-  var updateCol = headers[0].indexOf(updateColName); updateCol = updateCol+1;
-  if (dateCol > -1 && index > 1 && editColumn == updateCol && spreadsheet.getSheetName() == 'Processos Base') { // only timestamp if 'Last Updated' header exists, but not in the header row itself!
-    var cell = sheet.getRange(index, dateCol + 1);
-    var date = Utilities.formatDate(new Date(), timezone, timestamp_format);
-    cell.setValue(date);
-    spreadsheet.getRange('N1:N4').clear({contentsOnly: true, skipFilteredRows: true});
-    spreadsheet.getRange('N5').setValue('Última modificação');
-  }
-
-// 7 - Grupo de despesas
-  var timezone = "GMT-3";
-  var timestamp_format = "dd/MM/yyyy HH:mm:ss"; // Timestamp Format. 
-  var updateColName = "Grupo de Despesas";
-  var timeStampColName = "Última modificação";
-  var sheet = event.source.getSheetByName('Processos Base'); //Nome da planilha onde você vai rodar este script.
-  var spreadsheet = SpreadsheetApp.getActive();
-
-
-  var actRng = event.source.getActiveRange();
-  var editColumn = actRng.getColumn();
-  var index = actRng.getRowIndex();
-  var headers = sheet.getRange(5, 1, 1, sheet.getLastColumn()).getValues();
-  var dateCol = headers[0].indexOf(timeStampColName);
-  var updateCol = headers[0].indexOf(updateColName); updateCol = updateCol+1;
-  if (dateCol > -1 && index > 1 && editColumn == updateCol && spreadsheet.getSheetName() == 'Processos Base') { // only timestamp if 'Last Updated' header exists, but not in the header row itself!
-    var cell = sheet.getRange(index, dateCol + 1);
-    var date = Utilities.formatDate(new Date(), timezone, timestamp_format);
-    cell.setValue(date);
-    spreadsheet.getRange('N1:N4').clear({contentsOnly: true, skipFilteredRows: true});
-    spreadsheet.getRange('N5').setValue('Última modificação');
-  }
-
-// 8 - Fonte de Recursos
-  var timezone = "GMT-3";
-  var timestamp_format = "dd/MM/yyyy HH:mm:ss"; // Timestamp Format. 
-  var updateColName = "Fonte de Recursos";
-  var timeStampColName = "Última modificação";
-  var sheet = event.source.getSheetByName('Processos Base'); //Nome da planilha onde você vai rodar este script.
-  var spreadsheet = SpreadsheetApp.getActive();
-
-
-  var actRng = event.source.getActiveRange();
-  var editColumn = actRng.getColumn();
-  var index = actRng.getRowIndex();
-  var headers = sheet.getRange(5, 1, 1, sheet.getLastColumn()).getValues();
-  var dateCol = headers[0].indexOf(timeStampColName);
-  var updateCol = headers[0].indexOf(updateColName); updateCol = updateCol+1;
-  if (dateCol > -1 && index > 1 && editColumn == updateCol && spreadsheet.getSheetName() == 'Processos Base') { // only timestamp if 'Last Updated' header exists, but not in the header row itself!
-    var cell = sheet.getRange(index, dateCol + 1);
-    var date = Utilities.formatDate(new Date(), timezone, timestamp_format);
-    cell.setValue(date);
-    spreadsheet.getRange('N1:N4').clear({contentsOnly: true, skipFilteredRows: true});
-    spreadsheet.getRange('N5').setValue('Última modificação');
-  }
-
-// 9 - Número do processo
-  var timezone = "GMT-3";
-  var timestamp_format = "dd/MM/yyyy HH:mm:ss"; // Timestamp Format. 
-  var updateColName = "Nº do Processo";
-  var timeStampColName = "Última modificação";
-  var sheet = event.source.getSheetByName('Processos Base'); //Nome da planilha onde você vai rodar este script.
-  var spreadsheet = SpreadsheetApp.getActive();
-
-
-  var actRng = event.source.getActiveRange();
-  var editColumn = actRng.getColumn();
-  var index = actRng.getRowIndex();
-  var headers = sheet.getRange(5, 1, 1, sheet.getLastColumn()).getValues();
-  var dateCol = headers[0].indexOf(timeStampColName);
-  var updateCol = headers[0].indexOf(updateColName); updateCol = updateCol+1;
-  if (dateCol > -1 && index > 1 && editColumn == updateCol && spreadsheet.getSheetName() == 'Processos Base') { // only timestamp if 'Last Updated' header exists, but not in the header row itself!
-    var cell = sheet.getRange(index, dateCol + 1);
-    var date = Utilities.formatDate(new Date(), timezone, timestamp_format);
-    cell.setValue(date);
-    spreadsheet.getRange('N1:N4').clear({contentsOnly: true, skipFilteredRows: true});
-    spreadsheet.getRange('N5').setValue('Última modificação');
-  }
-
-// 10 - Órgão
-  var timezone = "GMT-3";
-  var timestamp_format = "dd/MM/yyyy HH:mm:ss"; // Timestamp Format. 
-  var updateColName = "Órgão (UO)";
-  var timeStampColName = "Última modificação";
-  var sheet = event.source.getSheetByName('Processos Base'); //Nome da planilha onde você vai rodar este script.
-  var spreadsheet = SpreadsheetApp.getActive();
-
-
-  var actRng = event.source.getActiveRange();
-  var editColumn = actRng.getColumn();
-  var index = actRng.getRowIndex();
-  var headers = sheet.getRange(5, 1, 1, sheet.getLastColumn()).getValues();
-  var dateCol = headers[0].indexOf(timeStampColName);
-  var updateCol = headers[0].indexOf(updateColName); updateCol = updateCol+1;
-  if (dateCol > -1 && index > 1 && editColumn == updateCol && spreadsheet.getSheetName() == 'Processos Base') { // only timestamp if 'Last Updated' header exists, but not in the header row itself!
-    var cell = sheet.getRange(index, dateCol + 1);
-    var date = Utilities.formatDate(new Date(), timezone, timestamp_format);
-    cell.setValue(date);
-    spreadsheet.getRange('N1:N4').clear({contentsOnly: true, skipFilteredRows: true});
-    spreadsheet.getRange('N5').setValue('Última modificação');
-  }
-
-// 11 - Origem de Recursos
-  var timezone = "GMT-3";
-  var timestamp_format = "dd/MM/yyyy HH:mm:ss"; // Timestamp Format. 
-  var updateColName = "Origem de Recursos";
-  var timeStampColName = "Última modificação";
-  var sheet = event.source.getSheetByName('Processos Base'); //Nome da planilha onde você vai rodar este script.
-  var spreadsheet = SpreadsheetApp.getActive();
-
-
-  var actRng = event.source.getActiveRange();
-  var editColumn = actRng.getColumn();
-  var index = actRng.getRowIndex();
-  var headers = sheet.getRange(5, 1, 1, sheet.getLastColumn()).getValues();
-  var dateCol = headers[0].indexOf(timeStampColName);
-  var updateCol = headers[0].indexOf(updateColName); updateCol = updateCol+1;
-  if (dateCol > -1 && index > 1 && editColumn == updateCol && spreadsheet.getSheetName() == 'Processos Base') { // only timestamp if 'Last Updated' header exists, but not in the header row itself!
-    var cell = sheet.getRange(index, dateCol + 1);
-    var date = Utilities.formatDate(new Date(), timezone, timestamp_format);
-    cell.setValue(date);
-    spreadsheet.getRange('N1:N4').clear({contentsOnly: true, skipFilteredRows: true});
-    spreadsheet.getRange('N5').setValue('Última modificação');
-  }
-
-// 12 - Situação
-  var timezone = "GMT-3";
-  var timestamp_format = "dd/MM/yyyy HH:mm:ss"; // Timestamp Format. 
-  var updateColName = "Situação";
-  var timeStampColName = "Última modificação";
-  var sheet = event.source.getSheetByName('Processos Base'); //Nome da planilha onde você vai rodar este script.
-  var spreadsheet = SpreadsheetApp.getActive();
-
-
-  var actRng = event.source.getActiveRange();
-  var editColumn = actRng.getColumn();
-  var index = actRng.getRowIndex();
-  var headers = sheet.getRange(5, 1, 1, sheet.getLastColumn()).getValues();
-  var dateCol = headers[0].indexOf(timeStampColName);
-  var updateCol = headers[0].indexOf(updateColName); updateCol = updateCol+1;
-  if (dateCol > -1 && index > 1 && editColumn == updateCol && spreadsheet.getSheetName() == 'Processos Base') { // only timestamp if 'Last Updated' header exists, but not in the header row itself!
+  if (dateCol > -1 && index > 1 && [editColumn == updateCol1 || editColumn == updateCol2 || editColumn == updateCol3 || editColumn == updateCol4 || editColumn == updateCol5 || editColumn == updateCol6 || editColumn == updateCol7 || editColumn == updateCol8 || editColumn == updateCol9 || editColumn == updateCol10 || editColumn == updateCol11 || editColumn == updateCol12] && spreadsheet.getSheetName() == 'Processos Base') { // only timestamp if 'Last Updated' header exists, but not in the header row itself!
     var cell = sheet.getRange(index, dateCol + 1);
     var date = Utilities.formatDate(new Date(), timezone, timestamp_format);
     cell.setValue(date);
