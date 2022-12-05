@@ -21,27 +21,12 @@ function REGBASE() {
     SpreadsheetApp.getUi().alert("Requisitos obrigatórios vazios!");
     return;
   }
-  spreadsheet.getRange('6:6').activate();
-  spreadsheet.getActiveSheet().insertRowsBefore(spreadsheet.getActiveRange().getRow(), 1);
-  spreadsheet.getActiveRange().offset(0, 0, 1, spreadsheet.getActiveRange().getNumColumns()).activate();
-  spreadsheet.getRange('B6').activate();
-  spreadsheet.getRange('B3:M3').copyTo(spreadsheet.getActiveRange(), SpreadsheetApp.CopyPasteType.PASTE_VALUES, false);
+  spreadsheet.getRange('B3:M3').copyTo(spreadsheet.getRange('B6'), SpreadsheetApp.CopyPasteType.PASTE_VALUES, false);
   spreadsheet.getRange('N6').setValue(data);
-  spreadsheet.getRange('X7').activate();
-  spreadsheet.getActiveRange().autoFill(spreadsheet.getRange('X6:X7'), SpreadsheetApp.AutoFillSeries.DEFAULT_SERIES);
-  spreadsheet.getRange('X6:X7').activate();
-  spreadsheet.setCurrentCell(spreadsheet.getRange('X7'));
-  spreadsheet.getRange('O7').activate();
-  spreadsheet.getActiveRange().autoFill(spreadsheet.getRange('O6:O7'), SpreadsheetApp.AutoFillSeries.DEFAULT_SERIES);
-  spreadsheet.getRange('O6:O7').activate();
-  spreadsheet.setCurrentCell(spreadsheet.getRange('O7'));
-  spreadsheet.getRange('P7').activate();
-  spreadsheet.getActiveRange().autoFill(spreadsheet.getRange('P6:P7'), SpreadsheetApp.AutoFillSeries.DEFAULT_SERIES);
-  spreadsheet.getRange('P6:P7').activate();
-  spreadsheet.setCurrentCell(spreadsheet.getRange('P7'));
+  spreadsheet.getRange('\'BIOS\'!R2:S2').copyTo(spreadsheet.getRange('\'Processos Base\'!O6:P6'), SpreadsheetApp.CopyPasteType.PASTE_FORMULA, false);
   spreadsheet.getRange('B3:M3').clear({contentsOnly: true, skipFilteredRows: true});
   spreadsheet.getRange('N5').setValue('Última modificação');
-  spreadsheet.getRange('\'BIOS\'!E2:P2').copyTo(spreadsheet.getRange('B3:M3'), SpreadsheetApp.CopyPasteType.PASTE_FORMAT, false);
+  spreadsheet.getRange('\'BIOS\'!E2:P2').copyTo(spreadsheet.getRange('\'Processos Base\'!B3:M3'), SpreadsheetApp.CopyPasteType.PASTE_FORMAT, false);
   spreadsheet.getRange('B3').activate();
 };
 
