@@ -1,8 +1,8 @@
 /** @OnlyCurrentDoc */
 
-// Olá! Código feito por Vinícius - Estagíario SOP/SEPLAG/AL - insta: @vinicius.ventura_ - Github: https://github.com/viniventur
+// Olá! Código feito por Vinícius - Estagiário SOP/SEPLAG/AL - insta: @vinicius.ventura_ - Github: https://github.com/viniventur
 // Código de Appscript do Planilhas Google (Google Sheets)
-// Última atualização: 21/11/2022
+// Última atualização: 05/12/2022
 
 function REGBASE() {
   var data = Utilities.formatDate(new Date(), "GMT-3", "dd/MM/yyyy HH:mm");
@@ -26,8 +26,6 @@ function REGBASE() {
   spreadsheet.getActiveRange().offset(0, 0, 1, spreadsheet.getActiveRange().getNumColumns()).activate();
   spreadsheet.getRange('B6').activate();
   spreadsheet.getRange('B3:M3').copyTo(spreadsheet.getActiveRange(), SpreadsheetApp.CopyPasteType.PASTE_VALUES, false);
-  // spreadsheet.getRange('G1').activate();
-  // spreadsheet.getRange('G1').setValue(data);
   spreadsheet.getRange('N6').setValue(data);
   spreadsheet.getRange('X7').activate();
   spreadsheet.getActiveRange().autoFill(spreadsheet.getRange('X6:X7'), SpreadsheetApp.AutoFillSeries.DEFAULT_SERIES);
@@ -41,9 +39,9 @@ function REGBASE() {
   spreadsheet.getActiveRange().autoFill(spreadsheet.getRange('P6:P7'), SpreadsheetApp.AutoFillSeries.DEFAULT_SERIES);
   spreadsheet.getRange('P6:P7').activate();
   spreadsheet.setCurrentCell(spreadsheet.getRange('P7'));
-  spreadsheet.getRange('B3:M3').activate();
-  spreadsheet.getActiveRangeList().clear({contentsOnly: true, skipFilteredRows: true});
+  spreadsheet.getRange('B3:M3').clear({contentsOnly: true, skipFilteredRows: true});
   spreadsheet.getRange('N5').setValue('Última modificação');
+  spreadsheet.getRange('\'BIOS\'!E2:P2').copyTo(spreadsheet.getRange('B3:M3'), SpreadsheetApp.CopyPasteType.PASTE_FORMAT, false);
   spreadsheet.getRange('B3').activate();
 };
 
@@ -359,37 +357,24 @@ var timezone = "GMT-3";
 
 }
 
-function atualizaraguarassina() {
+function atualizarsuperintendente() {
   var spreadsheet = SpreadsheetApp.getActive();
   var data = Utilities.formatDate(new Date(), "GMT-3", "dd/MM/yyyy HH:mm");
   spreadsheet.getRange('B2').activate();
   if (spreadsheet.getRange('B2:P2').getFilter() == null) {
-    spreadsheet.setActiveSheet(spreadsheet.getSheetByName('Processos Base'), true);
-    spreadsheet.getRange('B5:P');
-    spreadsheet.setActiveSheet(spreadsheet.getSheetByName('FILTRAGEM - NATHALIA'), true);
-    spreadsheet.getRange('B2:P2').activate();
-    spreadsheet.getRange('\'Processos Base\'!B5:P').copyTo(spreadsheet.getActiveRange(), SpreadsheetApp.CopyPasteType.PASTE_VALUES, false);
+  spreadsheet.getRange('\'Processos Base\'!B5:P').copyTo(spreadsheet.getRange('\'FILTRAGEM - SUPERINTENDÊNCIA\'!B2:P2'), SpreadsheetApp.CopyPasteType. PASTE_VALUES, false);
     spreadsheet.getRange('B2:P').createFilter();
-    spreadsheet.getRange('R1').activate();
     spreadsheet.getRange('R1').setValue(data);
-    var criteria = SpreadsheetApp.newFilterCriteria().setHiddenValues(
-      ['', '(BLOCOS) Finalizado/Aguardando assinatura', 'Aguardando análise no CPOF', 'Aguardando publicação', 'Aprovado CPOF', 'Em análise', 'Em análise na SEFAZ', 'Em produção - Decreto', 'Em produção - Despacho', 'Na Unidade', 'Não reconhecido pela SEFAZ', 'Publicado', 'Reconhecido pela SEFAZ']).build();
-    spreadsheet.getActiveSheet().getFilter().setColumnFilterCriteria(2, criteria);
+    //var criteria = SpreadsheetApp.newFilterCriteria().setHiddenValues(['', '(BLOCOS) Finalizado/Aguardando assinatura', 'Aguardando análise no CPOF', 'Aguardando publicação', 'Aprovado CPOF', 'Em análise', 'Em análise na SEFAZ', 'Em produção - Decreto', 'Em produção - Despacho', 'Na Unidade', 'Não reconhecido pela SEFAZ', 'Publicado', 'Reconhecido pela SEFAZ']).build();
+    //spreadsheet.getActiveSheet().getFilter().setColumnFilterCriteria(2, criteria);
     spreadsheet.getRange('A2').activate();
   } else {
   spreadsheet.getActiveSheet().getFilter().remove();
-  spreadsheet.setActiveSheet(spreadsheet.getSheetByName('Processos Base'), true);
-  spreadsheet.getRange('B5:P');
-  spreadsheet.setActiveSheet(spreadsheet.getSheetByName('FILTRAGEM - NATHALIA'), true);
-  spreadsheet.getRange('B2:P2').activate();
-  spreadsheet.getRange('\'Processos Base\'!B5:P').copyTo(spreadsheet.getActiveRange(), SpreadsheetApp.CopyPasteType.PASTE_VALUES, false);
+spreadsheet.getRange('\'Processos Base\'!B5:P').copyTo(spreadsheet.getRange('\'FILTRAGEM - SUPERINTENDÊNCIA\'!B2:P2'), SpreadsheetApp.CopyPasteType. PASTE_VALUES, false);
   spreadsheet.getRange('B2:P').createFilter();
-  spreadsheet.getRange('R1').activate();
   spreadsheet.getRange('R1').setValue(data);
-  var criteria = SpreadsheetApp.newFilterCriteria()
-  .setHiddenValues(['', '(BLOCOS) Finalizado/Aguardando assinatura', 'Aguardando análise no CPOF', 'Aguardando publicação', 'Aprovado CPOF', 'Em análise', 'Em análise na SEFAZ', 'Em produção - Decreto', 'Em produção - Despacho', 'Na Unidade', 'Não reconhecido pela SEFAZ', 'Publicado', 'Reconhecido pela SEFAZ'])
-  .build();
-  spreadsheet.getActiveSheet().getFilter().setColumnFilterCriteria(2, criteria);
+  //var criteria = SpreadsheetApp.newFilterCriteria().setHiddenValues(['', '(BLOCOS) Finalizado/Aguardando assinatura', 'Aguardando análise no CPOF', 'Aguardando publicação', 'Aprovado CPOF', 'Em análise', 'Em análise na SEFAZ', 'Em produção - Decreto', 'Em produção - Despacho', 'Na Unidade', 'Não reconhecido pela SEFAZ', 'Publicado', 'Reconhecido pela SEFAZ']).build();
+  //spreadsheet.getActiveSheet().getFilter().setColumnFilterCriteria(2, criteria);
   spreadsheet.getRange('A2').activate();
 }};
 
@@ -398,24 +383,14 @@ function atualizarfiltromanual() {
   var data = Utilities.formatDate(new Date(), "GMT-3", "dd/MM/yyyy HH:mm");
   spreadsheet.getRange('B2').activate();
   if (spreadsheet.getRange('B2:P2').getFilter() == null) {
-    spreadsheet.setActiveSheet(spreadsheet.getSheetByName('Processos Base'), true);
-    spreadsheet.getRange('B5:P');
-    spreadsheet.setActiveSheet(spreadsheet.getSheetByName('FILTRAGEM - Atualização Manual'), true);
-    spreadsheet.getRange('B2:P2').activate();
-    spreadsheet.getRange('\'Processos Base\'!B5:P').copyTo(spreadsheet.getActiveRange(), SpreadsheetApp.CopyPasteType.PASTE_VALUES, false);
+    spreadsheet.getRange('\'Processos Base\'!B5:P').copyTo(spreadsheet.getRange('\'FILTRAGEM - Atualização Manual\'!B2:P2'), SpreadsheetApp.CopyPasteType.PASTE_VALUES, false);
     spreadsheet.getRange('B2:P').createFilter();
-    spreadsheet.getRange('R1').activate();
     spreadsheet.getRange('R1').setValue(data);
     spreadsheet.getRange('A2').activate();
   } else { 
     spreadsheet.getActiveSheet().getFilter().remove();
-  spreadsheet.setActiveSheet(spreadsheet.getSheetByName('Processos Base'), true);
-  spreadsheet.getRange('B5:P');
-  spreadsheet.setActiveSheet(spreadsheet.getSheetByName('FILTRAGEM - Atualização Manual'), true);
-  spreadsheet.getRange('B2:P2').activate();
-  spreadsheet.getRange('\'Processos Base\'!B5:P').copyTo(spreadsheet.getActiveRange(), SpreadsheetApp.CopyPasteType.PASTE_VALUES, false);
+  spreadsheet.getRange('\'Processos Base\'!B5:P').copyTo(spreadsheet.getRange('\'FILTRAGEM - Atualização Manual\'!B2:P2'), SpreadsheetApp.CopyPasteType.PASTE_VALUES, false);
   spreadsheet.getRange('B2:P').createFilter();
-  spreadsheet.getRange('R1').activate();
   spreadsheet.getRange('R1').setValue(data);
   spreadsheet.getRange('A2').activate();
 }};
@@ -424,17 +399,8 @@ function atualizarrelatomanual() {
   var spreadsheet = SpreadsheetApp.getActive();
   var data = Utilities.formatDate(new Date(), "GMT-3", "dd/MM/yyyy HH:mm");
   spreadsheet.getRange('D3').activate();
- spreadsheet.setActiveSheet(spreadsheet.getSheetByName('FILTRAGEM - Atualização Manual'), true); //ULTIMA AQUI, FALTA FAZER OS DIRECIONAIS NA FILTRAGEM
-  spreadsheet.getRange('B2:I');
-  spreadsheet.setActiveSheet(spreadsheet.getSheetByName('RELATÓRIO EM TEXTO'), true);
-   spreadsheet.getRange('B5:I').activate();
-  var currentCell = spreadsheet.getCurrentCell();
-  spreadsheet.getSelection().getNextDataRange(SpreadsheetApp.Direction.DOWN).activate();
-  currentCell.activateAsCurrentCell();
-  spreadsheet.getActiveRangeList().clear({contentsOnly: true, skipFilteredRows: true});
-  spreadsheet.getRange('B4:I4').activate();
-  spreadsheet.getRange('\'FILTRAGEM - Atualização Manual\'!B2:I').copyTo(spreadsheet.getActiveRange(), SpreadsheetApp.CopyPasteType.PASTE_VALUES, false);
-  spreadsheet.getRange('K2').activate();
+  spreadsheet.getRange('\'RELATÓRIO EM TEXTO\'!B5:I3140').clear({contentsOnly: true, skipFilteredRows: true});
+  spreadsheet.getRange('\'FILTRAGEM - Atualização Manual\'!B2:I').copyTo(spreadsheet.getRange('\'RELATÓRIO EM TEXTO\'!B4:I4'), SpreadsheetApp.CopyPasteType. PASTE_VALUES, false);
   spreadsheet.getRange('K2').setValue(data);
   spreadsheet.getRange('D3').activate();
 };
