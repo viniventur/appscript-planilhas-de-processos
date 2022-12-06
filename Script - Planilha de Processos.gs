@@ -27,7 +27,7 @@ function REGBASE() {
   spreadsheet.getActiveRange().offset(0, 0, 1, spreadsheet.getActiveRange().getNumColumns()).activate();
   spreadsheet.getRange('B3:M3').copyTo(spreadsheet.getRange('B6'), SpreadsheetApp.CopyPasteType.PASTE_VALUES, false);
   spreadsheet.getRange('N6').setValue(data);
-  spreadsheet.getRange('\'BIOS\'!R2:S2').copyTo(spreadsheet.getRange('\'Processos Base\'!P6:Q6'), SpreadsheetApp.CopyPasteType.PASTE_FORMULA, false);
+  spreadsheet.getRange('\'BIOS\'!R2:S2').copyTo(spreadsheet.getRange('\'Processos Base\'!O6:P6'), SpreadsheetApp.CopyPasteType.PASTE_FORMULA, false);
   spreadsheet.getRange('B3:M3').clear({contentsOnly: true, skipFilteredRows: true});
   spreadsheet.getRange('N5').setValue('Última modificação');
   spreadsheet.getRange('\'BIOS\'!E2:P2').copyTo(spreadsheet.getRange('\'Processos Base\'!B3:M3'), SpreadsheetApp.CopyPasteType.PASTE_FORMAT, false);
