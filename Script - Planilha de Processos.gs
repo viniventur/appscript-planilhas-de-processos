@@ -1,9 +1,10 @@
-/** @OnlyCurrentDoc */
-
 // Olá! Código feito por Vinícius - Estagiário SOP/SEPLAG/AL - Insta: @vinicius.ventura_ - Github: https://github.com/viniventur
 // Código de Appscript do Planilhas Google (Google Sheets)
 // Última atualização: 06/12/2022
 
+/** @OnlyCurrentDoc */
+
+// Função de registro de processos na base
 function REGBASE() {
   var data = Utilities.formatDate(new Date(), "GMT-3", "dd/MM/yyyy HH:mm");
   var spreadsheet = SpreadsheetApp.getActive();
@@ -33,6 +34,7 @@ function REGBASE() {
   spreadsheet.getRange('B3').activate();
 };
 
+// Adicionar linhas simples
 function adlinhas() {
   var spreadsheet = SpreadsheetApp.getActive();
   spreadsheet.getRange('B3:C3').insertCells(SpreadsheetApp.Dimension.ROWS);
@@ -41,7 +43,7 @@ function adlinhas() {
 
 function onEdit(event)
 { 
-  // Registro de horário das modificações 
+  // Registro de horário das modificações dos processos
   var timezone = "GMT-3";
   var timestamp_format = "dd/MM/yyyy HH:mm:ss"; // Timestamp Format. 
   var updateColName1 = "Data de recebimento";
@@ -85,15 +87,13 @@ function onEdit(event)
     spreadsheet.getRange('N5').setValue('Última modificação');
   }
 
-  // PLANILHA: GERAL - VALO UTILIZADO
+  // PLANILHA: GERAL - Data de atualização do valor atualizado
 
-   var timezone = "GMT-3";
+  var timezone = "GMT-3";
   var timestamp_format = "dd/MM/yyyy HH:mm:ss"; // Timestamp Format. 
   var updateColName = "Valor Utilizado";
   var timeStampColName = "Última Atualização"; // Atenção ao nome diferente dos outros códigos
   var sheet = event.source.getSheetByName('GERAL'); //Nome da planilha onde você vai rodar este script.
-
-
   var actRng = event.source.getActiveRange();
   var editColumn = actRng.getColumn();
   var index = actRng.getRowIndex();
@@ -107,7 +107,6 @@ function onEdit(event)
     spreadsheet.getRange('I1:I5').clear({contentsOnly: true, skipFilteredRows: true});
     spreadsheet.getRange('I6').setValue('Última Atualização'); // Atenção ao nome diferente dos outros códigos
   }
-
 }
 
 function atualizarsuperintendente() {
