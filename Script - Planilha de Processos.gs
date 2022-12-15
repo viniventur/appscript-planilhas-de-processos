@@ -1,6 +1,6 @@
 // Olá! Código feito por Vinícius - Estagiário SOP/SEPLAG/AL - Insta: @vinicius.ventura_ - Github: https://github.com/viniventur
 // Código de Appscript do Planilhas Google (Google Sheets)
-// Última atualização: 06/12/2022
+// Última atualização: 15/12/2022
 
 /** @OnlyCurrentDoc */
 
@@ -41,8 +41,7 @@ function adlinhas() {
   spreadsheet.getRange('B4:C4').copyTo(spreadsheet.getRange('B3:C3'), SpreadsheetApp.CopyPasteType.PASTE_FORMAT, false);
 };
 
-function onEdit(event)
-{ 
+function onEdit(event) { 
   // Registro de horário das modificações dos processos
   var timezone = "GMT-3";
   var timestamp_format = "dd/MM/yyyy HH:mm:ss"; // Timestamp Format. 
@@ -107,6 +106,20 @@ function onEdit(event)
     spreadsheet.getRange('I1:I5').clear({contentsOnly: true, skipFilteredRows: true});
     spreadsheet.getRange('I6').setValue('Última Atualização'); // Atenção ao nome diferente dos outros códigos
   }
+
+  //Limpar células na consulta
+
+  var spreadsheet = SpreadsheetApp.getActive();
+  var sheet = event.source.getActiveSheet();
+  var sheeteve = event.source.getSheetByName('Consultas');
+  var sheetevename = sheeteve.getSheetName();
+  var spreadsheetconsult = spreadsheet.getSheetByName('Consultas');
+  var ssname = spreadsheetconsult.getSheetName();
+  var rngevent = event.source.getActiveRange().getValue();
+  if (ssname == sheetevename && rngevent == 'UO' || rngevent == 'UG' || rngevent == 'FONTE' || rngevent == 'Fonte Siconfi') {
+  spreadsheet.getRange('\'Consultas\'!C5:C7').clear({contentsOnly: true, skipFilteredRows: true});   
+  }
+  
 }
 
 function atualizarsuperintendente() {
