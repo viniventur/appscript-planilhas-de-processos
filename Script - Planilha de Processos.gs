@@ -96,15 +96,15 @@ function onEdit(event) {
   var actRng = event.source.getActiveRange();
   var editColumn = actRng.getColumn();
   var index = actRng.getRowIndex();
-  var headers = sheet.getRange(9, 1, 1, sheet.getLastColumn()).getValues();
+  var headers = sheet.getRange(8, 1, 1, sheet.getLastColumn()).getValues();
   var dateCol = headers[0].indexOf(timeStampColName);
   var updateCol = headers[0].indexOf(updateColName); updateCol = updateCol+1;
   if (dateCol > -1 && index > 1 && editColumn == updateCol && spreadsheet.getSheetName() == 'GERAL') { // only timestamp if 'Last Updated' header exists, but not in the header row itself!
     var cell = sheet.getRange(index, dateCol + 1);
     var date = Utilities.formatDate(new Date(), timezone, timestamp_format);
     cell.setValue(date);
-    spreadsheet.getRange('I1:I8').clear({contentsOnly: true, skipFilteredRows: true});
-    spreadsheet.getRange('I9').setValue('Última Atualização'); // Atenção ao nome diferente dos outros códigos
+    spreadsheet.getRange('I1:I7').clear({contentsOnly: true, skipFilteredRows: true});
+    spreadsheet.getRange('I8').setValue('Última Atualização'); // Atenção ao nome diferente dos outros códigos
   }
 
   //Limpar células na consulta
