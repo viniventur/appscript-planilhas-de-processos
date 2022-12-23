@@ -17,7 +17,6 @@ function REGBASE() {
   var valor = spreadsheet.getRange('H3').getValue()
   var objet = spreadsheet.getRange('I3').getValue()
   var datarec = spreadsheet.getRange('M3').getValue()
-  var spreadsheet = SpreadsheetApp.getActive();
   var ultlinha = spreadsheet.getLastRow()
   var processos = []; //para adição do loop dos processos
   var sheet = spreadsheet.getSheetByName('Processos Base')
@@ -27,9 +26,15 @@ function REGBASE() {
   let valores = sheet.getRange(i+1,5).getValue();
   processos.push(valores)
   }
-
-  if (sit == "" || orig == "" || orgaov == "" || nproc == "" || fonte == "" || gd == "" || valor == "" || objet == ""|| datarec == "") {
-  SpreadsheetApp.getUi().alert("Requisitos obrigatórios vazios!");
+  
+  if (nproc == "") {
+    SpreadsheetApp.getUi().alert("Requisitos obrigatórios vazios!");
+    return;
+  } else if ((sit == "" || orig == "" || orgaov == "" || nproc == "" || fonte == "" || gd == "" || valor == "" || objet == ""|| datarec == "") && (processos.indexOf(numproc) < 0)) {
+    SpreadsheetApp.getUi().alert("Requisitos obrigatórios vazios!");
+    return;
+  } else if ((sit == "" || orig == "" || orgaov == "" || fonte == "" || gd == "" || valor == "" || objet == ""|| datarec == "") && (processos.indexOf(numproc) >= 0)) {
+  SpreadsheetApp.getUi().alert("Processo já consta na base!");
     return;
   } else if (processos.indexOf(numproc) >= 0) {
     SpreadsheetApp.getUi().alert("Processo já consta na base!");
