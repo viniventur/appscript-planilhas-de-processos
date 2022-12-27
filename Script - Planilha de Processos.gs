@@ -1,6 +1,6 @@
 // Olá! Código feito por Vinícius - Estagiário SOP/SEPLAG/AL - Insta: @vinicius.ventura_ - Github: https://github.com/viniventur
 // Código de Appscript do Planilhas Google (Google Sheets)
-// Última atualização: 23/12/2022
+// Última atualização: 27/12/2022
 
 /** @OnlyCurrentDoc */
 
@@ -181,11 +181,13 @@ function atualizarfiltromanual() {
   spreadsheet.getRange('A2').activate();
 }};
 
-function atualizarrelatomanual() {
+function atualizarrelatotexto() {
   var spreadsheet = SpreadsheetApp.getActive();
   var data = Utilities.formatDate(new Date(), "GMT-3", "dd/MM/yyyy HH:mm");
-  spreadsheet.getRange('\'RELATÓRIO EM TEXTO\'!B5:I').clear({contentsOnly: true, skipFilteredRows: true});
-  spreadsheet.getRange('\'FILTRAGEM - Atualização Manual\'!B2:I').copyTo(spreadsheet.getRange('\'RELATÓRIO EM TEXTO\'!B4:I4'), SpreadsheetApp.CopyPasteType. PASTE_VALUES, false);
+  sheet = spreadsheet.getSheetByName('RELATORIO EM TEXTO');
+  intev = sheet.getRange(5, 2, sheet.getLastRow(), 7);
+  intev.clear({contentsOnly: true, skipFilteredRows: true});
+  spreadsheet.getRange('\'FILTRAGEM - Atualização Manual\'!B2:I').copyTo(spreadsheet.getRange('\'RELATORIO EM TEXTO\'!B4:I4'), SpreadsheetApp.CopyPasteType.PASTE_VALUES, false);
   spreadsheet.getRange('K2').setValue(data);
   spreadsheet.getRange('D3').activate();
-};
+}
