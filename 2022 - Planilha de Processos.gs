@@ -7,8 +7,7 @@
 function onOpen(e) {
 var app = SpreadsheetApp;
 var ui = app.getUi();
-ui.alert("PLANILHA DO ANO DE 2022! \nPlanilha criada em outubro de 2022 e atualizada até 30/12/2022.");
-
+var reposta = ui.alert("PLANILHA DO ANO DE 2022!\n\nPlanilha criada em outubro de 2022, link para a planilha de 2023: https://docs.google.com/spreadsheets/d/1bF_J2aV-SCeI8yD_H3azQm4ziR-IXf5Raejhvo7gbnU/edit?usp=sharing", ui.ButtonSet.OK);
 }
 
 // Função de registro de processos na base
