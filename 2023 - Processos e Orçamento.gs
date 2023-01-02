@@ -148,20 +148,26 @@ function atualizarsuperintendente() {
   var spreadsheet = SpreadsheetApp.getActive();
   var data = Utilities.formatDate(new Date(), "GMT-3", "dd/MM/yyyy HH:mm");
   if (spreadsheet.getRange('B2:P2').getFilter() == null) {
-  spreadsheet.getRange('\'Processos Base\'!B5:P').copyTo(spreadsheet.getRange('\'FILTRAGEM - SUPERINTENDÊNCIA\'!B2:P2'), SpreadsheetApp.CopyPasteType. PASTE_VALUES, false);
+    sheet = spreadsheet.getSheetByName('FILTRAGEM - SUPERINTENDÊNCIA');
+    intev = sheet.getRange(3, 2, sheet.getLastRow(), 15);
+    intev.clear({contentsOnly: true, skipFilteredRows: true});
+    spreadsheet.getRange('\'Processos Base\'!B5:P').copyTo(spreadsheet.getRange('\'FILTRAGEM - SUPERINTENDÊNCIA\'!B2:P2'), SpreadsheetApp.CopyPasteType. PASTE_VALUES, false);
     spreadsheet.getRange('B2:P').createFilter();
     spreadsheet.getRange('R1').setValue(data);
     //var criteria = SpreadsheetApp.newFilterCriteria().setHiddenValues(['', '(BLOCOS) Finalizado/Aguardando assinatura', 'Aguardando análise no CPOF', 'Aguardando publicação', 'Aprovado CPOF', 'Em análise', 'Em análise na SEFAZ', 'Em produção - Decreto', 'Em produção - Despacho', 'Na Unidade', 'Não reconhecido pela SEFAZ', 'Publicado', 'Reconhecido pela SEFAZ']).build();
     //spreadsheet.getActiveSheet().getFilter().setColumnFilterCriteria(2, criteria);
     spreadsheet.getRange('A2').activate();
   } else {
-  spreadsheet.getActiveSheet().getFilter().remove();
-  spreadsheet.getRange('\'Processos Base\'!B5:P').copyTo(spreadsheet.getRange('\'FILTRAGEM - SUPERINTENDÊNCIA\'!B2:P2'), SpreadsheetApp.CopyPasteType. PASTE_VALUES, false);
-  spreadsheet.getRange('B2:P').createFilter();
-  spreadsheet.getRange('R1').setValue(data);
+    spreadsheet.getActiveSheet().getFilter().remove();
+    sheet = spreadsheet.getSheetByName('FILTRAGEM - SUPERINTENDÊNCIA');
+    intev = sheet.getRange(3, 2, sheet.getLastRow(), 15);
+    intev.clear({contentsOnly: true, skipFilteredRows: true});
+    spreadsheet.getRange('\'Processos Base\'!B5:P').copyTo(spreadsheet.getRange('\'FILTRAGEM - SUPERINTENDÊNCIA\'!B2:P2'), SpreadsheetApp.CopyPasteType. PASTE_VALUES, false);
+    spreadsheet.getRange('B2:P').createFilter();
+    spreadsheet.getRange('R1').setValue(data);
   //var criteria = SpreadsheetApp.newFilterCriteria().setHiddenValues(['', '(BLOCOS) Finalizado/Aguardando assinatura', 'Aguardando análise no CPOF', 'Aguardando publicação', 'Aprovado CPOF', 'Em análise', 'Em análise na SEFAZ', 'Em produção - Decreto', 'Em produção - Despacho', 'Na Unidade', 'Não reconhecido pela SEFAZ', 'Publicado', 'Reconhecido pela SEFAZ']).build();
   //spreadsheet.getActiveSheet().getFilter().setColumnFilterCriteria(2, criteria);
-  spreadsheet.getRange('A2').activate();
+    spreadsheet.getRange('A2').activate();
   }
 };
 
@@ -169,12 +175,18 @@ function atualizarfiltromanual() {
   var spreadsheet = SpreadsheetApp.getActive();
   var data = Utilities.formatDate(new Date(), "GMT-3", "dd/MM/yyyy HH:mm");
   if (spreadsheet.getRange('B2:P2').getFilter() == null) {
+    sheet = spreadsheet.getSheetByName('FILTRAGEM - Atualização Manual');
+    intev = sheet.getRange(3, 2, sheet.getLastRow(), 15);
+    intev.clear({contentsOnly: true, skipFilteredRows: true});
     spreadsheet.getRange('\'Processos Base\'!B5:P').copyTo(spreadsheet.getRange('\'FILTRAGEM - Atualização Manual\'!B2:P2'), SpreadsheetApp.CopyPasteType.PASTE_VALUES, false);
     spreadsheet.getRange('B2:P').createFilter();
     spreadsheet.getRange('R1').setValue(data);
     spreadsheet.getRange('A2').activate();
   } else { 
     spreadsheet.getActiveSheet().getFilter().remove();
+    sheet = spreadsheet.getSheetByName('FILTRAGEM - Atualização Manual');
+    intev = sheet.getRange(3, 2, sheet.getLastRow(), 15);
+    intev.clear({contentsOnly: true, skipFilteredRows: true});
   spreadsheet.getRange('\'Processos Base\'!B5:P').copyTo(spreadsheet.getRange('\'FILTRAGEM - Atualização Manual\'!B2:P2'), SpreadsheetApp.CopyPasteType.PASTE_VALUES, false);
   spreadsheet.getRange('B2:P').createFilter();
   spreadsheet.getRange('R1').setValue(data);
