@@ -1,8 +1,15 @@
 // Olá! Código feito por Vinícius - Estagiário SOP/SEPLAG/AL - Insta: @vinicius.ventura_ - Github: https://github.com/viniventur
 // Código de Appscript do Planilhas Google (Google Sheets)
-// Última atualização: 27/12/2022
+// Última atualização: 02/01/2023
 
 /** @OnlyCurrentDoc */
+
+function onOpen(e) {
+var app = SpreadsheetApp;
+var ui = app.getUi();
+ui.alert("PLANILHA DO ANO DE 2022! \nPlanilha criada em outubro de 2022 e atualizada até 30/12/2022.");
+
+}
 
 // Função de registro de processos na base
 function REGBASE() {
