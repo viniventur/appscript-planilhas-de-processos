@@ -1,6 +1,6 @@
 // Olá! Código feito por Vinícius - Estagiário SOP/SEPLAG/AL - Insta: @vinicius.ventura_ - Github: https://github.com/viniventur
 // Código de Appscript do Planilhas Google (Google Sheets)
-// Última atualização: 02/01/2023
+// Última atualização: 17/01/2023
 
 /** @OnlyCurrentDoc */
 
@@ -45,10 +45,10 @@ function REGBASE() {
   spreadsheet.getActiveRange().offset(0, 0, 1, spreadsheet.getActiveRange().getNumColumns()).activate();
   spreadsheet.getRange('B3:M3').copyTo(spreadsheet.getRange('B6'), SpreadsheetApp.CopyPasteType.PASTE_VALUES, false);
   spreadsheet.getRange('N6').setValue(data);
-  spreadsheet.getRange('\'BIOS\'!S2:T2').copyTo(spreadsheet.getRange('\'Processos Base\'!O6:P6'), SpreadsheetApp.CopyPasteType.PASTE_FORMULA, false);
+  spreadsheet.getRange('\'BIOS\'!T2:U2').copyTo(spreadsheet.getRange('\'Processos Base\'!O6:P6'), SpreadsheetApp.CopyPasteType.PASTE_FORMULA, false);
   spreadsheet.getRange('B3:M3').clear({contentsOnly: true, skipFilteredRows: true});
   spreadsheet.getRange('N5').setValue('Última modificação');
-  spreadsheet.getRange('\'BIOS\'!F2:Q2').copyTo(spreadsheet.getRange('\'Processos Base\'!B3:M3'), SpreadsheetApp.CopyPasteType.PASTE_FORMAT, false);
+  spreadsheet.getRange('\'BIOS\'!G2:R2').copyTo(spreadsheet.getRange('\'Processos Base\'!B3:M3'), SpreadsheetApp.CopyPasteType.PASTE_FORMAT, false);
   spreadsheet.getRange('B3').activate();
   }
 };
