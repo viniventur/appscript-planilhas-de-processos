@@ -1,6 +1,6 @@
 // Olá! Código feito por Vinícius - Estagiário SOP/SEPLAG/AL - Insta: @vinicius.ventura_ - Github: https://github.com/viniventur
 // Código de Appscript do Planilhas Google (Google Sheets)
-// Última atualização: 17/01/2023
+// Última atualização: 23/01/2023
 
 /** @OnlyCurrentDoc */
 
@@ -98,7 +98,7 @@ function onEdit(event) {
   var updateCol9 = headers[0].indexOf(updateColName9); updateCol9 = updateCol+1;
   var updateCol10 = headers[0].indexOf(updateColName10); updateCol10 = updateCol+1;
   var updateCol11 = headers[0].indexOf(updateColName11); updateCol11 = updateCol+1;
-  var updateCol12 = headers[0].indexOf(updateColName12); updateColX12 = updateCol+1;
+  var updateCol12 = headers[0].indexOf(updateColName12); updateCol12 = updateCol+1;
   
   if (dateCol > -1 && index > 1 && [editColumn == updateCol1 || editColumn == updateCol2 || editColumn == updateCol3 || editColumn == updateCol4 || editColumn == updateCol5 || editColumn == updateCol6 || editColumn == updateCol7 || editColumn == updateCol8 || editColumn == updateCol9 || editColumn == updateCol10 || editColumn == updateCol11 || editColumn == updateCol12] && spreadsheet.getSheetName() == 'Processos Base') { // only timestamp if 'Last Updated' header exists, but not in the header row itself!
     var cellregistro = sheet.getRange(index, dateCol + 1);
@@ -112,21 +112,23 @@ function onEdit(event) {
 
   var timezone = "GMT-3";
   var timestamp_format = "dd/MM/yyyy HH:mm:ss"; // Timestamp Format. 
-  var updateColName = "Valor Utilizado";
+  var updateColName1 = "Valor Utilizado";
+  //var updateColName2 = "Valores";
   var timeStampColName = "Última Atualização"; // Atenção ao nome diferente dos outros códigos
-  var sheet = event.source.getSheetByName('GERAL'); //Nome da planilha onde você vai rodar este script.
+  var sheet = event.source.getSheetByName('LIMITE'); //Nome da planilha onde você vai rodar este script.
   var actRng = event.source.getActiveRange();
   var editColumn = actRng.getColumn();
   var index = actRng.getRowIndex();
-  var headers = sheet.getRange(8, 1, 1, sheet.getLastColumn()).getValues();
+  var headers = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues();
   var dateCol = headers[0].indexOf(timeStampColName);
-  var updateCol = headers[0].indexOf(updateColName); updateCol = updateCol+1;
-  if (dateCol > -1 && index > 1 && editColumn == updateCol && spreadsheet.getSheetName() == 'GERAL') { // only timestamp if 'Last Updated' header exists, but not in the header row itself!
+  var updateCol = headers[0].indexOf(updateColName1); updateCol = updateCol+1;
+  //var updateCol2 = headers[0].indexOf(updateColName1); updateCol2 = updateCol2+1;
+  if (dateCol > -1 && index > 1 && editColumn == updateCol && spreadsheet.getSheetName() == 'LIMITE') { // only timestamp if 'Last Updated' header exists, but not in the header row itself!
     var cell = sheet.getRange(index, dateCol + 1);
     var date = Utilities.formatDate(new Date(), timezone, timestamp_format);
     cell.setValue(date);
-    spreadsheet.getRange('I1:I7').clear({contentsOnly: true, skipFilteredRows: true});
-    spreadsheet.getRange('I8').setValue('Última Atualização'); // Atenção ao nome diferente dos outros códigos
+    spreadsheet.getRange('D3:D60').clear({contentsOnly: true, skipFilteredRows: true});
+    spreadsheet.getRange('D1').setValue('Última Atualização'); // Atenção ao nome diferente dos outros códigos
   }
 
   //Limpar células na consulta
