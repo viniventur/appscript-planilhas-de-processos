@@ -1,6 +1,6 @@
 // Olá! Código feito por Vinícius - Estagiário SOP/SEPLAG/AL - Insta: @vinicius.ventura_ - Github: https://github.com/viniventur
 // Código de Appscript do Planilhas Google (Google Sheets)
-// Última atualização: 30/01/2023
+// Última atualização: 10/02/2023
 
 /** @OnlyCurrentDoc */
 
@@ -110,8 +110,9 @@ function onEdit(event) {
     spreadsheet.getRange('O5').setValue('Última modificação');
   }
 
-  // PLANILHA: GERAL - Data de atualização do valor atualizado
-
+  // PLANILHA: LIMITE - Data de atualização do valor atualizado
+  
+  var email = MailApp;
   var timezone = "GMT-3";
   var timestamp_format = "dd/MM/yyyy HH:mm:ss"; // Timestamp Format. 
   var updateColName1 = "Valor Utilizado";
@@ -133,6 +134,7 @@ function onEdit(event) {
     spreadsheet.getRange('D1').setValue('Última Atualização'); // Atenção ao nome diferente dos outros códigos
   }
 
+
   //Limpar células na consulta
 
   var spreadsheet = SpreadsheetApp.getActive();
@@ -144,6 +146,26 @@ function onEdit(event) {
   var rngevent = event.source.getActiveRange().getValue();
   if (ssname == sheetevename && rngevent == 'UO' || rngevent == 'UG' || rngevent == 'FONTE' || rngevent == 'Fonte Siconfi') {
   spreadsheet.getRange('\'Consultas\'!C5:C7').clear({contentsOnly: true, skipFilteredRows: true});   
+  }
+
+}
+
+function enviaremail() {
+  app = SpreadsheetApp
+  ssp = app.getActiveSpreadsheet()
+  ss = ssp.getSheetByName("LIMITE")
+  valoruti = ss.getRange("B4").getDisplayValue();
+  porcentoorca = ssp.getSheetByName("GERAL").getRange("F9").getDisplayValue();
+  ultatua = ss.getRange("D2").getDisplayValue();
+  //var values = ss.getRange("J2:J").getValues();
+  var values = ss.getDataRange().getValues();
+  
+  for (var r = 0; r < values.length; r++){
+  var mail = MailApp;
+  //Logger.log(values[r][9])
+  if (r > 0 && r[9] != "") {
+  mail.sendEmail(values[r][9], "Limite Usado: "+porcentoorca+" - Valor: "+valoruti+" - LIMITE DE CRÉDITO - ATUALIZAÇÃO", "Atenção: email enviado manualmente a partir do valor atualizado na planilha, portanto, não vem diretamente do SIAFE. \n\nÚltima atualização: "+ultatua);
+  }
   }
 
 }
