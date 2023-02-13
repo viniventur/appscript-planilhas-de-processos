@@ -158,16 +158,14 @@ function enviaremail() {
   porcentoorca = ssp.getSheetByName("GERAL").getRange("F9").getDisplayValue();
   ultatua = ss.getRange("D2").getDisplayValue();
   //var values = ss.getRange("J2:J").getValues();
-  var values = ss.getDataRange().getValues();
-  
-  for (var r = 0; r < values.length; r++){
+  //var values = ss.getDataRange().getValues();
+  email = ss.getRange("I2").getValue();
+  //for (var r = 0; r < values.length; r++){
   var mail = MailApp;
-  //Logger.log(values[r][9])
-  if (r > 0 && r[9] != "") {
-  mail.sendEmail(values[r][9], "Limite Usado: "+porcentoorca+" - Valor: "+valoruti+" - LIMITE DE CRÉDITO - ATUALIZAÇÃO", "Atenção: email enviado manualmente a partir do valor atualizado na planilha, portanto, não vem diretamente do SIAFE. \n\nÚltima atualização: "+ultatua);
-  }
-  }
+  //if (r > 0 && r[9] != "") {
 
+  mail.sendEmail(email, "Limite Usado: "+porcentoorca+" - Valor: "+valoruti+" - LIMITE DE CRÉDITO - ATUALIZAÇÃO", "Atenção: email enviado manualmente a partir do valor atualizado na planilha, portanto, não vem diretamente do SIAFE. \n\nÚltima atualização: "+ultatua);
+  
 }
 
 function atualizarsuperintendente() {
