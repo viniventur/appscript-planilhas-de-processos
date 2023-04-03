@@ -1,6 +1,6 @@
 // Olá! Código feito por Vinícius - Estagiário SOP/SEPLAG/AL - Insta: @vinicius.ventura_ - Github: https://github.com/viniventur
 // Código de Appscript do Planilhas Google (Google Sheets)
-// Última atualização: 10/02/2023
+// Última atualização: 03/04/2023
 
 /** @OnlyCurrentDoc */
 
@@ -61,54 +61,60 @@ function adlinhas() {
   spreadsheet.getRange('B4:C4').copyTo(spreadsheet.getRange('B3:C3'), SpreadsheetApp.CopyPasteType.PASTE_FORMAT, false);
 };
 
+
 function onEdit(event) { 
 
   // Registro de horário das modificações dos processos
   
-  var timezone = "GMT-3";
-  var timestamp_format = "dd/MM/yyyy HH:mm:ss"; // Timestamp Format. 
-  var updateColName1 = "Data de recebimento";
-  var updateColName2 = "Descrição do erro";
-  var updateColName3 = "Erros";
-  var updateColName4 = "Observação";
-  var updateColName5 = "Objetivo";
-  var updateColName6 = "Valor";
-  var updateColName7 = "Grupo de Despesas";
-  var updateColName8 = "Fonte de Recursos";
-  var updateColName9 = "Nº do Processo";
-  var updateColName10 = "Órgão (UO)";
-  var updateColName11 = "Origem de Recursos";
-  var updateColName12 = "Situação";
-  var updateColName13 = "Tipos de Erros";
-  var timeStampColName = "Última modificação";
+  var ui = SpreadsheetApp.getUi();
   var sheet = event.source.getSheetByName('Processos Base'); //Nome da planilha onde você vai rodar este script.
   var spreadsheet = SpreadsheetApp.getActive();
+  var timezone = "GMT-3";
+  var timestamp_format = "dd/MM/yyyy HH:mm:ss";
+  var timeStampColName = "Última modificação";
+  var pubcolname = "Data de Publicação"
   var actRng = event.source.getActiveRange();
   var editColumn = actRng.getColumn();
   var index = actRng.getRowIndex();
-  var headers = sheet.getRange(5, 1, 5, sheet.getLastColumn()).getValues();
-  var dateCol = headers[0].indexOf(timeStampColName);
-  var updateCol1 = headers[0].indexOf(updateColName1); updateCol1 = updateCol+1;
-  var updateCol2 = headers[0].indexOf(updateColName2); updateCol2 = updateCol+1;
-  var updateCol3 = headers[0].indexOf(updateColName3); updateCol3 = updateCol+1;
-  var updateCol4 = headers[0].indexOf(updateColName4); updateCol4 = updateCol+1;
-  var updateCol5 = headers[0].indexOf(updateColName5); updateCol5 = updateCol+1;
-  var updateCol6 = headers[0].indexOf(updateColName6); updateCol6 = updateCol+1;
-  var updateCol7 = headers[0].indexOf(updateColName7); updateCol7 = updateCol+1;
-  var updateCol8 = headers[0].indexOf(updateColName8); updateCol8 = updateCol+1;
-  var updateCol9 = headers[0].indexOf(updateColName9); updateCol9 = updateCol+1;
-  var updateCol10 = headers[0].indexOf(updateColName10); updateCol10 = updateCol+1;
-  var updateCol11 = headers[0].indexOf(updateColName11); updateCol11 = updateCol+1;
-  var updateCol12 = headers[0].indexOf(updateColName12); updateCol12 = updateCol+1;
-  var updateCol13 = headers[0].indexOf(updateColName13); updateCol13 = updateCol+1;
+  var headers = sheet.getRange(5, 2, 1, sheet.getLastColumn()-1).getValues();
+  var dateCol = headers[0].indexOf(timeStampColName)+1;
+  var pubcol = headers[0].indexOf(pubcolname)+1;
+  var updatecols = [];
+
+  for (var i = 0; i <= headers.length;i++) {
+    let indexs = headers[0].indexOf(headers[0][i]); indexs = indexs+1;
+    updatecols.push(indexs)
+  }
+
+  var rngevent = actRng.getValue();
   
-  if (dateCol > -1 && index > 1 && [editColumn == updateCol1 || editColumn == updateCol2 || editColumn == updateCol3 || editColumn == updateCol4 || editColumn == updateCol5 || editColumn == updateCol6 || editColumn == updateCol7 || editColumn == updateCol8 || editColumn == updateCol9 || editColumn == updateCol10 || editColumn == updateCol11 || editColumn == updateCol12 || editColumn == updateCol13] && spreadsheet.getSheetName() == 'Processos Base') { // only timestamp if 'Last Updated' header exists, but not in the header row itself!
+  if (dateCol > -1 && index > 4 && updatecols.includes(editColumn) && spreadsheet.getSheetName() == 'Processos Base' && rngevent !== 'Publicado') {
     var cellregistro = sheet.getRange(index, dateCol + 1);
     var date = Utilities.formatDate(new Date(), timezone, timestamp_format);
     cellregistro.setValue(date);
-    spreadsheet.getRange('O1:O4').clear({contentsOnly: true, skipFilteredRows: true});
-    spreadsheet.getRange('O5').setValue('Última modificação');
+    //spreadsheet.getRange('O1:O4').clear({contentsOnly: true, skipFilteredRows: true});
+    //spreadsheet.getRange('P5').setValue('Última modificação');
+  } else if (dateCol > -1 && index > 4 && updatecols.includes(editColumn) && spreadsheet.getSheetName() == 'Processos Base' && rngevent == 'Publicado') { 
+    
+    var datapubinput = ui.prompt('Data de publicação:', ui.ButtonSet.OK_CANCEL);
+    if (datapubinput.getSelectedButton() == ui.Button.OK) {
+      var entrada = datapubinput.getResponseText();
+      var pattern = /^(\d{2})\/(\d{2})\/(\d{4})$/;
+      if (pattern.test(entrada)) {
+       var cellregistropub = sheet.getRange(index, pubcol + 1);
+      var cellregistrodate = sheet.getRange(index, dateCol + 1);
+      var date = Utilities.formatDate(new Date(), timezone, timestamp_format);
+      cellregistropub.setValue(entrada);
+      cellregistrodate.setValue(date);
+      } else {
+        ui.alert("Formato inválido. Por favor, insira a data no formato dd/MM/yyyy.");
+      }
+    } else {
+      return; // usuário cancelou ou clicou em "X"
+    }
+  
   }
+
 
   // PLANILHA: LIMITE - Data de atualização do valor atualizado
   
