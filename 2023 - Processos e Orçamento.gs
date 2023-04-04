@@ -112,13 +112,13 @@ function onEdit(event) {
       return; // usuário cancelou ou clicou em "X"
     }
     
-  } else if (((dateCol > -1) && (index > 5) && (updatecols.includes(editColumn)) && (sheet.getSheetName() == 'Processos Base')) && ((rngevent !== 'Publicado') && (editColumn == situacol)) || ((rngevent == 'Publicado') && (editColumn !== situacol))) { 
+  } else if (((sheet.getSheetName() == 'Processos Base')) && (dateCol > -1) && (index > 5) && (updatecols.includes(editColumn)) && ((rngevent !== 'Publicado') && (editColumn == situacol)) || ((rngevent == 'Publicado') && (editColumn !== situacol)) || ((rngevent !== 'Publicado') && (editColumn !== situacol))) { 
 
     var cellregistro = sheet.getRange(index, dateCol + 1);
     var date = Utilities.formatDate(new Date(), timezone, timestamp_format);
     cellregistro.setValue(date);
-    spreadsheet.getRange('P1:P4').clear({contentsOnly: true, skipFilteredRows: true});
-    spreadsheet.getRange('P5').setValue('Última modificação');
+    sheet.getRange('P1:P4').clear({contentsOnly: true, skipFilteredRows: true});
+    sheet.getRange('P5').setValue('Última modificação');
   
   }
 
