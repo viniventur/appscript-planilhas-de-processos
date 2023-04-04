@@ -1,6 +1,6 @@
 // Olá! Código feito por Vinícius - Estagiário SOP/SEPLAG/AL - Insta: @vinicius.ventura_ - Github: https://github.com/viniventur
 // Código de Appscript do Planilhas Google (Google Sheets)
-// Última atualização: 03/04/2023
+// Última atualização: 04/04/2023
 
 /** @OnlyCurrentDoc */
 
@@ -17,6 +17,7 @@ function REGBASE() {
   var valor = spreadsheet.getRange('H3').getValue()
   var objet = spreadsheet.getRange('I3').getValue()
   var datarec = spreadsheet.getRange('N3').getValue()
+  var datapub = spreadsheet.getRange('O3').getValue()
   var ultlinha = spreadsheet.getLastRow()
   var processos = []; //para adição do loop dos processos
   var sheet = spreadsheet.getSheetByName('Processos Base')
@@ -43,12 +44,12 @@ function REGBASE() {
   spreadsheet.getRange('6:6').activate();
   spreadsheet.getActiveSheet().insertRowsBefore(spreadsheet.getActiveRange().getRow(), 1);
   spreadsheet.getActiveRange().offset(0, 0, 1, spreadsheet.getActiveRange().getNumColumns()).activate();
-  spreadsheet.getRange('B3:N3').copyTo(spreadsheet.getRange('B6'), SpreadsheetApp.CopyPasteType.PASTE_VALUES, false);
-  spreadsheet.getRange('O6').setValue(data);
-  spreadsheet.getRange('\'BIOS\'!W2:X2').copyTo(spreadsheet.getRange('\'Processos Base\'!P6:Q6'), SpreadsheetApp.CopyPasteType.PASTE_FORMULA, false);
-  spreadsheet.getRange('B3:N3').clear({contentsOnly: true, skipFilteredRows: true});
-  spreadsheet.getRange('O5').setValue('Última modificação');
-  spreadsheet.getRange('\'BIOS\'!I2:U2').copyTo(spreadsheet.getRange('\'Processos Base\'!B3:N3'), SpreadsheetApp.CopyPasteType.PASTE_FORMAT, false);
+  spreadsheet.getRange('B3:O3').copyTo(spreadsheet.getRange('B6'), SpreadsheetApp.CopyPasteType.PASTE_VALUES, false);
+  spreadsheet.getRange('P6').setValue(data);
+  spreadsheet.getRange('\'BIOS\'!X2:Y2').copyTo(spreadsheet.getRange('\'Processos Base\'!Q6:R6'), SpreadsheetApp.CopyPasteType.PASTE_FORMULA, false);
+  spreadsheet.getRange('B3:O3').clear({contentsOnly: true, skipFilteredRows: true});
+  //spreadsheet.getRange('O5').setValue('Última modificação');
+  spreadsheet.getRange('\'BIOS\'!I2:V2').copyTo(spreadsheet.getRange('\'Processos Base\'!B3:O3'), SpreadsheetApp.CopyPasteType.PASTE_FORMAT, false);
   spreadsheet.getRange('B3').activate();
   }
 };
@@ -66,9 +67,9 @@ function onEdit(event) {
 
   // Registro de horário das modificações dos processos
   
+  var spreadsheet = SpreadsheetApp.getActive();
   var ui = SpreadsheetApp.getUi();
   var sheet = event.source.getSheetByName('Processos Base'); //Nome da planilha onde você vai rodar este script.
-  var spreadsheet = SpreadsheetApp.getActive();
   var timezone = "GMT-3";
   var timestamp_format = "dd/MM/yyyy HH:mm:ss";
   var timeStampColName = "Última modificação";
@@ -77,26 +78,23 @@ function onEdit(event) {
   var editColumn = actRng.getColumn();
   var index = actRng.getRowIndex();
   var headers = sheet.getRange(5, 2, 1, sheet.getLastColumn()-1).getValues();
+  var situacol = sheet.getRange('B:B').getColumn();
   var dateCol = headers[0].indexOf(timeStampColName)+1;
   var pubcol = headers[0].indexOf(pubcolname)+1;
   var updatecols = [];
 
-  for (var i = 0; i <= headers.length;i++) {
+
+  for (var i = 0; i <= headers[0].length;i++) {
     let indexs = headers[0].indexOf(headers[0][i]); indexs = indexs+1;
     updatecols.push(indexs)
   }
 
   var rngevent = actRng.getValue();
   
-  if (dateCol > -1 && index > 4 && updatecols.includes(editColumn) && spreadsheet.getSheetName() == 'Processos Base' && rngevent !== 'Publicado') {
-    var cellregistro = sheet.getRange(index, dateCol + 1);
-    var date = Utilities.formatDate(new Date(), timezone, timestamp_format);
-    cellregistro.setValue(date);
-    //spreadsheet.getRange('O1:O4').clear({contentsOnly: true, skipFilteredRows: true});
-    //spreadsheet.getRange('P5').setValue('Última modificação');
-  } else if (dateCol > -1 && index > 4 && updatecols.includes(editColumn) && spreadsheet.getSheetName() == 'Processos Base' && rngevent == 'Publicado') { 
-    
+  if ((dateCol > -1) && (index > 5) && (updatecols.includes(editColumn)) && (sheet.getSheetName() == 'Processos Base') && ((rngevent == 'Publicado') && (editColumn == situacol))) {
+
     var datapubinput = ui.prompt('Data de publicação:', ui.ButtonSet.OK_CANCEL);
+    while (entrada = '')
     if (datapubinput.getSelectedButton() == ui.Button.OK) {
       var entrada = datapubinput.getResponseText();
       var pattern = /^(\d{2})\/(\d{2})\/(\d{4})$/;
@@ -108,10 +106,19 @@ function onEdit(event) {
       cellregistrodate.setValue(date);
       } else {
         ui.alert("Formato inválido. Por favor, insira a data no formato dd/MM/yyyy.");
+
       }
     } else {
       return; // usuário cancelou ou clicou em "X"
     }
+    
+  } else if (((dateCol > -1) && (index > 5) && (updatecols.includes(editColumn)) && (sheet.getSheetName() == 'Processos Base')) && ((rngevent !== 'Publicado') && (editColumn == situacol)) || ((rngevent == 'Publicado') && (editColumn !== situacol))) { 
+
+    var cellregistro = sheet.getRange(index, dateCol + 1);
+    var date = Utilities.formatDate(new Date(), timezone, timestamp_format);
+    cellregistro.setValue(date);
+    spreadsheet.getRange('P1:P4').clear({contentsOnly: true, skipFilteredRows: true});
+    spreadsheet.getRange('P5').setValue('Última modificação');
   
   }
 
@@ -177,13 +184,13 @@ function enviaremail() {
 function atualizarsuperintendente() {
   var spreadsheet = SpreadsheetApp.getActive();
   var data = Utilities.formatDate(new Date(), "GMT-3", "dd/MM/yyyy HH:mm");
-  if (spreadsheet.getRange('B2:Q2').getFilter() == null) {
+  if (spreadsheet.getRange('B2:R2').getFilter() == null) {
     sheet = spreadsheet.getSheetByName('FILTRAGEM - SUPERINTENDÊNCIA');
     intev = sheet.getRange(3, 2, sheet.getLastRow(), 16);
     intev.clear({contentsOnly: true, skipFilteredRows: true});
-    spreadsheet.getRange('\'Processos Base\'!B5:Q').copyTo(spreadsheet.getRange('\'FILTRAGEM - SUPERINTENDÊNCIA\'!B2:Q2'), SpreadsheetApp.CopyPasteType. PASTE_VALUES, false);
-    spreadsheet.getRange('B2:Q').createFilter();
-    spreadsheet.getRange('S1').setValue(data);
+    spreadsheet.getRange('\'Processos Base\'!B5:R').copyTo(spreadsheet.getRange('\'FILTRAGEM - SUPERINTENDÊNCIA\'!B2:R2'), SpreadsheetApp.CopyPasteType. PASTE_VALUES, false);
+    spreadsheet.getRange('B2:R').createFilter();
+    spreadsheet.getRange('T1').setValue(data);
     //var criteria = SpreadsheetApp.newFilterCriteria().setHiddenValues(['', '(BLOCOS) Finalizado/Aguardando assinatura', 'Aguardando análise no CPOF', 'Aguardando publicação', 'Aprovado CPOF', 'Em análise', 'Em análise na SEFAZ', 'Em produção - Decreto', 'Em produção - Despacho', 'Na Unidade', 'Não reconhecido pela SEFAZ', 'Publicado', 'Reconhecido pela SEFAZ']).build();
     //spreadsheet.getActiveSheet().getFilter().setColumnFilterCriteria(2, criteria);
     spreadsheet.getRange('A2').activate();
@@ -192,9 +199,9 @@ function atualizarsuperintendente() {
     sheet = spreadsheet.getSheetByName('FILTRAGEM - SUPERINTENDÊNCIA');
     intev = sheet.getRange(3, 2, sheet.getLastRow(), 15);
     intev.clear({contentsOnly: true, skipFilteredRows: true});
-    spreadsheet.getRange('\'Processos Base\'!B5:Q').copyTo(spreadsheet.getRange('\'FILTRAGEM - SUPERINTENDÊNCIA\'!B2:Q2'), SpreadsheetApp.CopyPasteType. PASTE_VALUES, false);
-    spreadsheet.getRange('B2:Q').createFilter();
-    spreadsheet.getRange('S1').setValue(data);
+    spreadsheet.getRange('\'Processos Base\'!B5:R').copyTo(spreadsheet.getRange('\'FILTRAGEM - SUPERINTENDÊNCIA\'!B2:R2'), SpreadsheetApp.CopyPasteType. PASTE_VALUES, false);
+    spreadsheet.getRange('B2:R').createFilter();
+    spreadsheet.getRange('T1').setValue(data);
   //var criteria = SpreadsheetApp.newFilterCriteria().setHiddenValues(['', '(BLOCOS) Finalizado/Aguardando assinatura', 'Aguardando análise no CPOF', 'Aguardando publicação', 'Aprovado CPOF', 'Em análise', 'Em análise na SEFAZ', 'Em produção - Decreto', 'Em produção - Despacho', 'Na Unidade', 'Não reconhecido pela SEFAZ', 'Publicado', 'Reconhecido pela SEFAZ']).build();
   //spreadsheet.getActiveSheet().getFilter().setColumnFilterCriteria(2, criteria);
     spreadsheet.getRange('A2').activate();
@@ -204,22 +211,22 @@ function atualizarsuperintendente() {
 function atualizarfiltromanual() {
   var spreadsheet = SpreadsheetApp.getActive();
   var data = Utilities.formatDate(new Date(), "GMT-3", "dd/MM/yyyy HH:mm");
-  if (spreadsheet.getRange('B2:Q2').getFilter() == null) {
+  if (spreadsheet.getRange('B2:R2').getFilter() == null) {
     sheet = spreadsheet.getSheetByName('FILTRAGEM - Atualização Manual');
     intev = sheet.getRange(3, 2, sheet.getLastRow(), 16);
     intev.clear({contentsOnly: true, skipFilteredRows: true});
-    spreadsheet.getRange('\'Processos Base\'!B5:Q').copyTo(spreadsheet.getRange('\'FILTRAGEM - Atualização Manual\'!B2:Q2'), SpreadsheetApp.CopyPasteType.PASTE_VALUES, false);
-    spreadsheet.getRange('B2:Q').createFilter();
-    spreadsheet.getRange('S1').setValue(data);
+    spreadsheet.getRange('\'Processos Base\'!B5:R').copyTo(spreadsheet.getRange('\'FILTRAGEM - Atualização Manual\'!B2:R2'), SpreadsheetApp.CopyPasteType.PASTE_VALUES, false);
+    spreadsheet.getRange('B2:R').createFilter();
+    spreadsheet.getRange('T1').setValue(data);
     spreadsheet.getRange('A2').activate();
   } else { 
     spreadsheet.getActiveSheet().getFilter().remove();
     sheet = spreadsheet.getSheetByName('FILTRAGEM - Atualização Manual');
     intev = sheet.getRange(3, 2, sheet.getLastRow(), 16);
     intev.clear({contentsOnly: true, skipFilteredRows: true});
-  spreadsheet.getRange('\'Processos Base\'!B5:Q').copyTo(spreadsheet.getRange('\'FILTRAGEM - Atualização Manual\'!B2:Q2'), SpreadsheetApp.CopyPasteType.PASTE_VALUES, false);
-  spreadsheet.getRange('B2:Q').createFilter();
-  spreadsheet.getRange('S1').setValue(data);
+  spreadsheet.getRange('\'Processos Base\'!B5:R').copyTo(spreadsheet.getRange('\'FILTRAGEM - Atualização Manual\'!B2:R2'), SpreadsheetApp.CopyPasteType.PASTE_VALUES, false);
+  spreadsheet.getRange('B2:R').createFilter();
+  spreadsheet.getRange('T1').setValue(data);
   spreadsheet.getRange('A2').activate();
 }};
 
