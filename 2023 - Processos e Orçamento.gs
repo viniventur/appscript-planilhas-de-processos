@@ -1,6 +1,6 @@
 // Olá! Código feito por Vinícius - Estagiário SOP/SEPLAG/AL - Insta: @vinicius.ventura_ - Github: https://github.com/viniventur
 // Código de Appscript do Planilhas Google (Google Sheets)
-// Última atualização: 04/04/2023
+// Última atualização: 10/04/2023
 
 /** @OnlyCurrentDoc */
 
@@ -67,20 +67,28 @@ function onEdit(event) {
 
   // Registro de horário das modificações dos processos
   
+  var sheet = event.source.getActiveSheet();
+  var indexevent = event.range.getRow();
+  if (indexevent < 6 || sheet.getName() != 'Processos Base') {
+    return;
+  } else {
+
   var spreadsheet = SpreadsheetApp.getActive();
   var ui = SpreadsheetApp.getUi();
   var sheet = event.source.getSheetByName('Processos Base'); //Nome da planilha onde você vai rodar este script.
   var timezone = "GMT-3";
   var timestamp_format = "dd/MM/yyyy HH:mm:ss";
   var timeStampColName = "Última modificação";
-  var pubcolname = "Data de Publicação"
+  var pubcolname = "Data de publicação"
+  var obscolname = "Observação"
   var actRng = event.source.getActiveRange();
   var editColumn = actRng.getColumn();
   var index = actRng.getRowIndex();
   var headers = sheet.getRange(5, 2, 1, sheet.getLastColumn()-1).getValues();
   var situacol = sheet.getRange('B:B').getColumn();
-  var dateCol = headers[0].indexOf(timeStampColName)+1;
-  var pubcol = headers[0].indexOf(pubcolname)+1;
+  var datecol = headers[0].indexOf(timeStampColName)+2;
+  var pubcol = headers[0].indexOf(pubcolname)+2;
+  var obscol = headers[0].indexOf(obscolname)+2
   var updatecols = [];
 
 
@@ -91,36 +99,75 @@ function onEdit(event) {
 
   var rngevent = actRng.getValue();
   
-  if ((dateCol > -1) && (index > 5) && (updatecols.includes(editColumn)) && (sheet.getSheetName() == 'Processos Base') && ((rngevent == 'Publicado') && (editColumn == situacol))) {
-
+  if ((sheet.getSheetName() == 'Processos Base') && (datecol > -1) && (updatecols.includes(editColumn)) && ((rngevent == 'Publicado') && (editColumn == situacol))) {
     var datapubinput = ui.prompt('Data de publicação:', ui.ButtonSet.OK_CANCEL);
-    while (entrada = '')
-    if (datapubinput.getSelectedButton() == ui.Button.OK) {
-      var entrada = datapubinput.getResponseText();
+    var entrada = datapubinput.getResponseText();
+    if (datapubinput.getSelectedButton() == ui.Button.OK && entrada != '') {
       var pattern = /^(\d{2})\/(\d{2})\/(\d{4})$/;
-      if (pattern.test(entrada)) {
-       var cellregistropub = sheet.getRange(index, pubcol + 1);
-      var cellregistrodate = sheet.getRange(index, dateCol + 1);
-      var date = Utilities.formatDate(new Date(), timezone, timestamp_format);
-      cellregistropub.setValue(entrada);
-      cellregistrodate.setValue(date);
-      } else {
+      while (!pattern.test(entrada)){
         ui.alert("Formato inválido. Por favor, insira a data no formato dd/MM/yyyy.");
+      datapubinput = ui.prompt('Data de publicação:', ui.ButtonSet.OK_CANCEL);
+      entrada = datapubinput.getResponseText();
 
-      }
-    } else {
+      } if (pattern.test(entrada)) {
+          var cellregistropub = sheet.getRange(index, pubcol);
+          var cellregistrodate = sheet.getRange(index, datecol);
+          var date = Utilities.formatDate(new Date(), timezone, timestamp_format);
+          cellregistropub.setValue(entrada);
+          cellregistrodate.setValue(date);
+        } else {
+        ui.alert("Formato inválido. Por favor, insira a data no formato dd/MM/yyyy.")
+        return;
+        }
+      } else {
+      return; // usuário cancelou ou clicou em "X"
+     }
+    
+  } else if (((sheet.getSheetName() == 'Processos Base') && (datecol > -1) && (updatecols.includes(editColumn)) && ((rngevent == 'Aprovado CPOF') && (editColumn == situacol)))) {
+
+      var atainput = ui.prompt('Ata do CPOF:', ui.ButtonSet.OK_CANCEL);
+      var entrada = atainput.getResponseText();
+
+      while (entrada == '' && !(atainput.getSelectedButton() == ui.Button.CANCEL)){
+        ui.alert("Insira uma ata.");
+        atainput = ui.prompt('Ata do CPOF:', ui.ButtonSet.OK_CANCEL);
+        entrada = atainput.getResponseText();
+
+      } if (atainput.getSelectedButton() == ui.Button.OK && entrada != '') {
+              
+        var cellregistroata = sheet.getRange(index, obscol);
+        var cellregistrodate = sheet.getRange(index, datecol);
+        var date = Utilities.formatDate(new Date(), timezone, timestamp_format);
+        if (cellregistroata == '') {
+        
+          cellregistroata.setValue('Ata ' + entrada);
+          cellregistrodate.setValue(date);
+        
+        } else {
+          
+          cellregistroata.setValue('Ata ' + entrada + '\n' + cellregistroata.getValues());
+          cellregistrodate.setValue(date)
+        }
+      } else {
       return; // usuário cancelou ou clicou em "X"
     }
-    
-  } else if (((sheet.getSheetName() == 'Processos Base')) && (dateCol > -1) && (index > 5) && (updatecols.includes(editColumn)) && ((rngevent !== 'Publicado') && (editColumn == situacol)) || ((rngevent == 'Publicado') && (editColumn !== situacol)) || ((rngevent !== 'Publicado') && (editColumn !== situacol))) { 
 
-    var cellregistro = sheet.getRange(index, dateCol + 1);
+    
+  } else if (((sheet.getSheetName() == 'Processos Base')) && (datecol > -1) && (updatecols.includes(editColumn)) && ((rngevent !== 'Publicado') && (editColumn == situacol)) || ((rngevent == 'Publicado') && (editColumn !== situacol)) || ((rngevent !== 'Publicado') && (editColumn !== situacol))) { 
+
+    var cellregistro = sheet.getRange(index, datecol);
     var date = Utilities.formatDate(new Date(), timezone, timestamp_format);
     cellregistro.setValue(date);
+    /*
     sheet.getRange('P1:P4').clear({contentsOnly: true, skipFilteredRows: true});
     sheet.getRange('P5').setValue('Última modificação');
+    */
+  } 
   
-  }
+  
+  } if (sheet.getName() != 'LIMITE'){
+    return
+  } else {
 
 
   // PLANILHA: LIMITE - Data de atualização do valor atualizado
@@ -146,7 +193,7 @@ function onEdit(event) {
     spreadsheet.getRange('D3:D60').clear({contentsOnly: true, skipFilteredRows: true});
     spreadsheet.getRange('D1').setValue('Última Atualização'); // Atenção ao nome diferente dos outros códigos
   }
-
+  }
 
   //Limpar células na consulta
 
