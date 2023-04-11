@@ -1,11 +1,15 @@
-// Olá! Código feito por Vinícius - Estagiário SOP/SEPLAG/AL - Insta: @vinicius.ventura_ - Github: https://github.com/viniventur
-// Código de Appscript do Planilhas Google (Google Sheets)
-// Última atualização: 10/04/2023
+/* 
+Olá! Código feito por Vinícius - Estagiário SEOP/SEPLAG/AL - Insta: @vinicius.ventura_ - Github: https://github.com/viniventur
+Código de Appscript do Planilhas Google (Google Sheets)
+Última atualização: 11/04/2023
+*/
 
 /** @OnlyCurrentDoc */
 
 // Função de registro de processos na base
+
 function REGBASE() {
+
   var data = Utilities.formatDate(new Date(), "GMT-3", "dd/MM/yyyy HH:mm");
   var spreadsheet = SpreadsheetApp.getActive();
   var sit = spreadsheet.getRange('B3').getValue()
@@ -62,6 +66,7 @@ function adlinhas() {
   spreadsheet.getRange('B4:C4').copyTo(spreadsheet.getRange('B3:C3'), SpreadsheetApp.CopyPasteType.PASTE_FORMAT, false);
 };
 
+// funções onEdit
 
 function onEdit(event) { 
 
@@ -69,9 +74,7 @@ function onEdit(event) {
   
   var sheet = event.source.getActiveSheet();
   var indexevent = event.range.getRow();
-  if (indexevent < 6 || sheet.getName() != 'Processos Base') {
-    return;
-  } else {
+  if ((indexevent > 5) && (sheet.getName() == 'Processos Base')) {
 
   var spreadsheet = SpreadsheetApp.getActive();
   var ui = SpreadsheetApp.getUi();
@@ -99,16 +102,21 @@ function onEdit(event) {
 
   var rngevent = actRng.getValue();
   
-  if ((sheet.getSheetName() == 'Processos Base') && (datecol > -1) && (updatecols.includes(editColumn)) && ((rngevent == 'Publicado') && (editColumn == situacol))) {
+  if ((sheet.getSheetName() == 'Processos Base') && (datecol-2 > -1) && (updatecols.includes(editColumn)) && ((rngevent == 'Publicado') && (editColumn == situacol))) {
     var datapubinput = ui.prompt('Data de publicação:', ui.ButtonSet.OK_CANCEL);
     var entrada = datapubinput.getResponseText();
+    while (entrada == '' && !(datapubinput.getSelectedButton() == ui.Button.CANCEL)){
+        ui.alert("Insira uma data.")
+        datapubinput = ui.prompt('Data de publicação:', ui.ButtonSet.OK_CANCEL);
+        entrada = datapubinput.getResponseText();
+      
+      }
     if (datapubinput.getSelectedButton() == ui.Button.OK && entrada != '') {
       var pattern = /^(\d{2})\/(\d{2})\/(\d{4})$/;
       while (!pattern.test(entrada)){
         ui.alert("Formato inválido. Por favor, insira a data no formato dd/MM/yyyy.");
       datapubinput = ui.prompt('Data de publicação:', ui.ButtonSet.OK_CANCEL);
       entrada = datapubinput.getResponseText();
-
       } if (pattern.test(entrada)) {
           var cellregistropub = sheet.getRange(index, pubcol);
           var cellregistrodate = sheet.getRange(index, datecol);
@@ -123,7 +131,7 @@ function onEdit(event) {
       return; // usuário cancelou ou clicou em "X"
      }
     
-  } else if (((sheet.getSheetName() == 'Processos Base') && (datecol > -1) && (updatecols.includes(editColumn)) && ((rngevent == 'Aprovado CPOF') && (editColumn == situacol)))) {
+  } else if (((sheet.getSheetName() == 'Processos Base') && (datecol-2 > -1) && (updatecols.includes(editColumn)) && ((rngevent == 'Aprovado CPOF') && (editColumn == situacol)))) {
 
       var atainput = ui.prompt('Ata do CPOF:', ui.ButtonSet.OK_CANCEL);
       var entrada = atainput.getResponseText();
@@ -153,80 +161,83 @@ function onEdit(event) {
     }
 
     
-  } else if (((sheet.getSheetName() == 'Processos Base')) && (datecol > -1) && (updatecols.includes(editColumn)) && ((rngevent !== 'Publicado') && (editColumn == situacol)) || ((rngevent == 'Publicado') && (editColumn !== situacol)) || ((rngevent !== 'Publicado') && (editColumn !== situacol))) { 
+  } else if (((sheet.getSheetName() == 'Processos Base')) && (datecol-2 > -1) && (updatecols.includes(editColumn)) && ((rngevent !== 'Publicado') && (editColumn == situacol)) || ((rngevent == 'Publicado') && (editColumn !== situacol)) || ((rngevent !== 'Publicado') && (editColumn !== situacol))) { 
 
     var cellregistro = sheet.getRange(index, datecol);
     var date = Utilities.formatDate(new Date(), timezone, timestamp_format);
     cellregistro.setValue(date);
-    /*
-    sheet.getRange('P1:P4').clear({contentsOnly: true, skipFilteredRows: true});
-    sheet.getRange('P5').setValue('Última modificação');
-    */
-  } 
+    }
+
+    // fim codigo 3
+
+    var sheet = event.source.getActiveSheet();
+    var indexevent = event.range.getRow();
+
+    // PLANILHA: LIMITE - Data de atualização do valor atualizado
+
+  } else if ((indexevent == 2) && (sheet.getName() == 'LIMITE')) {
+
+    var spreadsheet = SpreadsheetApp.getActive();
+    var timezone = "GMT-3";
+    var timestamp_format = "dd/MM/yyyy HH:mm:ss";
+    var updateColName1 = "Valor Utilizado";
+    var timeStampColName = "Última Atualização"; // Atenção ao nome diferente dos outros códigos
+    var sheet = event.source.getSheetByName('LIMITE'); //Nome da planilha onde você vai rodar este script.
+    var actRng = event.source.getActiveRange();
+    var editColumn = actRng.getColumn();
+    var index = actRng.getRowIndex();
+    var headers = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues();
+    var datecol = headers[0].indexOf(timeStampColName)+1;
+    var updatecol = headers[0].indexOf(updateColName1)+1;
+    if ((datecol-1 > -1) && (editColumn == updatecol) && (spreadsheet.getSheetName() == 'LIMITE')) {
+      var cell = sheet.getRange(index, datecol);
+      var date = Utilities.formatDate(new Date(), timezone, timestamp_format);
+      cell.setValue(date);
+      
+    }
+
+    // fim codigo 2
   
-  
-  } if (sheet.getName() != 'LIMITE'){
-    return
+    var sheet = event.source.getActiveSheet();
+    
+    //Limpar células na consulta
+
+  } else if (sheet.getName() == 'Consultas') {
+
+    var spreadsheet = SpreadsheetApp.getActive();
+    var sheet = event.source.getSheetByName('Consultas');
+    var sheetconsult = spreadsheet.getSheetByName('Consultas');
+    var valrangeevent = event.source.getActiveRange().getValue();
+    var valrangeselect = sheetconsult.getRange(3, 4, 1, 1).getValue();
+    if ((sheet.getName() == 'Consultas') && (valrangeevent == valrangeselect)) {
+    spreadsheet.getRange('\'Consultas\'!C5:C7').clear({contentsOnly: true, skipFilteredRows: true});   
+    }
+
+    // fim codigo 3
+
   } else {
+    return
+  } 
 
+} // fim onEdit
 
-  // PLANILHA: LIMITE - Data de atualização do valor atualizado
-  
-  var email = MailApp;
-  var timezone = "GMT-3";
-  var timestamp_format = "dd/MM/yyyy HH:mm:ss"; // Timestamp Format. 
-  var updateColName1 = "Valor Utilizado";
-  //var updateColName2 = "Valores";
-  var timeStampColName = "Última Atualização"; // Atenção ao nome diferente dos outros códigos
-  var sheet = event.source.getSheetByName('LIMITE'); //Nome da planilha onde você vai rodar este script.
-  var actRng = event.source.getActiveRange();
-  var editColumn = actRng.getColumn();
-  var index = actRng.getRowIndex();
-  var headers = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues();
-  var dateCol = headers[0].indexOf(timeStampColName);
-  var updateCol = headers[0].indexOf(updateColName1); updateCol = updateCol+1;
-  //var updateCol2 = headers[0].indexOf(updateColName1); updateCol2 = updateCol2+1;
-  if (dateCol > -1 && index > 1 && editColumn == updateCol && spreadsheet.getSheetName() == 'LIMITE') { // only timestamp if 'Last Updated' header exists, but not in the header row itself!
-    var cell = sheet.getRange(index, dateCol + 1);
-    var date = Utilities.formatDate(new Date(), timezone, timestamp_format);
-    cell.setValue(date);
-    spreadsheet.getRange('D3:D60').clear({contentsOnly: true, skipFilteredRows: true});
-    spreadsheet.getRange('D1').setValue('Última Atualização'); // Atenção ao nome diferente dos outros códigos
-  }
-  }
-
-  //Limpar células na consulta
-
-  var spreadsheet = SpreadsheetApp.getActive();
-  var sheet = event.source.getActiveSheet();
-  var sheeteve = event.source.getSheetByName('Consultas');
-  var sheetevename = sheeteve.getSheetName();
-  var spreadsheetconsult = spreadsheet.getSheetByName('Consultas');
-  var ssname = spreadsheetconsult.getSheetName();
-  var rngevent = event.source.getActiveRange().getValue();
-  if (ssname == sheetevename && rngevent == 'UO' || rngevent == 'UG' || rngevent == 'FONTE' || rngevent == 'Fonte Siconfi') {
-  spreadsheet.getRange('\'Consultas\'!C5:C7').clear({contentsOnly: true, skipFilteredRows: true});   
-  }
-
-}
+// função de enviar email
 
 function enviaremail() {
-  app = SpreadsheetApp
-  ssp = app.getActiveSpreadsheet()
-  ss = ssp.getSheetByName("LIMITE")
-  valoruti = ss.getRange("B4").getDisplayValue();
-  porcentoorca = ssp.getSheetByName("GERAL").getRange("F9").getDisplayValue();
-  ultatua = ss.getRange("D2").getDisplayValue();
-  //var values = ss.getRange("J2:J").getValues();
-  //var values = ss.getDataRange().getValues();
-  email = ss.getRange("I2").getValue();
-  //for (var r = 0; r < values.length; r++){
+  var app = SpreadsheetApp
+  var ssp = app.getActiveSpreadsheet()
+  var ss = ssp.getSheetByName("LIMITE")
+  var valoruti = ss.getRange("B4").getDisplayValue();
+  var porcentoorca = ssp.getSheetByName("GERAL").getRange("F9").getDisplayValue();
+  var ultatua = ss.getRange("D2").getDisplayValue();
+  var email = ss.getRange("I2").getValue();
   var mail = MailApp;
-  //if (r > 0 && r[9] != "") {
 
   mail.sendEmail(email, "Limite Usado: "+porcentoorca+" - Valor: "+valoruti+" - LIMITE DE CRÉDITO - ATUALIZAÇÃO", "Atenção: email enviado manualmente a partir do valor atualizado na planilha, portanto, não vem diretamente do SIAFE. \n\nÚltima atualização: "+ultatua);
   
 }
+
+// função de atualizar filtragem manual 1 - superintendente
 
 function atualizarsuperintendente() {
   var spreadsheet = SpreadsheetApp.getActive();
@@ -255,6 +266,8 @@ function atualizarsuperintendente() {
   }
 };
 
+// função de atualizar filtragem manual 2 - geral
+
 function atualizarfiltromanual() {
   var spreadsheet = SpreadsheetApp.getActive();
   var data = Utilities.formatDate(new Date(), "GMT-3", "dd/MM/yyyy HH:mm");
@@ -276,6 +289,8 @@ function atualizarfiltromanual() {
   spreadsheet.getRange('T1').setValue(data);
   spreadsheet.getRange('A2').activate();
 }};
+
+// função de atualizar filtragem de relatório em texto
 
 function atualizarrelatotexto() {
   var spreadsheet = SpreadsheetApp.getActive();
