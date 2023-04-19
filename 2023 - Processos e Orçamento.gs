@@ -1,7 +1,7 @@
 /* 
-Olá! Código feito por Vinícius - Estagiário SEOP/SEPLAG/AL - Insta: @vinicius.ventura_ - Github: https://github.com/viniventur
+Olá! Código feito por Vinícius Ventura - Estagiário SEOP/SEPLAG/AL - Insta: @vinicius.ventura_ - Github: https://github.com/viniventur
 Código de Appscript do Planilhas Google (Google Sheets)
-Última atualização: 11/04/2023
+Última atualização: 19/04/2023
 */
 
 /** @OnlyCurrentDoc */
@@ -16,12 +16,17 @@ function REGBASE() {
   var orig = spreadsheet.getRange('C3').getValue()
   var orgaov = spreadsheet.getRange('D3').getValue()
   var nproc = spreadsheet.getRange('E3').getValue()
-  var fonte = spreadsheet.getRange('F3').getValue()
-  var gd = spreadsheet.getRange('G3').getValue()
-  var valor = spreadsheet.getRange('H3').getValue()
-  var objet = spreadsheet.getRange('I3').getValue()
-  var datarec = spreadsheet.getRange('N3').getValue()
-  var datapub = spreadsheet.getRange('O3').getValue()
+  var credtipo = spreadsheet.getRange('F3').getValue()
+  var fonte = spreadsheet.getRange('G3').getValue()
+  var gd = spreadsheet.getRange('H3').getValue()
+  var valor = spreadsheet.getRange('I3').getValue()
+  var objet = spreadsheet.getRange('J3').getValue()
+  var datarec = spreadsheet.getRange('O3').getValue()
+  var headerreg = spreadsheet.getRange('\'Processos Base\'!B3:P3');
+  var regbios = spreadsheet.getRange('\'BIOS\'!J2:X2')
+  var novregdata = spreadsheet.getRange('\'Processos Base\'!Q6');
+  var mesanobios = spreadsheet.getRange('\'BIOS\'!Z2:AA2');
+  var mesanoreg = spreadsheet.getRange('\'Processos Base\'!R6:S6')
   var ultlinha = spreadsheet.getLastRow()
   var processos = []; //para adição do loop dos processos
   var sheet = spreadsheet.getSheetByName('Processos Base')
@@ -35,10 +40,10 @@ function REGBASE() {
   if (nproc == "") {
     SpreadsheetApp.getUi().alert("Requisitos obrigatórios vazios!");
     return;
-  } else if ((sit == "" || orig == "" || orgaov == "" || nproc == "" || fonte == "" || gd == "" || valor == "" || objet == ""|| datarec == "") && (processos.indexOf(numproc) < 0)) {
+  } else if ((sit == "" || orig == "" || orgaov == "" || nproc == "" || credtipo == "" || fonte == "" || gd == "" || valor == "" || objet == ""|| datarec == "") && (processos.indexOf(numproc) < 0)) {
     SpreadsheetApp.getUi().alert("Requisitos obrigatórios vazios!");
     return;
-  } else if ((sit == "" || orig == "" || orgaov == "" || fonte == "" || gd == "" || valor == "" || objet == ""|| datarec == "") && (processos.indexOf(numproc) >= 0)) {
+  } else if ((sit == "" || orig == "" || orgaov == "" || nproc == "" || credtipo == "" || fonte == "" || gd == "" || valor == "" || objet == ""|| datarec == "") && (processos.indexOf(numproc) >= 0)) {
   SpreadsheetApp.getUi().alert("Processo já consta na base!");
     return;
   } else if (processos.indexOf(numproc) >= 0) {
@@ -48,12 +53,12 @@ function REGBASE() {
   spreadsheet.getRange('6:6').activate();
   spreadsheet.getActiveSheet().insertRowsBefore(spreadsheet.getActiveRange().getRow(), 1);
   spreadsheet.getActiveRange().offset(0, 0, 1, spreadsheet.getActiveRange().getNumColumns()).activate();
-  spreadsheet.getRange('B3:O3').copyTo(spreadsheet.getRange('B6'), SpreadsheetApp.CopyPasteType.PASTE_VALUES, false);
-  spreadsheet.getRange('P6').setValue(data);
-  spreadsheet.getRange('\'BIOS\'!X2:Y2').copyTo(spreadsheet.getRange('\'Processos Base\'!Q6:R6'), SpreadsheetApp.CopyPasteType.PASTE_FORMULA, false);
-  spreadsheet.getRange('B3:O3').clear({contentsOnly: true, skipFilteredRows: true});
+  headerreg.copyTo(spreadsheet.getRange('B6'), SpreadsheetApp.CopyPasteType.PASTE_VALUES, false);
+  novregdata.setValue(data);
+  mesanobios.copyTo(mesanoreg, SpreadsheetApp.CopyPasteType.PASTE_FORMULA, false);
+  headerreg.clear({contentsOnly: true, skipFilteredRows: true});
   //spreadsheet.getRange('O5').setValue('Última modificação');
-  spreadsheet.getRange('\'BIOS\'!I2:V2').copyTo(spreadsheet.getRange('\'Processos Base\'!B3:O3'), SpreadsheetApp.CopyPasteType.PASTE_FORMAT, false);
+  regbios.copyTo(headerreg, SpreadsheetApp.CopyPasteType.PASTE_FORMAT, false);
   spreadsheet.getRange('B3').activate();
   }
 };
@@ -145,16 +150,18 @@ function onEdit(event) {
               
         var cellregistroata = sheet.getRange(index, obscol);
         var cellregistrodate = sheet.getRange(index, datecol);
+        entrada = atainput.getResponseText();
         var date = Utilities.formatDate(new Date(), timezone, timestamp_format);
-        if (cellregistroata == '') {
+        if (cellregistroata.getValue() == '') {
         
           cellregistroata.setValue('Ata ' + entrada);
           cellregistrodate.setValue(date);
         
         } else {
-          
+
           cellregistroata.setValue('Ata ' + entrada + '\n' + cellregistroata.getValues());
           cellregistrodate.setValue(date)
+
         }
       } else {
       return; // usuário cancelou ou clicou em "X"
@@ -242,26 +249,28 @@ function enviaremail() {
 function atualizarsuperintendente() {
   var spreadsheet = SpreadsheetApp.getActive();
   var data = Utilities.formatDate(new Date(), "GMT-3", "dd/MM/yyyy HH:mm");
-  if (spreadsheet.getRange('B2:R2').getFilter() == null) {
+  var header = spreadsheet.getRange('\'FILTRAGEM - SUPERINTENDÊNCIA\'!B2:S2');
+  var dadosbase = spreadsheet.getRange('\'Processos Base\'!B5:S')
+  var dadosfiltro = spreadsheet.getRange('\'FILTRAGEM - SUPERINTENDÊNCIA\'!B2:S')
+  var datacel = spreadsheet.getRange('U1');
+  if (header.getFilter() == null) {
     sheet = spreadsheet.getSheetByName('FILTRAGEM - SUPERINTENDÊNCIA');
     intev = sheet.getRange(3, 2, sheet.getLastRow(), 16);
     intev.clear({contentsOnly: true, skipFilteredRows: true});
-    spreadsheet.getRange('\'Processos Base\'!B5:R').copyTo(spreadsheet.getRange('\'FILTRAGEM - SUPERINTENDÊNCIA\'!B2:R2'), SpreadsheetApp.CopyPasteType. PASTE_VALUES, false);
-    spreadsheet.getRange('B2:R').createFilter();
-    spreadsheet.getRange('T1').setValue(data);
-    //var criteria = SpreadsheetApp.newFilterCriteria().setHiddenValues(['', '(BLOCOS) Finalizado/Aguardando assinatura', 'Aguardando análise no CPOF', 'Aguardando publicação', 'Aprovado CPOF', 'Em análise', 'Em análise na SEFAZ', 'Em produção - Decreto', 'Em produção - Despacho', 'Na Unidade', 'Não reconhecido pela SEFAZ', 'Publicado', 'Reconhecido pela SEFAZ']).build();
-    //spreadsheet.getActiveSheet().getFilter().setColumnFilterCriteria(2, criteria);
+    dadosbase.copyTo(header, SpreadsheetApp.CopyPasteType. PASTE_VALUES, false);
+    dadosbase.copyTo(header, SpreadsheetApp.CopyPasteType. PASTE_FORMAT, false);
+    dadosfiltro.createFilter();
+    datacel.setValue(data);
     spreadsheet.getRange('A2').activate();
   } else {
     spreadsheet.getActiveSheet().getFilter().remove();
     sheet = spreadsheet.getSheetByName('FILTRAGEM - SUPERINTENDÊNCIA');
     intev = sheet.getRange(3, 2, sheet.getLastRow(), 15);
     intev.clear({contentsOnly: true, skipFilteredRows: true});
-    spreadsheet.getRange('\'Processos Base\'!B5:R').copyTo(spreadsheet.getRange('\'FILTRAGEM - SUPERINTENDÊNCIA\'!B2:R2'), SpreadsheetApp.CopyPasteType. PASTE_VALUES, false);
-    spreadsheet.getRange('B2:R').createFilter();
-    spreadsheet.getRange('T1').setValue(data);
-  //var criteria = SpreadsheetApp.newFilterCriteria().setHiddenValues(['', '(BLOCOS) Finalizado/Aguardando assinatura', 'Aguardando análise no CPOF', 'Aguardando publicação', 'Aprovado CPOF', 'Em análise', 'Em análise na SEFAZ', 'Em produção - Decreto', 'Em produção - Despacho', 'Na Unidade', 'Não reconhecido pela SEFAZ', 'Publicado', 'Reconhecido pela SEFAZ']).build();
-  //spreadsheet.getActiveSheet().getFilter().setColumnFilterCriteria(2, criteria);
+    dadosbase.copyTo(header, SpreadsheetApp.CopyPasteType. PASTE_VALUES, false);
+    dadosbase.copyTo(header, SpreadsheetApp.CopyPasteType. PASTE_FORMAT, false);
+    dadosfiltro.createFilter();
+    datacel.setValue(data);
     spreadsheet.getRange('A2').activate();
   }
 };
@@ -271,34 +280,46 @@ function atualizarsuperintendente() {
 function atualizarfiltromanual() {
   var spreadsheet = SpreadsheetApp.getActive();
   var data = Utilities.formatDate(new Date(), "GMT-3", "dd/MM/yyyy HH:mm");
-  if (spreadsheet.getRange('B2:R2').getFilter() == null) {
+  var header = spreadsheet.getRange('\'FILTRAGEM - Atualização Manual\'!B2:S2');
+  var dadosbase = spreadsheet.getRange('\'Processos Base\'!B5:S')
+  var dadosfiltro = spreadsheet.getRange('\'FILTRAGEM - Atualização Manual\'!B2:S')
+  var datacel = spreadsheet.getRange('U1');
+ if (header.getFilter() == null) {
     sheet = spreadsheet.getSheetByName('FILTRAGEM - Atualização Manual');
     intev = sheet.getRange(3, 2, sheet.getLastRow(), 16);
     intev.clear({contentsOnly: true, skipFilteredRows: true});
-    spreadsheet.getRange('\'Processos Base\'!B5:R').copyTo(spreadsheet.getRange('\'FILTRAGEM - Atualização Manual\'!B2:R2'), SpreadsheetApp.CopyPasteType.PASTE_VALUES, false);
-    spreadsheet.getRange('B2:R').createFilter();
-    spreadsheet.getRange('T1').setValue(data);
+    dadosbase.copyTo(header, SpreadsheetApp.CopyPasteType. PASTE_VALUES, false);
+    dadosbase.copyTo(header, SpreadsheetApp.CopyPasteType. PASTE_FORMAT, false);
+    dadosfiltro.createFilter();
+    datacel.setValue(data);
     spreadsheet.getRange('A2').activate();
-  } else { 
+  } else {
     spreadsheet.getActiveSheet().getFilter().remove();
     sheet = spreadsheet.getSheetByName('FILTRAGEM - Atualização Manual');
-    intev = sheet.getRange(3, 2, sheet.getLastRow(), 16);
+    intev = sheet.getRange(3, 2, sheet.getLastRow(), 15);
     intev.clear({contentsOnly: true, skipFilteredRows: true});
-  spreadsheet.getRange('\'Processos Base\'!B5:R').copyTo(spreadsheet.getRange('\'FILTRAGEM - Atualização Manual\'!B2:R2'), SpreadsheetApp.CopyPasteType.PASTE_VALUES, false);
-  spreadsheet.getRange('B2:R').createFilter();
-  spreadsheet.getRange('T1').setValue(data);
-  spreadsheet.getRange('A2').activate();
-}};
+    dadosbase.copyTo(header, SpreadsheetApp.CopyPasteType. PASTE_VALUES, false);
+    dadosbase.copyTo(header, SpreadsheetApp.CopyPasteType. PASTE_FORMAT, false);
+    dadosfiltro.createFilter();
+    datacel.setValue(data);
+    spreadsheet.getRange('A2').activate();
+  }
+};
 
 // função de atualizar filtragem de relatório em texto
 
 function atualizarrelatotexto() {
   var spreadsheet = SpreadsheetApp.getActive();
   var data = Utilities.formatDate(new Date(), "GMT-3", "dd/MM/yyyy HH:mm");
+  var dadosfiltrosantestipo = spreadsheet.getRange('\'FILTRAGEM - Atualização Manual\'!B2:E')
+  var dadosfiltrodepoistipo = spreadsheet.getRange('\'FILTRAGEM - Atualização Manual\'!G2:J')
+  var dadosreltexto1 = spreadsheet.getRange('\'RELATORIO EM TEXTO\'!B4:E')
+  var dadosreltexto2 = spreadsheet.getRange('\'RELATORIO EM TEXTO\'!F4:I')
   sheet = spreadsheet.getSheetByName('RELATORIO EM TEXTO');
   intev = sheet.getRange(5, 2, sheet.getLastRow(), 7);
   intev.clear({contentsOnly: true, skipFilteredRows: true});
-  spreadsheet.getRange('\'FILTRAGEM - Atualização Manual\'!B2:I').copyTo(spreadsheet.getRange('\'RELATORIO EM TEXTO\'!B4:I4'), SpreadsheetApp.CopyPasteType.PASTE_VALUES, false);
+  dadosfiltrosantestipo.copyTo(dadosreltexto1, SpreadsheetApp.CopyPasteType.PASTE_VALUES, false);
+  dadosfiltrodepoistipo.copyTo(dadosreltexto2, SpreadsheetApp.CopyPasteType.PASTE_VALUES, false);
   spreadsheet.getRange('K2').setValue(data);
   spreadsheet.getRange('D3').activate();
 }
