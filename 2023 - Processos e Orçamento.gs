@@ -12,16 +12,14 @@ function REGBASE() {
 
   var data = Utilities.formatDate(new Date(), "GMT-3", "dd/MM/yyyy HH:mm");
   var spreadsheet = SpreadsheetApp.getActive();
+  var headerval1 = spreadsheet.getRange('B3:J3').getValues() 
+  var headerval2 = spreadsheet.getRange('O3').getValues()
+  var headerval = headerval1[0].concat(headerval2[0])
   var sit = spreadsheet.getRange('B3').getValue()
-  var orig = spreadsheet.getRange('C3').getValue()
-  var orgaov = spreadsheet.getRange('D3').getValue()
   var nproc = spreadsheet.getRange('E3').getValue()
-  var credtipo = spreadsheet.getRange('F3').getValue()
-  var fonte = spreadsheet.getRange('G3').getValue()
-  var gd = spreadsheet.getRange('H3').getValue()
-  var valor = spreadsheet.getRange('I3').getValue()
-  var objet = spreadsheet.getRange('J3').getValue()
-  var datarec = spreadsheet.getRange('O3').getValue()
+  var obs = spreadsheet.getRange('K3').getDisplayValue()
+  var datarec = spreadsheet.getRange('O3').getDisplayValue()
+  var datapub = spreadsheet.getRange('P3').getDisplayValue()
   var headerreg = spreadsheet.getRange('\'Processos Base\'!B3:P3');
   var regbios = spreadsheet.getRange('\'BIOS\'!J2:X2')
   var novregdata = spreadsheet.getRange('\'Processos Base\'!Q6');
@@ -31,19 +29,33 @@ function REGBASE() {
   var processos = []; //para adição do loop dos processos
   var sheet = spreadsheet.getSheetByName('Processos Base')
   var numproc = sheet.getRange(3, 5).getValue();
+  var regexata = /ata\s\d+/;
+  var regexdata = /^(\d{2})\/(\d{2})\/(\d{4})$/;
 
   for (var i = 5; i <= ultlinha; i++) {
   let valores = sheet.getRange(i+1,5).getValue();
   processos.push(valores)
   }
-  
+
   if (nproc == "") {
     SpreadsheetApp.getUi().alert("Requisitos obrigatórios vazios!");
     return;
-  } else if ((sit == "" || orig == "" || orgaov == "" || nproc == "" || credtipo == "" || fonte == "" || gd == "" || valor == "" || objet == ""|| datarec == "") && (processos.indexOf(numproc) < 0)) {
+  } else if ((headerval.indexOf("") > -1)) {
     SpreadsheetApp.getUi().alert("Requisitos obrigatórios vazios!");
     return;
-  } else if ((sit == "" || orig == "" || orgaov == "" || nproc == "" || credtipo == "" || fonte == "" || gd == "" || valor == "" || objet == ""|| datarec == "") && (processos.indexOf(numproc) >= 0)) {
+  } else if ((headerval.indexOf("") == -1) && (processos.indexOf(numproc) < 0) && (!(regexdata.test(datarec)))) {
+    SpreadsheetApp.getUi().alert("Formato inválido. Por favor, insira datas no formato dd/mm/yyyy.");
+    return;
+  } else if ((sit == "Publicado") && (datapub == "") && (headerval.indexOf("") == -1) && (processos.indexOf(numproc) < 0)) {
+    SpreadsheetApp.getUi().alert("Insira a data de publicação.");
+    return;
+  } else if ((sit == "Publicado") && (!(regexdata.test(datapub))) && (headerval.indexOf("") == -1) && (processos.indexOf(numproc) < 0)) {
+    SpreadsheetApp.getUi().alert("Formato inválido. Por favor, insira datas no formato dd/mm/yyyy.");
+    return;
+  } else if ((sit == "Aprovado CPOF") && (headerval.indexOf("") == -1) && (!(regexata.test(obs.toLowerCase())))) {
+    SpreadsheetApp.getUi().alert('Insira a ata do CPOF no texto da observação (exemplo: "Ata 10").');
+    return;
+  } else if ((headerval.indexOf("") == -1) && (processos.indexOf(numproc) >= 0)) {
   SpreadsheetApp.getUi().alert("Processo já consta na base!");
     return;
   } else if (processos.indexOf(numproc) >= 0) {
@@ -111,7 +123,7 @@ function onEdit(event) {
     var datapubinput = ui.prompt('Data de publicação:', ui.ButtonSet.OK_CANCEL);
     var entrada = datapubinput.getResponseText();
     while (entrada == '' && !(datapubinput.getSelectedButton() == ui.Button.CANCEL)){
-        ui.alert("Insira uma data.")
+        ui.alert("Insira a data de publicação.")
         datapubinput = ui.prompt('Data de publicação:', ui.ButtonSet.OK_CANCEL);
         entrada = datapubinput.getResponseText();
       
@@ -119,7 +131,7 @@ function onEdit(event) {
     if (datapubinput.getSelectedButton() == ui.Button.OK && entrada != '') {
       var pattern = /^(\d{2})\/(\d{2})\/(\d{4})$/;
       while (!pattern.test(entrada)){
-        ui.alert("Formato inválido. Por favor, insira a data no formato dd/MM/yyyy.");
+        ui.alert("Formato inválido. Por favor, insira a data no formato dd/mm/yyyy.");
       datapubinput = ui.prompt('Data de publicação:', ui.ButtonSet.OK_CANCEL);
       entrada = datapubinput.getResponseText();
       } if (pattern.test(entrada)) {
@@ -129,7 +141,7 @@ function onEdit(event) {
           cellregistropub.setValue(entrada);
           cellregistrodate.setValue(date);
         } else {
-        ui.alert("Formato inválido. Por favor, insira a data no formato dd/MM/yyyy.")
+        ui.alert("Formato inválido. Por favor, insira a data no formato dd/mm/yyyy.")
         return;
         }
       } else {
