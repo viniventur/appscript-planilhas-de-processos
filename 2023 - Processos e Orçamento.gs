@@ -1,7 +1,7 @@
 /* 
 Olá! Código feito por Vinícius Ventura - Estagiário SEOP/SEPLAG/AL - Insta: @vinicius.ventura_ - Github: https://github.com/viniventur
 Código de Appscript do Planilhas Google (Google Sheets)
-Última atualização: 19/04/2023
+Última atualização: 26/04/2023
 */
 
 /** @OnlyCurrentDoc */
@@ -273,7 +273,6 @@ function atualizarsuperintendente() {
     dadosbase.copyTo(header, SpreadsheetApp.CopyPasteType. PASTE_FORMAT, false);
     dadosfiltro.createFilter();
     datacel.setValue(data);
-    spreadsheet.getRange('A2').activate();
   } else {
     spreadsheet.getActiveSheet().getFilter().remove();
     sheet = spreadsheet.getSheetByName('FILTRAGEM - SUPERINTENDÊNCIA');
@@ -283,7 +282,6 @@ function atualizarsuperintendente() {
     dadosbase.copyTo(header, SpreadsheetApp.CopyPasteType. PASTE_FORMAT, false);
     dadosfiltro.createFilter();
     datacel.setValue(data);
-    spreadsheet.getRange('A2').activate();
   }
 };
 
@@ -304,7 +302,6 @@ function atualizarfiltromanual() {
     dadosbase.copyTo(header, SpreadsheetApp.CopyPasteType. PASTE_FORMAT, false);
     dadosfiltro.createFilter();
     datacel.setValue(data);
-    spreadsheet.getRange('A2').activate();
   } else {
     spreadsheet.getActiveSheet().getFilter().remove();
     sheet = spreadsheet.getSheetByName('FILTRAGEM - Atualização Manual');
@@ -314,7 +311,6 @@ function atualizarfiltromanual() {
     dadosbase.copyTo(header, SpreadsheetApp.CopyPasteType. PASTE_FORMAT, false);
     dadosfiltro.createFilter();
     datacel.setValue(data);
-    spreadsheet.getRange('A2').activate();
   }
 };
 
@@ -332,6 +328,8 @@ function atualizarrelatotexto() {
   intev.clear({contentsOnly: true, skipFilteredRows: true});
   dadosfiltrosantestipo.copyTo(dadosreltexto1, SpreadsheetApp.CopyPasteType.PASTE_VALUES, false);
   dadosfiltrodepoistipo.copyTo(dadosreltexto2, SpreadsheetApp.CopyPasteType.PASTE_VALUES, false);
+  dadosfiltrosantestipo.copyTo(dadosreltexto1, SpreadsheetApp.CopyPasteType.PASTE_FORMAT, false);
+  dadosfiltrodepoistipo.copyTo(dadosreltexto2, SpreadsheetApp.CopyPasteType.PASTE_FORMAT, false);
   spreadsheet.getRange('K2').setValue(data);
   spreadsheet.getRange('D3').activate();
 }
