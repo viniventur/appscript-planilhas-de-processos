@@ -1,7 +1,7 @@
 /* 
 Olá! Código feito por Vinícius Ventura - Estagiário SEOP/SEPLAG/AL - Insta: @vinicius.ventura_ - Github: https://github.com/viniventur
 Código de Appscript do Planilhas Google (Google Sheets)
-Última atualização: 26/04/2023
+Última atualização: 02/05/2023
 */
 
 /** @OnlyCurrentDoc */
@@ -52,8 +52,8 @@ function REGBASE() {
   } else if ((sit == "Publicado") && (!(regexdata.test(datapub))) && (headerval.indexOf("") == -1) && (processos.indexOf(numproc) < 0)) {
     SpreadsheetApp.getUi().alert("Formato inválido. Por favor, insira datas no formato dd/mm/yyyy.");
     return;
-  } else if ((sit == "Aprovado CPOF") && (headerval.indexOf("") == -1) && (!(regexata.test(obs.toLowerCase())))) {
-    SpreadsheetApp.getUi().alert('Insira a ata do CPOF no texto da observação (exemplo: "Ata 10").');
+  } else if ((sit == "Aprovado - CPOF") && (headerval.indexOf("") == -1) && (!(regexata.test(obs.toLowerCase())))) {
+    SpreadsheetApp.getUi().alert('Insira o número da ata do CPOF (exemplo: "10" para ata 10).');
     return;
   } else if ((headerval.indexOf("") == -1) && (processos.indexOf(numproc) >= 0)) {
   SpreadsheetApp.getUi().alert("Processo já consta na base!");
@@ -148,7 +148,7 @@ function onEdit(event) {
       return; // usuário cancelou ou clicou em "X"
      }
     
-  } else if (((sheet.getSheetName() == 'Processos Base') && (datecol-2 > -1) && (updatecols.includes(editColumn)) && ((rngevent == 'Aprovado CPOF') && (editColumn == situacol)))) {
+  } else if (((sheet.getSheetName() == 'Processos Base') && (datecol-2 > -1) && (updatecols.includes(editColumn)) && ((rngevent == 'Aprovado - CPOF') && (editColumn == situacol)))) {
 
       var atainput = ui.prompt('Ata do CPOF:', ui.ButtonSet.OK_CANCEL);
       var entrada = atainput.getResponseText();
