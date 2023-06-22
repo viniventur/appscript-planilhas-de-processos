@@ -1,7 +1,7 @@
 /* 
 Olá! Código feito por Vinícius Ventura - Estagiário SEOP/SEPLAG/AL - Insta: @vinicius.ventura_ - Github: https://github.com/viniventur
 Código de Appscript do Planilhas Google (Google Sheets)
-Última atualização: 02/05/2023
+Última atualização: 22/06/2023
 */
 
 /** @OnlyCurrentDoc */
@@ -12,25 +12,27 @@ function REGBASE() {
 
   var data = Utilities.formatDate(new Date(), "GMT-3", "dd/MM/yyyy HH:mm");
   var spreadsheet = SpreadsheetApp.getActive();
-  var headerval1 = spreadsheet.getRange('B3:J3').getValues() 
-  var headerval2 = spreadsheet.getRange('O3').getValues()
-  var headerval = headerval1[0].concat(headerval2[0])
+  var headerval1 = spreadsheet.getRange('B3:J3').getValues() // VALORES PARA REGISTRO ATÉ OBJ - OBRIGATORIO
+  var headerval2 = spreadsheet.getRange('O3').getValues() // VALOR DE RECEBIMENTO PARA REGISTRO - OBRIGATORIO
+  var headerval = headerval1[0].concat(headerval2[0]) // REGISTROS OBRIGATÓRIOS
   var sit = spreadsheet.getRange('B3').getValue()
   var nproc = spreadsheet.getRange('E3').getValue()
   var obs = spreadsheet.getRange('K3').getDisplayValue()
   var datarec = spreadsheet.getRange('O3').getDisplayValue()
   var datapub = spreadsheet.getRange('P3').getDisplayValue()
-  var headerreg = spreadsheet.getRange('\'Processos Base\'!B3:P3');
-  var regbios = spreadsheet.getRange('\'BIOS\'!J2:X2')
-  var novregdata = spreadsheet.getRange('\'Processos Base\'!Q6');
-  var mesanobios = spreadsheet.getRange('\'BIOS\'!Z2:AA2');
-  var mesanoreg = spreadsheet.getRange('\'Processos Base\'!R6:S6')
+  var ndecreto = spreadsheet.getRange('Q3').getValue()
+  var headerreg = spreadsheet.getRange('\'Processos Base\'!B3:Q3'); // VALORES PARA REGISTRO TOTAL 
+  var regbios = spreadsheet.getRange('\'BIOS\'!J2:Y2')
+  var novregdata = spreadsheet.getRange('\'Processos Base\'!R6');
+  var mesanobios = spreadsheet.getRange('\'BIOS\'!AA2:AB2');
+  var mesanoreg = spreadsheet.getRange('\'Processos Base\'!S6:T6')
   var ultlinha = spreadsheet.getLastRow()
   var processos = []; //para adição do loop dos processos
   var sheet = spreadsheet.getSheetByName('Processos Base')
   var numproc = sheet.getRange(3, 5).getValue();
   var regexata = /ata\s\d+/;
   var regexdata = /^(\d{2})\/(\d{2})\/(\d{4})$/;
+  var padraonumerico = /^\d+(\.\d+)?$/;
 
   for (var i = 5; i <= ultlinha; i++) {
   let valores = sheet.getRange(i+1,5).getValue();
@@ -46,14 +48,26 @@ function REGBASE() {
   } else if ((headerval.indexOf("") == -1) && (processos.indexOf(numproc) < 0) && (!(regexdata.test(datarec)))) {
     SpreadsheetApp.getUi().alert("Formato inválido. Por favor, insira datas no formato dd/mm/yyyy.");
     return;
+  } else if ((sit != "Publicado") && (datapub != "") && (ndecreto != "") && (headerval.indexOf("") == -1) && (processos.indexOf(numproc) < 0)) {
+    SpreadsheetApp.getUi().alert("O processo não foi publicado, porém informações referentes à publicação foram registradas.");
+    return;
+  } else if ((sit == "Publicado") && (datapub == "") && (ndecreto == "") && (headerval.indexOf("") == -1) && (processos.indexOf(numproc) < 0)) {
+    SpreadsheetApp.getUi().alert("Insira as informações de publicação.");
+    return;
   } else if ((sit == "Publicado") && (datapub == "") && (headerval.indexOf("") == -1) && (processos.indexOf(numproc) < 0)) {
     SpreadsheetApp.getUi().alert("Insira a data de publicação.");
+    return;
+  } else if ((sit == "Publicado") && (ndecreto == "") && (headerval.indexOf("") == -1) && (processos.indexOf(numproc) < 0)) {
+    SpreadsheetApp.getUi().alert("Insira o número do decreto da publicação.");
     return;
   } else if ((sit == "Publicado") && (!(regexdata.test(datapub))) && (headerval.indexOf("") == -1) && (processos.indexOf(numproc) < 0)) {
     SpreadsheetApp.getUi().alert("Formato inválido. Por favor, insira datas no formato dd/mm/yyyy.");
     return;
+  } else if ((sit == "Publicado") && (!(padraonumerico.test(ndecreto))) && (headerval.indexOf("") == -1) && (processos.indexOf(numproc) < 0)) {
+    SpreadsheetApp.getUi().alert("Formato inválido. Por favor, insira apenas números no campo 'Nº do decreto'.");
+    return;
   } else if ((sit == "Aprovado - CPOF") && (headerval.indexOf("") == -1) && (!(regexata.test(obs.toLowerCase())))) {
-    SpreadsheetApp.getUi().alert('Insira o número da ata do CPOF (exemplo: "10" para ata 10).');
+    SpreadsheetApp.getUi().alert('Insira o número da ata do CPOF (exemplo: digite "10" para ata 10).');
     return;
   } else if ((headerval.indexOf("") == -1) && (processos.indexOf(numproc) >= 0)) {
   SpreadsheetApp.getUi().alert("Processo já consta na base!");
@@ -100,6 +114,7 @@ function onEdit(event) {
   var timestamp_format = "dd/MM/yyyy HH:mm:ss";
   var timeStampColName = "Última modificação";
   var pubcolname = "Data de publicação"
+  var decretocolname = "Nº do decreto"
   var obscolname = "Observação"
   var actRng = event.source.getActiveRange();
   var editColumn = actRng.getColumn();
@@ -108,6 +123,7 @@ function onEdit(event) {
   var situacol = sheet.getRange('B:B').getColumn();
   var datecol = headers[0].indexOf(timeStampColName)+2;
   var pubcol = headers[0].indexOf(pubcolname)+2;
+  var decretocol = headers[0].indexOf(decretocolname)+2;
   var obscol = headers[0].indexOf(obscolname)+2
   var updatecols = [];
 
@@ -120,42 +136,93 @@ function onEdit(event) {
   var rngevent = actRng.getValue();
   
   if ((sheet.getSheetName() == 'Processos Base') && (datecol-2 > -1) && (updatecols.includes(editColumn)) && ((rngevent == 'Publicado') && (editColumn == situacol))) {
-    var datapubinput = ui.prompt('Data de publicação:', ui.ButtonSet.OK_CANCEL);
-    var entrada = datapubinput.getResponseText();
-    while (entrada == '' && !(datapubinput.getSelectedButton() == ui.Button.CANCEL)){
-        ui.alert("Insira a data de publicação.")
-        datapubinput = ui.prompt('Data de publicação:', ui.ButtonSet.OK_CANCEL);
-        entrada = datapubinput.getResponseText();
-      
+    
+    // Input de data de publicação
+
+    var datapubinput = ''
+    var entradadatapub = ''
+    var datapubinput = ui.prompt('Data de publicação:', ui.ButtonSet.OK);
+    var entradadatapub = datapubinput.getResponseText();
+    var padraodata = /^(\d{2})\/(\d{2})\/(\d{4})$/;
+
+    if (datapubinput.getSelectedButton() == ui.Button.CLOSE) {
+        ui.alert("Registro de informações de publicações canceladas.")
+        return
+    } else {
+
+      while (((entradadatapub == '') || !(padraodata.test(entradadatapub)))) {
+
+        if (datapubinput.getSelectedButton() == ui.Button.CLOSE) {
+          ui.alert("Registro de informações de publicações canceladas.")
+          return
+        } else if ((entradadatapub == '')) {
+          ui.alert("Insira a data de publicação.")
+        } else if (!padraodata.test(entradadatapub)) {
+          ui.alert("Formato inválido. Por favor, insira a data no formato dd/mm/yyyy.");
+        }  
+
+        var datapubinput = ui.prompt('Data de publicação:', ui.ButtonSet.OK);
+        var entradadatapub = datapubinput.getResponseText();
+
       }
-    if (datapubinput.getSelectedButton() == ui.Button.OK && entrada != '') {
-      var pattern = /^(\d{2})\/(\d{2})\/(\d{4})$/;
-      while (!pattern.test(entrada)){
-        ui.alert("Formato inválido. Por favor, insira a data no formato dd/mm/yyyy.");
-      datapubinput = ui.prompt('Data de publicação:', ui.ButtonSet.OK_CANCEL);
-      entrada = datapubinput.getResponseText();
-      } if (pattern.test(entrada)) {
+
+      // Input de número do decreto
+
+      var entradandecreto = '';
+      var ndecretoinput = ''
+      var ndecretoinput = ui.prompt('Nº do decreto:', ui.ButtonSet.OK);
+      var entradandecreto = ndecretoinput.getResponseText();
+      var padraonumerico = /^\d+(\.\d+)?$/;
+
+      if (ndecretoinput.getSelectedButton() == ui.Button.CLOSE) {
+          ui.alert("Registro de número de decreto cancelado, apenas a data de publicação informada será inserida.")
           var cellregistropub = sheet.getRange(index, pubcol);
           var cellregistrodate = sheet.getRange(index, datecol);
           var date = Utilities.formatDate(new Date(), timezone, timestamp_format);
-          cellregistropub.setValue(entrada);
+          cellregistropub.setValue(entradadatapub);
           cellregistrodate.setValue(date);
-        } else {
-        ui.alert("Formato inválido. Por favor, insira a data no formato dd/mm/yyyy.")
-        return;
-        }
+          return
       } else {
-      return; // usuário cancelou ou clicou em "X"
-     }
+
+        while (((entradandecreto == '') || !(padraonumerico.test(entradandecreto)))) {
+
+          if (ndecretoinput.getSelectedButton() == ui.Button.CLOSE) {
+            ui.alert("Registro de número de decreto cancelado, apenas a data de publicação informada será inserida.")
+            var cellregistropub = sheet.getRange(index, pubcol);
+            var cellregistrodate = sheet.getRange(index, datecol);
+            var date = Utilities.formatDate(new Date(), timezone, timestamp_format);
+            cellregistropub.setValue(entradadatapub);
+            cellregistrodate.setValue(date);
+            return
+          } else if ((entradandecreto == '')) {
+            ui.alert("Insira o número do decreto.")
+          } else if (!padraonumerico.test(entradandecreto)) {
+            ui.alert("Formato inválido. Por favor, insira apenas números");
+          }
+
+          var ndecretoinput = ui.prompt('Nº do decreto:', ui.ButtonSet.OK);
+          var entradandecreto = ndecretoinput.getResponseText();
+
+        }
+
+        var cellregistropub = sheet.getRange(index, pubcol);
+        var cellregistrodecreto = sheet.getRange(index, decretocol);
+        var cellregistrodate = sheet.getRange(index, datecol);
+        var date = Utilities.formatDate(new Date(), timezone, timestamp_format);
+        cellregistropub.setValue(entradadatapub);
+        cellregistrodecreto.setValue(entradandecreto);
+        cellregistrodate.setValue(date);
+      }
+    }
     
   } else if (((sheet.getSheetName() == 'Processos Base') && (datecol-2 > -1) && (updatecols.includes(editColumn)) && ((rngevent == 'Aprovado - CPOF') && (editColumn == situacol)))) {
 
-      var atainput = ui.prompt('Ata do CPOF:', ui.ButtonSet.OK_CANCEL);
+      var atainput = ui.prompt('Ata do CPOF:', ui.ButtonSet.OK);
       var entrada = atainput.getResponseText();
 
-      while (entrada == '' && !(atainput.getSelectedButton() == ui.Button.CANCEL)){
+      while (entrada == '' && !(atainput.getSelectedButton() == ui.Button.CLOSE)){
         ui.alert("Insira uma ata.");
-        atainput = ui.prompt('Ata do CPOF:', ui.ButtonSet.OK_CANCEL);
+        atainput = ui.prompt('Ata do CPOF:', ui.ButtonSet.OK);
         entrada = atainput.getResponseText();
 
       } if (atainput.getSelectedButton() == ui.Button.OK && entrada != '') {
@@ -261,10 +328,10 @@ function enviaremail() {
 function atualizarsuperintendente() {
   var spreadsheet = SpreadsheetApp.getActive();
   var data = Utilities.formatDate(new Date(), "GMT-3", "dd/MM/yyyy HH:mm");
-  var header = spreadsheet.getRange('\'FILTRAGEM - SUPERINTENDÊNCIA\'!B2:S2');
-  var dadosbase = spreadsheet.getRange('\'Processos Base\'!B5:S')
-  var dadosfiltro = spreadsheet.getRange('\'FILTRAGEM - SUPERINTENDÊNCIA\'!B2:S')
-  var datacel = spreadsheet.getRange('U1');
+  var header = spreadsheet.getRange('\'FILTRAGEM - SUPERINTENDÊNCIA\'!B2:T2');
+  var dadosbase = spreadsheet.getRange('\'Processos Base\'!B5:T')
+  var dadosfiltro = spreadsheet.getRange('\'FILTRAGEM - SUPERINTENDÊNCIA\'!B2:T')
+  var datacel = spreadsheet.getRange('V1');
   if (header.getFilter() == null) {
     sheet = spreadsheet.getSheetByName('FILTRAGEM - SUPERINTENDÊNCIA');
     intev = sheet.getRange(3, 2, sheet.getLastRow(), 16);
@@ -290,10 +357,10 @@ function atualizarsuperintendente() {
 function atualizarfiltromanual() {
   var spreadsheet = SpreadsheetApp.getActive();
   var data = Utilities.formatDate(new Date(), "GMT-3", "dd/MM/yyyy HH:mm");
-  var header = spreadsheet.getRange('\'FILTRAGEM - Atualização Manual\'!B2:S2');
-  var dadosbase = spreadsheet.getRange('\'Processos Base\'!B5:S')
-  var dadosfiltro = spreadsheet.getRange('\'FILTRAGEM - Atualização Manual\'!B2:S')
-  var datacel = spreadsheet.getRange('U1');
+  var header = spreadsheet.getRange('\'FILTRAGEM - Atualização Manual\'!B2:T2');
+  var dadosbase = spreadsheet.getRange('\'Processos Base\'!B5:T')
+  var dadosfiltro = spreadsheet.getRange('\'FILTRAGEM - Atualização Manual\'!B2:T')
+  var datacel = spreadsheet.getRange('V1');
  if (header.getFilter() == null) {
     sheet = spreadsheet.getSheetByName('FILTRAGEM - Atualização Manual');
     intev = sheet.getRange(3, 2, sheet.getLastRow(), 16);
