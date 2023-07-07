@@ -1,7 +1,7 @@
 /* 
 Olá! Código feito por Vinícius Ventura - Estagiário SEOP/SEPLAG/AL - Insta: @vinicius.ventura_ - Github: https://github.com/viniventur
 Código de Appscript do Planilhas Google (Google Sheets)
-Última atualização: 22/06/2023
+Última atualização: 07/07/2023
 */
 
 /** @OnlyCurrentDoc */
@@ -138,6 +138,7 @@ function onEdit(event) {
   if ((sheet.getSheetName() == 'Processos Base') && (datecol-2 > -1) && (updatecols.includes(editColumn)) && ((rngevent == 'Publicado') && (editColumn == situacol))) {
     
     // Input de data de publicação
+
 
     var datapubinput = ''
     var entradadatapub = ''
@@ -323,7 +324,36 @@ function enviaremail() {
   
 }
 
-// função de atualizar filtragem manual 1 - superintendente
+// função de atualizar filtragem manual 1 - secretária
+
+function atualizarsecretaria() {
+  var spreadsheet = SpreadsheetApp.getActive();
+  var data = Utilities.formatDate(new Date(), "GMT-3", "dd/MM/yyyy HH:mm");
+  var header = spreadsheet.getRange('\'FILTRAGEM - SECRETÁRIA\'!B2:T2');
+  var dadosbase = spreadsheet.getRange('\'Processos Base\'!B5:T')
+  var dadosfiltro = spreadsheet.getRange('\'FILTRAGEM - SECRETÁRIA\'!B2:T')
+  var datacel = spreadsheet.getRange('V1');
+  if (header.getFilter() == null) {
+    sheet = spreadsheet.getSheetByName('FILTRAGEM - SECRETÁRIA');
+    intev = sheet.getRange(3, 2, sheet.getLastRow(), 16);
+    intev.clear({contentsOnly: true, skipFilteredRows: true});
+    dadosbase.copyTo(header, SpreadsheetApp.CopyPasteType. PASTE_VALUES, false);
+    dadosbase.copyTo(header, SpreadsheetApp.CopyPasteType. PASTE_FORMAT, false);
+    dadosfiltro.createFilter();
+    datacel.setValue(data);
+  } else {
+    spreadsheet.getActiveSheet().getFilter().remove();
+    sheet = spreadsheet.getSheetByName('FILTRAGEM - SECRETÁRIA');
+    intev = sheet.getRange(3, 2, sheet.getLastRow(), 15);
+    intev.clear({contentsOnly: true, skipFilteredRows: true});
+    dadosbase.copyTo(header, SpreadsheetApp.CopyPasteType. PASTE_VALUES, false);
+    dadosbase.copyTo(header, SpreadsheetApp.CopyPasteType. PASTE_FORMAT, false);
+    dadosfiltro.createFilter();
+    datacel.setValue(data);
+  }
+};
+
+// função de atualizar filtragem manual 2 - superintendente
 
 function atualizarsuperintendente() {
   var spreadsheet = SpreadsheetApp.getActive();
@@ -391,12 +421,11 @@ function atualizarrelatotexto() {
   var dadosreltexto1 = spreadsheet.getRange('\'RELATORIO EM TEXTO\'!B4:E')
   var dadosreltexto2 = spreadsheet.getRange('\'RELATORIO EM TEXTO\'!F4:I')
   sheet = spreadsheet.getSheetByName('RELATORIO EM TEXTO');
-  intev = sheet.getRange(5, 2, sheet.getLastRow(), 7);
+  intev = sheet.getRange(5, 2, sheet.getLastRow(), 8);
   intev.clear({contentsOnly: true, skipFilteredRows: true});
   dadosfiltrosantestipo.copyTo(dadosreltexto1, SpreadsheetApp.CopyPasteType.PASTE_VALUES, false);
   dadosfiltrodepoistipo.copyTo(dadosreltexto2, SpreadsheetApp.CopyPasteType.PASTE_VALUES, false);
   dadosfiltrosantestipo.copyTo(dadosreltexto1, SpreadsheetApp.CopyPasteType.PASTE_FORMAT, false);
   dadosfiltrodepoistipo.copyTo(dadosreltexto2, SpreadsheetApp.CopyPasteType.PASTE_FORMAT, false);
   spreadsheet.getRange('K2').setValue(data);
-  spreadsheet.getRange('D3').activate();
 }
