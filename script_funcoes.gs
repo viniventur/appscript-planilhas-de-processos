@@ -182,3 +182,18 @@ function atualizarrelatotexto() {
   dadosfiltrodepoistipo.copyTo(dadosreltexto2, SpreadsheetApp.CopyPasteType.PASTE_FORMAT, false);
   spreadsheet.getRange('K2').setValue(data);
 }
+
+function redifinirfiltro() {
+  var spreadsheet = SpreadsheetApp.getActive();
+  var nomeplanilha = spreadsheet.getSheetName();
+  var sheet = spreadsheet.getSheetByName(nomeplanilha);
+  var header = sheet.getRange('B1:T1');
+  var dadosfiltro = sheet.getRange('B1:T');
+  if (header.getFilter() == null) {
+    sheet = spreadsheet.getSheetByName(nomeplanilha);
+    dadosfiltro.createFilter();
+  } else {
+    dadosfiltro.getFilter().remove();
+    dadosfiltro.createFilter();
+  }
+}
