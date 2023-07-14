@@ -183,7 +183,7 @@ function atualizarrelatotexto() {
   spreadsheet.getRange('K2').setValue(data);
 }
 
-function redifinirfiltro() {
+function redefinirfiltro() {
   var spreadsheet = SpreadsheetApp.getActive();
   var nomeplanilha = spreadsheet.getSheetName();
   var sheet = spreadsheet.getSheetByName(nomeplanilha);
