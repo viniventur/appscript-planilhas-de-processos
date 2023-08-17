@@ -2,7 +2,7 @@
 ***************** FUNÇÕES NORMAIS *****************
 Olá! Código feito por Vinícius Ventura - Estagiário SOP/SEPLAG/AL - Insta: @vinicius.ventura_ - Github: https://github.com/viniventur
 Código de Appscript do Planilhas Google (Google Sheets)
-Última atualização: 12/07/2023
+Última atualização: 17/08/2023
 */
 
 /** @OnlyCurrentDoc */
@@ -102,16 +102,28 @@ function adlinhas() {
 
 function enviaremail() {
   var app = SpreadsheetApp
-  var ssp = app.getActiveSpreadsheet()
-  var ss = ssp.getSheetByName("LIMITE")
-  var valoruti = ss.getRange("B4").getDisplayValue();
-  var porcentoorca = ssp.getSheetByName("GERAL").getRange("F9").getDisplayValue();
-  var ultatua = ss.getRange("D2").getDisplayValue();
-  var email = ss.getRange("I2").getValue();
   var mail = MailApp;
+  var drive = DriveApp;
+  var ss = app.getActiveSpreadsheet();
+  var ss_limite = ss.getSheetByName("LIMITE");
+  var ss_geral = ss.getSheetByName("GERAL");
+  var saldo = ss_geral.getRange("G9").getDisplayValue();
+  var valor_limi = ss_geral.getRange("D9").getDisplayValue();
+  var limite_porc = ss_geral.getRange("C9").getDisplayValue();
+  var limite_utili_porc = ss_geral.getRange("F9").getDisplayValue();
+  var valor_utili = ss_limite.getRange("B4").getDisplayValue();
+  var ultatua = ss_limite.getRange("D2").getDisplayValue();
+  var email = ss_limite.getRange("I2").getValue();
+  var assunto = "Limite Usado: "+limite_utili_porc+" - Saldo: "+saldo+" - LIMITE DE CRÉDITO - ATUALIZAÇÃO"
+  var html = "<h1>Informações do Limite de Crédito</h1><b>Valor aprovado com limite de "+limite_porc+":</b> "+valor_limi+"<br><b>Valor utilizado: </b>"+valor_utili+"<br><b>Saldo:</b> "+saldo+"<br><b>% Utilizado:</b> "+limite_utili_porc+"<br><br><b>Última atualização do valor: "+ultatua+"</b><br><br><b>Atenção: Este email é enviado a partir de uma automatização e os valores contidos nele são dependentes dos valores registrados na planilha de execução, portanto, não são advindos diretamente do SIAFE.</b>"
 
-  mail.sendEmail(email, "Limite Usado: "+porcentoorca+" - Valor: "+valoruti+" - LIMITE DE CRÉDITO - ATUALIZAÇÃO", "Atenção: email enviado manualmente a partir do valor atualizado na planilha, portanto, não vem diretamente do SIAFE. \n\nÚltima atualização: "+ultatua);
-  
+  mail.sendEmail({
+    name: "Atualização Limite",
+    to: email,
+    subject: assunto,
+    htmlBody: html
+  }); 
+
 }
 
 // função de atualizar filtragem manual
@@ -143,9 +155,10 @@ function atualizarfiltromanual() {
     if (header.getFilter() == null) {
       sheet = spreadsheet.getSheetByName(nomeplanilha);
       intev = sheet.getRange(3, 2, sheet.getLastRow(), 16);
-      intev.clear({contentsOnly: true, skipFilteredRows: true});
-      dadosbase.copyTo(header, SpreadsheetApp.CopyPasteType. PASTE_VALUES, false);
-      dadosbase.copyTo(header, SpreadsheetApp.CopyPasteType. PASTE_FORMAT, false);
+      intev.clear({contentsOnly: false, skipFilteredRows: false});
+      //intev.clearConditionalFormatRules();
+      dadosbase.copyTo(header, SpreadsheetApp.CopyPasteType.PASTE_VALUES, false);
+      dadosbase.copyTo(header, SpreadsheetApp.CopyPasteType.PASTE_FORMAT, false);
       dadosfiltro.createFilter();
       datacel.setValue(data);
     } else {
