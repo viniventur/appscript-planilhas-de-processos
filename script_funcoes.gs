@@ -17,6 +17,7 @@ function REGBASE() {
   var headerval2 = spreadsheet.getRange('O3').getValues() // VALOR DE RECEBIMENTO PARA REGISTRO - OBRIGATORIO
   var headerval = headerval1[0].concat(headerval2[0]) // REGISTROS OBRIGATÓRIOS
   var sit = spreadsheet.getRange('B3').getValue()
+  var orig_rec = spreadsheet.getRange('C3').getValue()
   var nproc = spreadsheet.getRange('E3').getValue()
   var obs = spreadsheet.getRange('K3').getDisplayValue()
   var datarec = spreadsheet.getRange('O3').getDisplayValue()
@@ -69,6 +70,9 @@ function REGBASE() {
     return;
   } else if ((sit == "Aprovado - CPOF") && (headerval.indexOf("") == -1) && (!(regexata.test(obs.toLowerCase())))) {
     SpreadsheetApp.getUi().alert('Insira o número da ata do CPOF (exemplo: digite "10" para ata 10).');
+    return;
+  } else if ((sit == "Publicado") && (headerval.indexOf("") == -1) && (orig_rec == "Sem Cobertura")) {
+    SpreadsheetApp.getUi().alert('O processo consta como PUBLICADO porém a origem de recurso está SEM COBERTURA. Por favor, insira uma origem de recursos do tipo "Sem Cobertura - Atendido por..."');
     return;
   } else if ((headerval.indexOf("") == -1) && (processos.indexOf(numproc) >= 0)) {
   SpreadsheetApp.getUi().alert("Processo já consta na base!");
@@ -219,10 +223,13 @@ function atualizarresumolimite() {
   var dados_filtro = ss.getRange('B3:F100');
   var dados_data_base = ss_base.getRange('F2:F3');
   var dados_data = ss.getRange('I2:I3');
+  var data = Utilities.formatDate(new Date(), "GMT-3", "dd/MM/yyyy HH:mm:ss");
+  var datacel = ss.getRange('N2')
   
   dados_filtro.clear({contentsOnly: true});
   dados_data.clear({contentsOnly: true});
   dados.copyTo(dados_filtro, {contentsOnly: true});
   dados_data_base.copyTo(dados_data, {contentsOnly: true});
   dados_filtro.sort(4);
+  datacel.setValue(data);
 }
