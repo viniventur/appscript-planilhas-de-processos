@@ -2,7 +2,7 @@
 ***************** FUNÇÕES onEDIT *****************
 Olá! Código feito por Vinícius Ventura - Estagiário SOP/SEPLAG/AL - Insta: @vinicius.ventura_ - Github: https://github.com/viniventur
 Código de Appscript do Planilhas Google (Google Sheets)
-Última atualização: 12/07/2023
+Última atualização: 21/08/2023
 */
 
 /** @OnlyCurrentDoc */
@@ -22,6 +22,7 @@ function onEdit(event) {
   var timestamp_format = "dd/MM/yyyy HH:mm:ss";
   var timeStampColName = "Última modificação";
   var pubcolname = "Data de publicação"
+  var orig_rec = "Origem de Recursos"
   var decretocolname = "Nº do decreto"
   var obscolname = "Observação"
   var actRng = event.source.getActiveRange();
@@ -29,6 +30,7 @@ function onEdit(event) {
   var index = actRng.getRowIndex();
   var headers = sheet.getRange(5, 2, 1, sheet.getLastColumn()-1).getValues();
   var situacol = sheet.getRange('B:B').getColumn();
+  var origcol = sheet.getRange('C:C').getColumn();
   var datecol = headers[0].indexOf(timeStampColName)+2;
   var pubcol = headers[0].indexOf(pubcolname)+2;
   var decretocol = headers[0].indexOf(decretocolname)+2;
@@ -47,55 +49,46 @@ function onEdit(event) {
     
     // Input de data de publicação
 
+    var orig_rec_edit = sheet.getRange(index, origcol).getValue();
 
-    var datapubinput = ''
-    var entradadatapub = ''
-    var datapubinput = ui.prompt('Data de publicação:', ui.ButtonSet.OK);
-    var entradadatapub = datapubinput.getResponseText();
-    var padraodata = /^(\d{2})\/(\d{2})\/(\d{4})$/;
+    if (orig_rec_edit === "Sem Cobertura") {
 
-    if (datapubinput.getSelectedButton() == ui.Button.CLOSE) {
-        ui.alert("Registro de informações de publicações canceladas.")
-        return
-    } else {
+      var datapubinput = ''
+      var entradadatapub = ''
+      var datapubinput = ui.prompt('Data de publicação:', ui.ButtonSet.OK);
+      var entradadatapub = datapubinput.getResponseText();
+      var padraodata = /^(\d{2})\/(\d{2})\/(\d{4})$/;
 
-      while (((entradadatapub == '') || !(padraodata.test(entradadatapub)))) {
-
-        if (datapubinput.getSelectedButton() == ui.Button.CLOSE) {
+      if (datapubinput.getSelectedButton() == ui.Button.CLOSE) {
           ui.alert("Registro de informações de publicações canceladas.")
-          return
-        } else if ((entradadatapub == '')) {
-          ui.alert("Insira a data de publicação.")
-        } else if (!padraodata.test(entradadatapub)) {
-          ui.alert("Formato inválido. Por favor, insira a data no formato dd/mm/yyyy.");
-        }  
-
-        var datapubinput = ui.prompt('Data de publicação:', ui.ButtonSet.OK);
-        var entradadatapub = datapubinput.getResponseText();
-
-      }
-
-      // Input de número do decreto
-
-      var entradandecreto = '';
-      var ndecretoinput = ''
-      var ndecretoinput = ui.prompt('Nº do decreto:', ui.ButtonSet.OK);
-      var entradandecreto = ndecretoinput.getResponseText();
-      var padraonumerico = /^\d+(\.\d+)?$/;
-
-      if (ndecretoinput.getSelectedButton() == ui.Button.CLOSE) {
-          ui.alert("Registro de número de decreto cancelado, apenas a data de publicação informada será inserida.")
-          var cellregistropub = sheet.getRange(index, pubcol);
-          var cellregistrodate = sheet.getRange(index, datecol);
-          var date = Utilities.formatDate(new Date(), timezone, timestamp_format);
-          cellregistropub.setValue(entradadatapub);
-          cellregistrodate.setValue(date);
           return
       } else {
 
-        while (((entradandecreto == '') || !(padraonumerico.test(entradandecreto)))) {
+        while (((entradadatapub == '') || !(padraodata.test(entradadatapub)))) {
 
-          if (ndecretoinput.getSelectedButton() == ui.Button.CLOSE) {
+          if (datapubinput.getSelectedButton() == ui.Button.CLOSE) {
+            ui.alert("Registro de informações de publicações canceladas.")
+            return
+          } else if ((entradadatapub == '')) {
+            ui.alert("Insira a data de publicação.")
+          } else if (!padraodata.test(entradadatapub)) {
+            ui.alert("Formato inválido. Por favor, insira a data no formato dd/mm/yyyy.");
+          }  
+
+          var datapubinput = ui.prompt('Data de publicação:', ui.ButtonSet.OK);
+          var entradadatapub = datapubinput.getResponseText();
+
+        }
+
+        // Input de número do decreto
+
+        var entradandecreto = '';
+        var ndecretoinput = ''
+        var ndecretoinput = ui.prompt('Nº do decreto:', ui.ButtonSet.OK);
+        var entradandecreto = ndecretoinput.getResponseText();
+        var padraonumerico = /^\d+(\.\d+)?$/;
+
+        if (ndecretoinput.getSelectedButton() == ui.Button.CLOSE) {
             ui.alert("Registro de número de decreto cancelado, apenas a data de publicação informada será inserida.")
             var cellregistropub = sheet.getRange(index, pubcol);
             var cellregistrodate = sheet.getRange(index, datecol);
@@ -103,24 +96,117 @@ function onEdit(event) {
             cellregistropub.setValue(entradadatapub);
             cellregistrodate.setValue(date);
             return
-          } else if ((entradandecreto == '')) {
-            ui.alert("Insira o número do decreto.")
-          } else if (!padraonumerico.test(entradandecreto)) {
-            ui.alert("Formato inválido. Por favor, insira apenas números");
+        } else {
+
+          while (((entradandecreto == '') || !(padraonumerico.test(entradandecreto)))) {
+
+            if (ndecretoinput.getSelectedButton() == ui.Button.CLOSE) {
+              ui.alert("Registro de número de decreto cancelado, apenas a data de publicação informada será inserida.")
+              var cellregistropub = sheet.getRange(index, pubcol);
+              var cellregistrodate = sheet.getRange(index, datecol);
+              var date = Utilities.formatDate(new Date(), timezone, timestamp_format);
+              cellregistropub.setValue(entradadatapub);
+              cellregistrodate.setValue(date);
+              return
+            } else if ((entradandecreto == '')) {
+              ui.alert("Insira o número do decreto.")
+            } else if (!padraonumerico.test(entradandecreto)) {
+              ui.alert("Formato inválido. Por favor, insira apenas números");
+            }
+
+            var ndecretoinput = ui.prompt('Nº do decreto:', ui.ButtonSet.OK);
+            var entradandecreto = ndecretoinput.getResponseText();
+
           }
 
-          var ndecretoinput = ui.prompt('Nº do decreto:', ui.ButtonSet.OK);
-          var entradandecreto = ndecretoinput.getResponseText();
+          var cellregistropub = sheet.getRange(index, pubcol);
+          var cellregistrodecreto = sheet.getRange(index, decretocol);
+          var cellregistrodate = sheet.getRange(index, datecol);
+          var date = Utilities.formatDate(new Date(), timezone, timestamp_format);
+          cellregistropub.setValue(entradadatapub);
+          cellregistrodecreto.setValue(entradandecreto);
+          cellregistrodate.setValue(date);
+        }
+      }
+
+      SpreadsheetApp.getUi().alert('ATENÇÃO! A origem de recurso do processo publicado consta como SEM COBERTURA. Por favor, insira uma origem de recursos do tipo "Sem Cobertura - Atendido por..."');
+    
+    } else {
+
+      var datapubinput = ''
+      var entradadatapub = ''
+      var datapubinput = ui.prompt('Data de publicação:', ui.ButtonSet.OK);
+      var entradadatapub = datapubinput.getResponseText();
+      var padraodata = /^(\d{2})\/(\d{2})\/(\d{4})$/;
+
+      if (datapubinput.getSelectedButton() == ui.Button.CLOSE) {
+          ui.alert("Registro de informações de publicações canceladas.")
+          return
+      } else {
+
+        while (((entradadatapub == '') || !(padraodata.test(entradadatapub)))) {
+
+          if (datapubinput.getSelectedButton() == ui.Button.CLOSE) {
+            ui.alert("Registro de informações de publicações canceladas.")
+            return
+          } else if ((entradadatapub == '')) {
+            ui.alert("Insira a data de publicação.")
+          } else if (!padraodata.test(entradadatapub)) {
+            ui.alert("Formato inválido. Por favor, insira a data no formato dd/mm/yyyy.");
+          }  
+
+          var datapubinput = ui.prompt('Data de publicação:', ui.ButtonSet.OK);
+          var entradadatapub = datapubinput.getResponseText();
 
         }
 
-        var cellregistropub = sheet.getRange(index, pubcol);
-        var cellregistrodecreto = sheet.getRange(index, decretocol);
-        var cellregistrodate = sheet.getRange(index, datecol);
-        var date = Utilities.formatDate(new Date(), timezone, timestamp_format);
-        cellregistropub.setValue(entradadatapub);
-        cellregistrodecreto.setValue(entradandecreto);
-        cellregistrodate.setValue(date);
+        // Input de número do decreto
+
+        var entradandecreto = '';
+        var ndecretoinput = ''
+        var ndecretoinput = ui.prompt('Nº do decreto:', ui.ButtonSet.OK);
+        var entradandecreto = ndecretoinput.getResponseText();
+        var padraonumerico = /^\d+(\.\d+)?$/;
+
+        if (ndecretoinput.getSelectedButton() == ui.Button.CLOSE) {
+            ui.alert("Registro de número de decreto cancelado, apenas a data de publicação informada será inserida.")
+            var cellregistropub = sheet.getRange(index, pubcol);
+            var cellregistrodate = sheet.getRange(index, datecol);
+            var date = Utilities.formatDate(new Date(), timezone, timestamp_format);
+            cellregistropub.setValue(entradadatapub);
+            cellregistrodate.setValue(date);
+            return
+        } else {
+
+          while (((entradandecreto == '') || !(padraonumerico.test(entradandecreto)))) {
+
+            if (ndecretoinput.getSelectedButton() == ui.Button.CLOSE) {
+              ui.alert("Registro de número de decreto cancelado, apenas a data de publicação informada será inserida.")
+              var cellregistropub = sheet.getRange(index, pubcol);
+              var cellregistrodate = sheet.getRange(index, datecol);
+              var date = Utilities.formatDate(new Date(), timezone, timestamp_format);
+              cellregistropub.setValue(entradadatapub);
+              cellregistrodate.setValue(date);
+              return
+            } else if ((entradandecreto == '')) {
+              ui.alert("Insira o número do decreto.")
+            } else if (!padraonumerico.test(entradandecreto)) {
+              ui.alert("Formato inválido. Por favor, insira apenas números");
+            }
+
+            var ndecretoinput = ui.prompt('Nº do decreto:', ui.ButtonSet.OK);
+            var entradandecreto = ndecretoinput.getResponseText();
+
+          }
+
+          var cellregistropub = sheet.getRange(index, pubcol);
+          var cellregistrodecreto = sheet.getRange(index, decretocol);
+          var cellregistrodate = sheet.getRange(index, datecol);
+          var date = Utilities.formatDate(new Date(), timezone, timestamp_format);
+          cellregistropub.setValue(entradadatapub);
+          cellregistrodecreto.setValue(entradandecreto);
+          cellregistrodate.setValue(date);
+        }
       }
     }
     
