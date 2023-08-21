@@ -2,7 +2,7 @@
 ***************** FUNÇÕES NORMAIS *****************
 Olá! Código feito por Vinícius Ventura - Estagiário SOP/SEPLAG/AL - Insta: @vinicius.ventura_ - Github: https://github.com/viniventur
 Código de Appscript do Planilhas Google (Google Sheets)
-Última atualização: 17/08/2023
+Última atualização: 21/08/2023
 */
 
 /** @OnlyCurrentDoc */
@@ -209,4 +209,16 @@ function redefinirfiltro() {
     dadosfiltro.getFilter().remove();
     dadosfiltro.createFilter();
   }
+}
+
+function atualizarresumolimite() {
+  var spreadsheet = SpreadsheetApp.getActive();
+  var ss = spreadsheet.getSheetByName('Texto Atualização Publicados');
+  var ss_dados = spreadsheet.getSheetByName('rascunho resumo publi');
+  var dados = ss_dados.getRange(2, 1, ss_dados.getLastRow()-1, 5);
+  var dados_filtro = ss.getRange('B3:F100');
+  
+  dados_filtro.clear({contentsOnly: true});
+  dados.copyTo(dados_filtro, {contentsOnly: true});
+  dados_filtro.sort(4)
 }
