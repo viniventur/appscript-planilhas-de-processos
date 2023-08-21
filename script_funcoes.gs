@@ -214,11 +214,15 @@ function redefinirfiltro() {
 function atualizarresumolimite() {
   var spreadsheet = SpreadsheetApp.getActive();
   var ss = spreadsheet.getSheetByName('Texto Atualização Publicados');
-  var ss_dados = spreadsheet.getSheetByName('rascunho resumo publi');
-  var dados = ss_dados.getRange(2, 1, ss_dados.getLastRow()-1, 5);
+  var ss_base = spreadsheet.getSheetByName('rascunho resumo publi');
+  var dados = ss_base.getRange(2, 1, ss_base.getLastRow()-1, 5);
   var dados_filtro = ss.getRange('B3:F100');
+  var dados_data_base = ss_base.getRange('F2:F3');
+  var dados_data = ss.getRange('I2:I3');
   
   dados_filtro.clear({contentsOnly: true});
+  dados_data.clear({contentsOnly: true});
   dados.copyTo(dados_filtro, {contentsOnly: true});
-  dados_filtro.sort(4)
+  dados_data_base.copyTo(dados_data, {contentsOnly: true});
+  dados_filtro.sort(4);
 }
