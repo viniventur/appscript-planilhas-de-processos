@@ -2,7 +2,7 @@
 ***************** FUNÇÕES NORMAIS *****************
 Olá! Código feito por Vinícius Ventura - Estagiário SOP/SEPLAG/AL - Insta: @vinicius.ventura_ - Github: https://github.com/viniventur
 Código de Appscript do Planilhas Google (Google Sheets)
-Última atualização: 21/08/2023
+Última atualização: 25/08/2023
 */
 
 /** @OnlyCurrentDoc */
@@ -81,16 +81,12 @@ function REGBASE() {
     SpreadsheetApp.getUi().alert("Processo já consta na base!");
     return;
   } else {
-  spreadsheet.getRange('6:6').activate();
-  spreadsheet.getActiveSheet().insertRowsBefore(spreadsheet.getActiveRange().getRow(), 1);
-  spreadsheet.getActiveRange().offset(0, 0, 1, spreadsheet.getActiveRange().getNumColumns()).activate();
+  spreadsheet.insertRowsBefore(6, 1);
   headerreg.copyTo(spreadsheet.getRange('B6'), SpreadsheetApp.CopyPasteType.PASTE_VALUES, false);
   novregdata.setValue(data);
   mesanobios.copyTo(mesanoreg, SpreadsheetApp.CopyPasteType.PASTE_FORMULA, false);
   headerreg.clear({contentsOnly: true, skipFilteredRows: true});
-  //spreadsheet.getRange('O5').setValue('Última modificação');
   regbios.copyTo(headerreg, SpreadsheetApp.CopyPasteType.PASTE_FORMAT, false);
-  spreadsheet.getRange('B3').activate();
   }
 };
 
