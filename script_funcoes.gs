@@ -2,7 +2,7 @@
 ***************** FUNÇÕES NORMAIS *****************
 Olá! Código feito por Vinícius Ventura - Estagiário SOP/SEPLAG/AL - Insta: @vinicius.ventura_ - Github: https://github.com/viniventur
 Código de Appscript do Planilhas Google (Google Sheets)
-Última atualização: 25/08/2023
+Última atualização: 30/08/2023
 */
 
 /** @OnlyCurrentDoc */
@@ -216,16 +216,16 @@ function atualizarresumolimite() {
   var ss = spreadsheet.getSheetByName('Texto Atualização Publicados');
   var ss_base = spreadsheet.getSheetByName('rascunho resumo publi');
   var dados = ss_base.getRange(2, 1, ss_base.getLastRow()-1, 5);
-  var dados_filtro = ss.getRange('B3:F100');
+  var dados_filtro = ss.getRange('E3:I100');
   var dados_data_base = ss_base.getRange('F2:F3');
-  var dados_data = ss.getRange('I2:I3');
+  var dados_data = ss.getRange('L2:L3');
   var data = Utilities.formatDate(new Date(), "GMT-3", "dd/MM/yyyy HH:mm:ss");
-  var datacel = ss.getRange('N2')
-  
+  var datacel = ss.getRange('Q2');
+
   dados_filtro.clear({contentsOnly: true});
   dados_data.clear({contentsOnly: true});
   dados.copyTo(dados_filtro, {contentsOnly: true});
   dados_data_base.copyTo(dados_data, {contentsOnly: true});
-  dados_filtro.sort(4);
   datacel.setValue(data);
+  dados_filtro.sort(7);
 }
