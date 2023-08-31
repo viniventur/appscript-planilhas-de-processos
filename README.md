@@ -1,2 +1,2 @@
-# Projeto de Planilha Automatizada - Google Sheets com Appscript
+# Planilha Automatizada - Google Sheets com Appscript
 
