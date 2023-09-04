@@ -2,7 +2,7 @@
 ***************** FUNÇÕES NORMAIS *****************
 Olá! Código feito por Vinícius Ventura - Estagiário SOP/SEPLAG/AL - Insta: @vinicius.ventura_ - Github: https://github.com/viniventur
 Código de Appscript do Planilhas Google (Google Sheets)
-Última atualização: 30/08/2023
+Última atualização: 04/09/2023
 */
 
 /** @OnlyCurrentDoc */
@@ -19,6 +19,7 @@ function REGBASE() {
   var sit = spreadsheet.getRange('B3').getValue()
   var orig_rec = spreadsheet.getRange('C3').getValue()
   var nproc = spreadsheet.getRange('E3').getValue()
+  var valor = spreadsheet.getRange('I3').getValue()
   var obs = spreadsheet.getRange('K3').getDisplayValue()
   var datarec = spreadsheet.getRange('O3').getDisplayValue()
   var datapub = spreadsheet.getRange('P3').getDisplayValue()
@@ -67,6 +68,9 @@ function REGBASE() {
     return;
   } else if ((sit == "Publicado") && (!(padraonumerico.test(ndecreto))) && (headerval.indexOf("") == -1) && (processos.indexOf(numproc) < 0)) {
     SpreadsheetApp.getUi().alert("Formato inválido. Por favor, insira apenas números no campo 'Nº do decreto'.");
+    return;
+  } else if ((!(padraonumerico.test(valor))) && (headerval.indexOf("") == -1) && (processos.indexOf(numproc) < 0)) {
+    SpreadsheetApp.getUi().alert("Formato inválido. Por favor, insira apenas números no campo 'Valor'.");
     return;
   } else if ((sit == "Aprovado - CPOF") && (headerval.indexOf("") == -1) && (!(regexata.test(obs.toLowerCase())))) {
     SpreadsheetApp.getUi().alert('Insira o número da ata do CPOF (exemplo: digite "10" para ata 10).');
