@@ -2,7 +2,7 @@
 ***************** FUNÇÕES NORMAIS *****************
 Olá! Código feito por Vinícius Ventura - Estagiário SOP/SEPLAG/AL - Insta: @vinicius.ventura_ - Github: https://github.com/viniventur
 Código de Appscript do Planilhas Google (Google Sheets)
-Última atualização: 04/09/2023
+Última atualização: 12/09/2023
 */
 
 /** @OnlyCurrentDoc */
@@ -30,17 +30,12 @@ function REGBASE() {
   var mesanobios = spreadsheet.getRange('\'BIOS\'!AA2:AB2');
   var mesanoreg = spreadsheet.getRange('\'Processos Base\'!S6:T6')
   var ultlinha = spreadsheet.getLastRow()
-  var processos = []; //para adição do loop dos processos
   var sheet = spreadsheet.getSheetByName('Processos Base')
+  var processos = sheet.getRange(6, 5, sheet.getLastRow(), 1).getValues().flat();
   var numproc = sheet.getRange(3, 5).getValue();
   var regexata = /ata\s\d+/;
   var regexdata = /^(\d{2})\/(\d{2})\/(\d{4})$/;
   var padraonumerico = /^\d+(\.\d+)?$/;
-
-  for (var i = 5; i <= ultlinha; i++) {
-  let valores = sheet.getRange(i+1,5).getValue();
-  processos.push(valores)
-  }
 
   if (nproc == "") {
     SpreadsheetApp.getUi().alert("Requisitos obrigatórios vazios!");
