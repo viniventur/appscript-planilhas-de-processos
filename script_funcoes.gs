@@ -2,10 +2,19 @@
 ***************** FUNÇÕES NORMAIS *****************
 Olá! Código feito por Vinícius Ventura - Estagiário SOP/SEPLAG/AL - Insta: @vinicius.ventura_ - Github: https://github.com/viniventur
 Código de Appscript do Planilhas Google (Google Sheets)
-Última atualização: 12/09/2023
+Última atualização: 05/01/2024
 */
 
 /** @OnlyCurrentDoc */
+
+// Função de aviso ao abrir para alertar sobre a planilha de 2024
+
+function onOpen(e) {
+  var app = SpreadsheetApp;
+  var ui = app.getUi();
+  ui.alert("ATENÇÃO: ESTA PLANILHA É REFERENTE AO EXERCÍCIO DE 2023!\n\nLink para a planilha de 2024:\n\nhttps://docs.google.com/spreadsheets/d/1M3XdEzLNPYtn1ddyd1hfvoN269cXBuIvZ9CbL5HVx2k/edit?usp=sharing", ui.ButtonSet.OK);
+
+}
 
 // Função de registro de processos na base
 
@@ -85,7 +94,7 @@ function REGBASE() {
   novregdata.setValue(data);
   mesanobios.copyTo(mesanoreg, SpreadsheetApp.CopyPasteType.PASTE_FORMULA, false);
   headerreg.clear({contentsOnly: true, skipFilteredRows: true});
-  regbios.copyTo(headerreg, SpreadsheetApp.CopyPasteType.PASTE_FORMAT, false);
+  regbios.copyTo(headerreg, SpreadsheetApp.CopyPasteType.PASTE_NORMAL, false);
   }
 };
 
@@ -227,4 +236,19 @@ function atualizarresumolimite() {
   dados_data_base.copyTo(dados_data, {contentsOnly: true});
   datacel.setValue(data);
   dados_filtro.sort(7);
+}
+
+function registrarnota() {
+  
+  var ss = SpreadsheetApp.getActive()
+  var ss_reg = ss.getSheetByName('Registro Nota')
+  var ss_base = ss.getSheetByName('base_nrs')
+  var int_reg = ss_reg.getRange(2, 2, ss_reg.getLastRow(), 3)
+  var int_base = ss_base.getRange(ss_base.getLastRow()+1,1)
+
+
+  int_reg.copyTo(int_base, SpreadsheetApp.CopyPasteType.PASTE_VALUES, false);
+  int_reg.clear({contentsOnly: true})
+  //Logger.log(ss_reg.getLastRow())
+
 }
