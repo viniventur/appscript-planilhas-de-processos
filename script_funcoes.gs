@@ -2,19 +2,10 @@
 ***************** FUNÇÕES NORMAIS *****************
 Olá! Código feito por Vinícius Ventura - Estagiário SOP/SEPLAG/AL - Insta: @vinicius.ventura_ - Github: https://github.com/viniventur
 Código de Appscript do Planilhas Google (Google Sheets)
-Última atualização: 05/01/2024
+Última atualização: 12/09/2023
 */
 
 /** @OnlyCurrentDoc */
-
-// Função de aviso ao abrir para alertar sobre a planilha de 2024
-
-function onOpen(e) {
-  var app = SpreadsheetApp;
-  var ui = app.getUi();
-  ui.alert("ATENÇÃO: ESTA PLANILHA É REFERENTE AO EXERCÍCIO DE 2023!\n\nLink para a planilha de 2024:\n\nhttps://docs.google.com/spreadsheets/d/1M3XdEzLNPYtn1ddyd1hfvoN269cXBuIvZ9CbL5HVx2k/edit?usp=sharing", ui.ButtonSet.OK);
-
-}
 
 // Função de registro de processos na base
 
@@ -162,7 +153,7 @@ function atualizarfiltromanual() {
     var datacel = sheet.getRange('V1');
     if (header.getFilter() == null) {
       sheet = spreadsheet.getSheetByName(nomeplanilha);
-      intev = sheet.getRange(3, 2, sheet.getLastRow(), 16);
+      intev = sheet.getRange(3, 2, sheet.getLastRow(), 19);
       intev.clear({contentsOnly: false, skipFilteredRows: false});
       //intev.clearConditionalFormatRules();
       dadosbase.copyTo(header, SpreadsheetApp.CopyPasteType.PASTE_VALUES, false);
@@ -172,7 +163,7 @@ function atualizarfiltromanual() {
     } else {
       spreadsheet.getActiveSheet().getFilter().remove();
       sheet = spreadsheet.getSheetByName(nomeplanilha);
-      intev = sheet.getRange(3, 2, sheet.getLastRow(), 15);
+      intev = sheet.getRange(3, 2, sheet.getLastRow(), 19);
       intev.clear({contentsOnly: true, skipFilteredRows: true});
       dadosbase.copyTo(header, SpreadsheetApp.CopyPasteType. PASTE_VALUES, false);
       dadosbase.copyTo(header, SpreadsheetApp.CopyPasteType. PASTE_FORMAT, false);
@@ -184,25 +175,6 @@ function atualizarfiltromanual() {
     ui.alert("Planilha não permitida para a função");
   }
 };
-
-// função de atualizar filtragem de relatório em texto
-
-function atualizarrelatotexto() {
-  var spreadsheet = SpreadsheetApp.getActive();
-  var data = Utilities.formatDate(new Date(), "GMT-3", "dd/MM/yyyy HH:mm");
-  var dadosfiltrosantestipo = spreadsheet.getRange('\'FILTRAGEM - Atualização Manual\'!B2:E')
-  var dadosfiltrodepoistipo = spreadsheet.getRange('\'FILTRAGEM - Atualização Manual\'!G2:J')
-  var dadosreltexto1 = spreadsheet.getRange('\'RELATORIO EM TEXTO\'!B4:E')
-  var dadosreltexto2 = spreadsheet.getRange('\'RELATORIO EM TEXTO\'!F4:I')
-  sheet = spreadsheet.getSheetByName('RELATORIO EM TEXTO');
-  intev = sheet.getRange(5, 2, sheet.getLastRow(), 8);
-  intev.clear({contentsOnly: true, skipFilteredRows: true});
-  dadosfiltrosantestipo.copyTo(dadosreltexto1, SpreadsheetApp.CopyPasteType.PASTE_VALUES, false);
-  dadosfiltrodepoistipo.copyTo(dadosreltexto2, SpreadsheetApp.CopyPasteType.PASTE_VALUES, false);
-  dadosfiltrosantestipo.copyTo(dadosreltexto1, SpreadsheetApp.CopyPasteType.PASTE_FORMAT, false);
-  dadosfiltrodepoistipo.copyTo(dadosreltexto2, SpreadsheetApp.CopyPasteType.PASTE_FORMAT, false);
-  spreadsheet.getRange('K2').setValue(data);
-}
 
 function redefinirfiltro() {
   var spreadsheet = SpreadsheetApp.getActive();
