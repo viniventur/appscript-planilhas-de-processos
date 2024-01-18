@@ -1,0 +1,126 @@
+/* 
+***************** FUNÇÕES NORMAIS *****************
+Olá! Código feito por Vinícius Ventura - Estagiário SOP/SEPLAG/AL - Insta: @vinicius.ventura_ - Github: https://github.com/viniventur
+Código de Appscript do Planilhas Google (Google Sheets)
+Última atualização: 18/01/2023
+*/
+
+/** @OnlyCurrentDoc */
+
+// Função de registro de processos na base
+
+function REGBASE() {
+
+  var data = Utilities.formatDate(new Date(), "GMT-3", "dd/MM/yyyy HH:mm");
+  var spreadsheet = SpreadsheetApp.getActive();
+  var headerval1 = spreadsheet.getRange('B3:I3').getValues() // VALORES PARA REGISTRO ATÉ OBJ - OBRIGATORIO
+  var headerval2 = spreadsheet.getRange('K3').getValues() // DATA DE RECEBIMENTO PARA REGISTRO - OBRIGATORIO
+  var headerval = headerval1[0].concat(headerval2[0]) // REGISTROS OBRIGATÓRIOS
+  var nproc = spreadsheet.getRange('C3').getValue()
+  var data_rec = spreadsheet.getRange('K3').getDisplayValue()
+  var headerreg = spreadsheet.getRange('\'Processos Gerais Base\'!B3:K3'); // VALORES PARA REGISTRO TOTAL 
+  var regbios = spreadsheet.getRange('\'BIOS\'!J2:S2')
+  var novregdata = spreadsheet.getRange('\'Processos Gerais Base\'!L6');
+  var mesanobios = spreadsheet.getRange('\'BIOS\'!U2:V2');
+  var mesanoreg = spreadsheet.getRange('\'Processos Gerais Base\'!M6:N6')
+  var ultlinha = spreadsheet.getLastRow()
+  var sheet = spreadsheet.getSheetByName('Processos Gerais Base')
+  var processos = sheet.getRange(6, 2, sheet.getLastRow(), 1).getValues().flat();
+  var numproc = sheet.getRange(3, 3).getValue();
+  var regexata = /ata\s\d+/;
+  var regexdata = /^(\d{2})\/(\d{2})\/(\d{4})$/;
+  var padraonumerico = /^\d+(\.\d+)?$/;
+
+  if (nproc == "") {
+    // requisitos obrigatórios
+    SpreadsheetApp.getUi().alert("Requisitos obrigatórios vazios!");
+    return;
+  } else if ((headerval.indexOf("") > -1)) {
+    SpreadsheetApp.getUi().alert("Requisitos obrigatórios vazios!");
+    return;
+    //formatos inválidos
+  } else if ((headerval.indexOf("") == -1) && (processos.indexOf(numproc) < 0) && (!(regexdata.test(data_rec)))) {
+    SpreadsheetApp.getUi().alert("Formato inválido. Por favor, insira datas no formato dd/mm/yyyy.");
+    return;
+    // Duplicados
+  } else if ((headerval.indexOf("") == -1) && (processos.indexOf(numproc) >= 0)) {
+  SpreadsheetApp.getUi().alert("Processo já consta na base!");
+    return;
+  } else if (processos.indexOf(numproc) >= 0) {
+    SpreadsheetApp.getUi().alert("Processo já consta na base!");
+    return;
+  } else {
+  spreadsheet.insertRowsBefore(6, 1);
+  headerreg.copyTo(spreadsheet.getRange('B6'), SpreadsheetApp.CopyPasteType.PASTE_VALUES, false);
+  novregdata.setValue(data);
+  mesanobios.copyTo(mesanoreg, SpreadsheetApp.CopyPasteType.PASTE_FORMULA, false);
+  headerreg.clear({contentsOnly: true, skipFilteredRows: true});
+  regbios.copyTo(headerreg, SpreadsheetApp.CopyPasteType.PASTE_NORMAL, false);
+  }
+};
+
+// função de atualizar filtragem manual
+
+function atualizarfiltromanual() {
+  var spreadsheet = SpreadsheetApp.getActive();
+  var data = Utilities.formatDate(new Date(), "GMT-3", "dd/MM/yyyy HH:mm");
+  var sheets = spreadsheet.getSheets();
+  
+  var filtragemSheetNames = [];
+  
+  for (var i = 0; i < sheets.length; i++) {
+    var sheet = sheets[i];
+    var sheetName = sheet.getName();
+    
+    if (sheetName.indexOf('FILTRAGEM - ') === 0) {
+      filtragemSheetNames.push(sheetName);
+    }
+  }
+
+  var nomeplanilha = spreadsheet.getSheetName();
+
+  if (filtragemSheetNames.indexOf(nomeplanilha) !== -1) {
+    var sheet = spreadsheet.getSheetByName(nomeplanilha);
+    var header = sheet.getRange('B2:N2');
+    var dadosbase = spreadsheet.getRange('\'Processos Gerais Base\'!B5:N')
+    var dadosfiltro = sheet.getRange('B2:N');
+    var datacel = sheet.getRange('P1');
+    if (header.getFilter() == null) {
+      sheet = spreadsheet.getSheetByName(nomeplanilha);
+      intev = sheet.getRange(3, 2, sheet.getLastRow(), 13);
+      intev.clear({contentsOnly: false, skipFilteredRows: false});
+      //intev.clearConditionalFormatRules();
+      dadosbase.copyTo(header, SpreadsheetApp.CopyPasteType.PASTE_VALUES, false);
+      dadosbase.copyTo(header, SpreadsheetApp.CopyPasteType.PASTE_FORMAT, false);
+      dadosfiltro.createFilter();
+      datacel.setValue(data);
+    } else {
+      spreadsheet.getActiveSheet().getFilter().remove();
+      sheet = spreadsheet.getSheetByName(nomeplanilha);
+      intev = sheet.getRange(3, 2, sheet.getLastRow(), 13);
+      intev.clear({contentsOnly: true, skipFilteredRows: true});
+      dadosbase.copyTo(header, SpreadsheetApp.CopyPasteType. PASTE_VALUES, false);
+      dadosbase.copyTo(header, SpreadsheetApp.CopyPasteType. PASTE_FORMAT, false);
+      dadosfiltro.createFilter();
+      datacel.setValue(data);
+    }
+  } else {
+    var ui = SpreadsheetApp.getUi();
+    ui.alert("Planilha não permitida para a função");
+  }
+};
+
+function redefinirfiltro() {
+  var spreadsheet = SpreadsheetApp.getActive();
+  var nomeplanilha = spreadsheet.getSheetName();
+  var sheet = spreadsheet.getSheetByName(nomeplanilha);
+  var header = sheet.getRange('B1:N1');
+  var dadosfiltro = sheet.getRange('B1:N');
+  if (header.getFilter() == null) {
+    sheet = spreadsheet.getSheetByName(nomeplanilha);
+    dadosfiltro.createFilter();
+  } else {
+    dadosfiltro.getFilter().remove();
+    dadosfiltro.createFilter();
+  }
+}
