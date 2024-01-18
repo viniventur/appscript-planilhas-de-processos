@@ -168,7 +168,7 @@ function atualizarfiltromanual() {
     var datacel = sheet.getRange('V1');
     if (header.getFilter() == null) {
       sheet = spreadsheet.getSheetByName(nomeplanilha);
-      intev = sheet.getRange(3, 2, sheet.getLastRow(), 16);
+      intev = sheet.getRange(3, 2, sheet.getLastRow(), 19);
       intev.clear({contentsOnly: false, skipFilteredRows: false});
       //intev.clearConditionalFormatRules();
       dadosbase.copyTo(header, SpreadsheetApp.CopyPasteType.PASTE_VALUES, false);
@@ -178,7 +178,7 @@ function atualizarfiltromanual() {
     } else {
       spreadsheet.getActiveSheet().getFilter().remove();
       sheet = spreadsheet.getSheetByName(nomeplanilha);
-      intev = sheet.getRange(3, 2, sheet.getLastRow(), 15);
+      intev = sheet.getRange(3, 2, sheet.getLastRow(), 19);
       intev.clear({contentsOnly: true, skipFilteredRows: true});
       dadosbase.copyTo(header, SpreadsheetApp.CopyPasteType. PASTE_VALUES, false);
       dadosbase.copyTo(header, SpreadsheetApp.CopyPasteType. PASTE_FORMAT, false);
