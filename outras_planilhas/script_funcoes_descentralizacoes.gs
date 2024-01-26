@@ -2,7 +2,7 @@
 ***************** FUNÇÕES NORMAIS *****************
 Olá! Código feito por Vinícius Ventura - Estagiário SOP/SEPLAG/AL - Insta: @vinicius.ventura_ - Github: https://github.com/viniventur
 Código de Appscript do Planilhas Google (Google Sheets)
-Última atualização: 18/01/2023
+Última atualização: 26/01/2024
 */
 
 /** @OnlyCurrentDoc */
@@ -13,7 +13,11 @@ function REGBASE() {
 
   var data = Utilities.formatDate(new Date(), "GMT-3", "dd/MM/yyyy HH:mm");
   var spreadsheet = SpreadsheetApp.getActive();
-  var headerval = spreadsheet.getRange('B3:Q3').getValues() // VALORES PARA REGISTRO ATÉ OBJ - OBRIGATORIO
+  var headerval1 = spreadsheet.getRange('B3').getValues() // VALORES PARA REGISTRO ATÉ OBJ - OBRIGATORIO
+  var headerval2 = spreadsheet.getRange('E3:G3').getValues() // VALORES PARA REGISTRO ATÉ OBJ - OBRIGATORIO
+  var headerval3 = spreadsheet.getRange('K3').getValues() // VALOR DE RECEBIMENTO PARA REGISTRO - OBRIGATORIO
+  var headerval4 = spreadsheet.getRange('Q3').getValues() // VALOR DE RECEBIMENTO PARA REGISTRO - OBRIGATORIO
+  var headerval = headerval1[0].concat(headerval2[0], headerval3[0], headerval4[0]) // REGISTROS OBRIGATÓRIOS
   var sit = spreadsheet.getRange('B3').getValue()
   var n_ted = spreadsheet.getRange('C3').getValue()
   var nproc = spreadsheet.getRange('E3').getValue()
@@ -22,7 +26,7 @@ function REGBASE() {
   var obs = spreadsheet.getRange('K3').getDisplayValue()
   var data_ini = spreadsheet.getRange('O3').getDisplayValue()
   var data_fin = spreadsheet.getRange('P3').getDisplayValue()
-  var data_doeal = spreadsheet.getRange('Q3').getDisplayValue()
+  var data_rec = spreadsheet.getRange('Q3').getDisplayValue()
   var headerreg = spreadsheet.getRange('\'Descentralizações Base\'!B3:Q3'); // VALORES PARA REGISTRO TOTAL 
   var regbios = spreadsheet.getRange('\'BIOS\'!J2:Y2')
   var novregdata = spreadsheet.getRange('\'Descentralizações Base\'!R6');
@@ -44,14 +48,11 @@ function REGBASE() {
     SpreadsheetApp.getUi().alert("Requisitos obrigatórios vazios!");
     return;
     //formatos inválidos
-  } else if ((headerval.indexOf("") == -1) && (processos.indexOf(numproc) < 0) && (!(regexdata.test(data_ini)))) {
+  } else if ((headerval.indexOf("") == -1) && (processos.indexOf(numproc) < 0) && (!(regexdata.test(data_rec)))) {
     SpreadsheetApp.getUi().alert("Formato inválido. Por favor, insira datas no formato dd/mm/yyyy.");
     return;
-  } else if ((!(regexdata.test(data_ini)) || !(regexdata.test(data_fin)) || !(regexdata.test(data_doeal))) && (headerval.indexOf("") == -1) && (processos.indexOf(numproc) < 0)) {
+  } else if (!(regexdata.test(data_rec)) && (headerval.indexOf("") == -1) && (processos.indexOf(numproc) < 0)) {
     SpreadsheetApp.getUi().alert("Formato inválido. Por favor, insira datas no formato dd/mm/yyyy.");
-    return;
-  } else if ((!(padraonumerico.test(valor_ini)) || !(padraonumerico.test(valor_desc))) && (headerval.indexOf("") == -1) && (processos.indexOf(numproc) < 0)) {
-    SpreadsheetApp.getUi().alert("Formato inválido. Por favor, insira apenas números nos campos referentes a valores.");
     return;
     // Duplicados
   } else if ((headerval.indexOf("") == -1) && (processos.indexOf(numproc) >= 0)) {
