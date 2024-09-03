@@ -4,7 +4,7 @@ function em_producao() {
 }
 
 function registro_inde() {
-  
+
   var ui = SpreadsheetApp.getUi()
   var data = Utilities.formatDate(new Date(), "GMT-3", "dd/MM/yyyy HH:mm");
   var ss_registro = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Registro");
@@ -37,30 +37,41 @@ function registro_inde() {
   var regexdata = /^(\d{2})\/(\d{2})\/(\d{4})$/;
   var padraonumerico = /^\d+(\.\d+)?$/;
 
-  if (nproc = "") {
+
+  if (nproc == "") {
     ui.alert("Requisitos obrigatórios vazios!");
     return;
   } else if (obrigatorios.indexOf("") > -1) {
-      ui.alert("Requisitos obrigatórios vazios!");
+    ui.alert("Requisitos obrigatórios vazios!");
     return;
   } else if (!(padraonumerico.test(valor))) {
     ui.alert("Formato inválido. Por favor, insira apenas números no campo 'Valor'.");
     return;
-  } else if ((saida != "") && (obrigatorios.indexOf("") == -1) && (processos.indexOf(nproc) < 0) && ((!(regexdata.test(entrada))) || (!(regexdata.test(saida))))) {
+  }
+
+  // Verificação das datas
+  if (saida != "") {
+    if (!(regexdata.test(entrada)) || !(regexdata.test(saida))) {
       ui.alert("Formato inválido. Por favor, insira datas no formato dd/mm/yyyy.");
-    return;
-  } else if ((obrigatorios.indexOf("") == -1) && (processos.indexOf(nproc) < 0) && (!(regexdata.test(entrada)))) {
-     ui.alert("Formato inválido. Por favor, insira datas no formato dd/mm/yyyy.");
-    return;
-  } else if (processos.indexOf(nproc[0]) >= 0) {
+      return;
+    }
+  } else {
+    if (!(regexdata.test(entrada))) {
+      ui.alert("Formato inválido. Por favor, insira a data de entrada no formato dd/mm/yyyy.");
+      return;
+    }
+  }
+
+  // Verificação se o processo já existe
+  if (processos.indexOf(nproc[0]) >= 0) {
     ui.alert("Processo já consta na base!");
     return;
-  } else {
-    ss_inden.insertRowsBefore(2, 1);
-    range_registro.copyTo(ss_inden.getRange('B2'), SpreadsheetApp.CopyPasteType.PASTE_NORMAL, false);
-    atualizacao.setValue(data);
-    range_registro.clear({contentsOnly: true, skipFilteredRows: true});
-    bios_inden.copyTo(range_registro, SpreadsheetApp.CopyPasteType.PASTE_NORMAL, false);
-    ui.alert('Processo indenizatório adicionado com sucesso!')
   }
+
+  ss_inden.insertRowsBefore(2, 1);
+  range_registro.copyTo(ss_inden.getRange('B2'), SpreadsheetApp.CopyPasteType.PASTE_NORMAL, false);
+  atualizacao.setValue(data);
+  range_registro.clear({contentsOnly: true, skipFilteredRows: true});
+  bios_inden.copyTo(range_registro, SpreadsheetApp.CopyPasteType.PASTE_NORMAL, false);
+  ui.alert('Processo indenizatório adicionado com sucesso!')
 }
