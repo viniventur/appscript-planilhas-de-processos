@@ -7,7 +7,7 @@ function registro_inde() {
 
   const ui = SpreadsheetApp.getUi();
   const data = Utilities.formatDate(new Date(), "GMT-3", "dd/MM/yyyy HH:mm");
-  const ss_registro = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Registro");
+  const ss_registro = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Registro de Processos");
   const ss_base = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Processos Indenizatórios");
   const ss_atualizacao = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("atualizacoes");
   const ss_BIOS_registros = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("BIOS_registros");
@@ -35,10 +35,9 @@ function registro_inde() {
   const valores_registro = range_registro.getValues();
   const atualizacao = ss_base.getRange('U2');
   const processos = ss_base.getRange(2, 3, ss_base.getLastRow(), 1).getValues().flat();
-  const nproc = ss_registro.getRange('C5').getValues();
+  const nproc = ss_registro.getRange('C5').getValue();
   const regexdata = /^(\d{2})\/(\d{2})\/(\d{4})$/;
   const padraonumerico = /^\d+(\.\d+)?$/;
-  const regexCNPJ = /^\d{2}\.\d{3}\.\d{3}\/\d{4}-\d{2}$/;  // Regex para verificar o formato CNPJ
 
   if (nproc == "") {
     ui.alert("Requisitos obrigatórios vazios!");
@@ -49,7 +48,7 @@ function registro_inde() {
   } else if (!(padraonumerico.test(valor))) {
     ui.alert("Formato inválido. Por favor, insira apenas números no campo 'Valor'.");
     return;
-  } else if (!(cnpj.toString().length == 14)) {  // Supondo que você tenha uma variável 'cnpj' para o campo de CNPJ
+  } else if (!(cnpj.toString().length == 14)) {
     ui.alert("Formato inválido de CNPJ. Por favor, insira apenas 14 dígitos.");
     return;
   }
@@ -69,7 +68,7 @@ function registro_inde() {
   }
 
   // Verificação se o processo já existe
-  if (processos.indexOf(nproc[0]) >= 0) {
+  if (processos.indexOf(nproc) >= 0) {
     ui.alert("Processo já consta na base!");
     return;
   }
@@ -86,7 +85,7 @@ function registro_licit_emerg() {
 
   const ui = SpreadsheetApp.getUi();
   const data = Utilities.formatDate(new Date(), "GMT-3", "dd/MM/yyyy HH:mm");
-  const ss_registro = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Registro");
+  const ss_registro = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Registro de Processos");
   const ss_base = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Licitatório e Emergenciais");
   const ss_atualizacao = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("atualizacoes");
   const ss_BIOS_registros = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("BIOS_registros");
@@ -112,7 +111,7 @@ function registro_licit_emerg() {
   const valores_registro = range_registro.getValues();
   const atualizacao = ss_base.getRange('O2');
   const processos = ss_base.getRange(2, 4, ss_base.getLastRow(), 1).getValues().flat();
-  const nproc = ss_registro.getRange('D11').getValues();
+  const nproc = ss_registro.getRange('D11').getValue();
   const regexdata = /^(\d{2})\/(\d{2})\/(\d{4})$/;
   const padraonumerico = /^\d+(\.\d+)?$/;
 
@@ -152,7 +151,7 @@ function registro_gerais() {
 
   const ui = SpreadsheetApp.getUi();
   const data = Utilities.formatDate(new Date(), "GMT-3", "dd/MM/yyyy HH:mm");
-  const ss_registro = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Registro");
+  const ss_registro = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Registro de Processos");
   const ss_base = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Processos Gerais");
   const ss_atualizacao = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("atualizacoes");
   const ss_BIOS_registros = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("BIOS_registros");
@@ -179,7 +178,7 @@ function registro_gerais() {
   const valores_registro = range_registro.getValues();
   const atualizacao = ss_base.getRange('R2');
   const processos = ss_base.getRange(2, 3, ss_base.getLastRow(), 1).getValues().flat();
-  const nproc = ss_registro.getRange('C17').getValues();
+  const nproc = ss_registro.getRange('C17').getValue();
   const regexdata = /^(\d{2})\/(\d{2})\/(\d{4})$/;
   const padraonumerico = /^\d+(\.\d+)?$/;
 
@@ -189,7 +188,7 @@ function registro_gerais() {
   } else if (obrigatorios.indexOf("") > -1) {
     ui.alert("Requisitos obrigatórios vazios!");
     return;
-  } else if (!(cnpj.toString().length == 14)) {  // Supondo que você tenha uma variável 'cnpj' para o campo de CNPJ
+  } else if (!(cnpj.toString().length == 14)) { 
     ui.alert("Formato inválido de CNPJ. Por favor, insira apenas 14 dígitos.");
     return;
   }
@@ -220,3 +219,47 @@ function registro_gerais() {
   bios_registro.copyTo(range_registro, SpreadsheetApp.CopyPasteType.PASTE_NORMAL, false);
   ui.alert('Processo adicionado com sucesso!')
 }
+
+function registro_cnpj_cpf() {
+
+  const ui = SpreadsheetApp.getUi();
+  const data = Utilities.formatDate(new Date(), "GMT-3", "dd/MM/yyyy HH:mm");
+  const ss_registro = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Registro de CNPJ/CPF");
+  const ss_BIOS_registros = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("BIOS_registros");
+  const bios_registro = ss_BIOS_registros.getRange('B11:C11');
+  const range_registro = ss_registro.getRange('E5:F5');
+  
+  let cnpj_cpf = ss_registro.getRange('E5').getValue();
+  const valores_registro = range_registro.getValues().flat();
+  const base_cnpj_cpf = ss_registro.getRange(5, 2, ss_registro.getLastRow(), 1).getValues().flat();
+
+  const regexCNPJ = /^\d{2}\.\d{3}\.\d{3}\/\d{4}-\d{2}$/;
+  const regexCPF = /^\d{3}\.\d{3}\.\d{3}-\d{2}$/;
+
+  if (valores_registro.indexOf("") > -1) {
+    ui.alert("Requisitos obrigatórios vazios!");
+    return;
+  } 
+
+if (base_cnpj_cpf.indexOf(cnpj_cpf) > -1) {
+    ui.alert("Interessado já consta na base!");
+    return;
+  } 
+
+  if (!(regexCNPJ.test(cnpj_cpf)) && !(regexCPF.test(cnpj_cpf))) {
+    ui.alert("Formato inválido de CNPJ ou CPF. Por favor, insira na formatação correta.");
+    return;
+  }
+
+  ss_registro.getRange('B5:C5').insertCells(SpreadsheetApp.Dimension.ROWS);
+  range_registro.copyTo(ss_registro.getRange('B5:C5'), SpreadsheetApp.CopyPasteType.PASTE_NORMAL, false);
+  range_registro.clear({contentsOnly: true, skipFilteredRows: true});
+  bios_registro.copyTo(range_registro, SpreadsheetApp.CopyPasteType.PASTE_NORMAL, false);
+  if (regexCNPJ.test(cnpj_cpf)) {
+    ui.alert('CNPJ adicionado com sucesso!');
+  } else if (regexCPF.test(cnpj_cpf)) {
+    ui.alert('CPF adicionado com sucesso!');
+  }
+  
+}
+
