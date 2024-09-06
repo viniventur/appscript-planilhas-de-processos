@@ -1,3 +1,12 @@
+/* 
+***************** FUNÇÕES onEdit *****************
+Olá! Código feito por Vinícius Ventura - Analista de dados SUPCIE/CGE/AL - Insta: @vinicius.ventura_ - Github: https://github.com/viniventur
+Código de Appscript do Planilhas Google (Google Sheets)
+Última atualização: 06/09/2024
+*/
+
+
+
 function onEdit(event) {
   
   const sheet = event.source.getActiveSheet();
