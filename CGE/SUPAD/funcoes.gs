@@ -33,8 +33,8 @@ function registro_inde() {
   }
 
   const valores_registro = range_registro.getValues();
-  const atualizacao = ss_base.getRange('U2');
-  const processos = ss_base.getRange(2, 3, ss_base.getLastRow(), 1).getValues().flat();
+  const atualizacao = ss_base.getRange('U3');
+  const processos = ss_base.getRange(3, 3, ss_base.getLastRow(), 1).getValues().flat();
   const nproc = ss_registro.getRange('C5').getValue();
   const regexdata = /^(\d{2})\/(\d{2})\/(\d{4})$/;
   const padraonumerico = /^\d+(\.\d+)?$/;
@@ -42,17 +42,22 @@ function registro_inde() {
   if (nproc == "") {
     ui.alert("Requisitos obrigatórios vazios!");
     return;
-  } else if (obrigatorios.indexOf("") > -1) {
+  }
+  
+  if (obrigatorios.indexOf("") > -1) {
     ui.alert("Requisitos obrigatórios vazios!");
     return;
-  } else if (!(padraonumerico.test(valor))) {
+  }
+  
+  if (!(padraonumerico.test(valor))) {
     ui.alert("Formato inválido. Por favor, insira apenas números no campo 'Valor'.");
     return;
-  } else if (!(cnpj.toString().length == 14)) {
+  }
+  
+  if (!(cnpj.toString().length == 18)) {
     ui.alert("Formato inválido de CNPJ. Por favor, insira apenas 14 dígitos.");
     return;
   }
-
 
   // Verificação das datas
   if (saida != "") {
@@ -73,8 +78,8 @@ function registro_inde() {
     return;
   }
 
-  ss_base.insertRowsBefore(2, 1);
-  range_registro.copyTo(ss_base.getRange('B2'), SpreadsheetApp.CopyPasteType.PASTE_NORMAL, false);
+  ss_base.insertRowsBefore(3, 1);
+  range_registro.copyTo(ss_base.getRange('B3'), SpreadsheetApp.CopyPasteType.PASTE_NORMAL, false);
   atualizacao.setValue(data);
   range_registro.clear({contentsOnly: true, skipFilteredRows: true});
   bios_registro.copyTo(range_registro, SpreadsheetApp.CopyPasteType.PASTE_NORMAL, false);
@@ -109,8 +114,8 @@ function registro_licit_emerg() {
   }
 
   const valores_registro = range_registro.getValues();
-  const atualizacao = ss_base.getRange('O2');
-  const processos = ss_base.getRange(2, 4, ss_base.getLastRow(), 1).getValues().flat();
+  const atualizacao = ss_base.getRange('O3');
+  const processos = ss_base.getRange(3, 4, ss_base.getLastRow(), 1).getValues().flat();
   const nproc = ss_registro.getRange('D11').getValue();
   const regexdata = /^(\d{2})\/(\d{2})\/(\d{4})$/;
   const padraonumerico = /^\d+(\.\d+)?$/;
@@ -134,13 +139,13 @@ function registro_licit_emerg() {
   
 
   // Verificação se o processo já existe
-  if (processos.indexOf(nproc[0]) >= 0) {
+  if (processos.indexOf(nproc) >= 0) {
     ui.alert("Processo já consta na base!");
     return;
   }
 
-  ss_base.insertRowsBefore(2, 1);
-  range_registro.copyTo(ss_base.getRange('B2'), SpreadsheetApp.CopyPasteType.PASTE_NORMAL, false);
+  ss_base.insertRowsBefore(3, 1);
+  range_registro.copyTo(ss_base.getRange('B3'), SpreadsheetApp.CopyPasteType.PASTE_NORMAL, false);
   atualizacao.setValue(data);
   range_registro.clear({contentsOnly: true, skipFilteredRows: true});
   bios_registro.copyTo(range_registro, SpreadsheetApp.CopyPasteType.PASTE_NORMAL, false);
@@ -176,8 +181,8 @@ function registro_gerais() {
   }
 
   const valores_registro = range_registro.getValues();
-  const atualizacao = ss_base.getRange('R2');
-  const processos = ss_base.getRange(2, 3, ss_base.getLastRow(), 1).getValues().flat();
+  const atualizacao = ss_base.getRange('R3');
+  const processos = ss_base.getRange(3, 3, ss_base.getLastRow(), 1).getValues().flat();
   const nproc = ss_registro.getRange('C17').getValue();
   const regexdata = /^(\d{2})\/(\d{2})\/(\d{4})$/;
   const padraonumerico = /^\d+(\.\d+)?$/;
@@ -188,7 +193,7 @@ function registro_gerais() {
   } else if (obrigatorios.indexOf("") > -1) {
     ui.alert("Requisitos obrigatórios vazios!");
     return;
-  } else if (!(cnpj.toString().length == 14)) { 
+  } else if (!(cnpj.toString().length == 18)) { 
     ui.alert("Formato inválido de CNPJ. Por favor, insira apenas 14 dígitos.");
     return;
   }
@@ -207,13 +212,13 @@ function registro_gerais() {
   }
 
   // Verificação se o processo já existe
-  if (processos.indexOf(nproc[0]) >= 0) {
+  if (processos.indexOf(nproc) >= 0) {
     ui.alert("Processo já consta na base!");
     return;
   }
 
-  ss_base.insertRowsBefore(2, 1);
-  range_registro.copyTo(ss_base.getRange('B2'), SpreadsheetApp.CopyPasteType.PASTE_NORMAL, false);
+  ss_base.insertRowsBefore(3, 1);
+  range_registro.copyTo(ss_base.getRange('B3'), SpreadsheetApp.CopyPasteType.PASTE_NORMAL, false);
   atualizacao.setValue(data);
   range_registro.clear({contentsOnly: true, skipFilteredRows: true});
   bios_registro.copyTo(range_registro, SpreadsheetApp.CopyPasteType.PASTE_NORMAL, false);
@@ -262,4 +267,110 @@ if (base_cnpj_cpf.indexOf(cnpj_cpf) > -1) {
   }
   
 }
+
+
+// função de atualizar filtragem manual
+
+function atualizarfiltromanual() {
+  const spreadsheet = SpreadsheetApp.getActive();
+  const data = Utilities.formatDate(new Date(), "GMT-3", "dd/MM/yyyy HH:mm");
+  const nomeplanilha = spreadsheet.getSheetName();
+  const bios_atualizacao = spreadsheet.getSheetByName('atualizacoes');
+
+
+  if (nomeplanilha == 'FILTRAGEM - Processos Indenizatórios') {
+
+    const sheet = spreadsheet.getSheetByName(nomeplanilha);
+    const header = sheet.getRange('B2:U2');
+    const dadosbase = spreadsheet.getRange('\'Processos Indenizatórios\'!B2:U')
+    const dadosfiltro = sheet.getRange('B2:U');
+    const datacel = bios_atualizacao.getRange('B5');
+    const intev = sheet.getRange(3, 2, sheet.getLastRow(), 20);
+
+    if (header.getFilter() == null) {
+
+      intev.clear({contentsOnly: false, skipFilteredRows: false});
+      //intev.clearConditionalFormatRules();
+      dadosbase.copyTo(header, SpreadsheetApp.CopyPasteType.PASTE_VALUES, false);
+      dadosbase.copyTo(header, SpreadsheetApp.CopyPasteType.PASTE_FORMAT, false);
+      dadosfiltro.createFilter();
+      datacel.setValue(data);
+
+    } else {
+
+      spreadsheet.getActiveSheet().getFilter().remove();
+      intev.clear({contentsOnly: false, skipFilteredRows: false});
+      //intev.clearConditionalFormatRules();
+      dadosbase.copyTo(header, SpreadsheetApp.CopyPasteType.PASTE_VALUES, false);
+      dadosbase.copyTo(header, SpreadsheetApp.CopyPasteType.PASTE_FORMAT, false);
+      dadosfiltro.createFilter();
+      datacel.setValue(data);
+
+    }
+
+  } else if (nomeplanilha == 'FILTRAGEM - Licitatório e Emergenciais') { 
+
+    const sheet = spreadsheet.getSheetByName(nomeplanilha);
+    const header = sheet.getRange('B2:O2');
+    const dadosbase = spreadsheet.getRange('\'Licitatório e Emergenciais\'!B2:U')
+    const dadosfiltro = sheet.getRange('B2:O');
+    const datacel = bios_atualizacao.getRange('B6');
+    const intev = sheet.getRange(3, 2, sheet.getLastRow(), 14);
+
+    if (header.getFilter() == null) {
+
+      intev.clear({contentsOnly: false, skipFilteredRows: false});
+      //intev.clearConditionalFormatRules();
+      dadosbase.copyTo(header, SpreadsheetApp.CopyPasteType.PASTE_VALUES, false);
+      dadosbase.copyTo(header, SpreadsheetApp.CopyPasteType.PASTE_FORMAT, false);
+      dadosfiltro.createFilter();
+      datacel.setValue(data);
+
+    } else {
+
+      spreadsheet.getActiveSheet().getFilter().remove();
+      intev.clear({contentsOnly: false, skipFilteredRows: false});
+      //intev.clearConditionalFormatRules();
+      dadosbase.copyTo(header, SpreadsheetApp.CopyPasteType.PASTE_VALUES, false);
+      dadosbase.copyTo(header, SpreadsheetApp.CopyPasteType.PASTE_FORMAT, false);
+      dadosfiltro.createFilter();
+      datacel.setValue(data);
+
+    }
+
+  } else if (nomeplanilha == 'FILTRAGEM - Processos Gerais') { 
+
+    const sheet = spreadsheet.getSheetByName(nomeplanilha);
+    const header = sheet.getRange('B2:R2');
+    const dadosbase = spreadsheet.getRange('\'Processos Gerais\'!B2:U')
+    const dadosfiltro = sheet.getRange('B2:R');
+    const datacel = bios_atualizacao.getRange('B7');
+    const intev = sheet.getRange(3, 2, sheet.getLastRow(), 17);
+
+    if (header.getFilter() == null) {
+
+      intev.clear({contentsOnly: false, skipFilteredRows: false});
+      //intev.clearConditionalFormatRules();
+      dadosbase.copyTo(header, SpreadsheetApp.CopyPasteType.PASTE_VALUES, false);
+      dadosbase.copyTo(header, SpreadsheetApp.CopyPasteType.PASTE_FORMAT, false);
+      dadosfiltro.createFilter();
+      datacel.setValue(data);
+
+    } else {
+
+      spreadsheet.getActiveSheet().getFilter().remove();
+      intev.clear({contentsOnly: false, skipFilteredRows: false});
+      //intev.clearConditionalFormatRules();
+      dadosbase.copyTo(header, SpreadsheetApp.CopyPasteType.PASTE_VALUES, false);
+      dadosbase.copyTo(header, SpreadsheetApp.CopyPasteType.PASTE_FORMAT, false);
+      dadosfiltro.createFilter();
+      datacel.setValue(data);
+
+    }
+    
+  } else {
+    const ui = SpreadsheetApp.getUi();
+    ui.alert("Planilha não permitida para a função");
+  }
+};
 
