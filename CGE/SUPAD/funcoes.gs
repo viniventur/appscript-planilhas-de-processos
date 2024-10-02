@@ -2,10 +2,8 @@
 ***************** FUNÇÕES *****************
 Olá! Código feito por Vinícius Ventura - Analista de dados SUPCIE/CGE/AL - Insta: @vinicius.ventura_ - Github: https://github.com/viniventur
 Código de Appscript do Planilhas Google (Google Sheets)
-Última atualização: 06/09/2024
+Última atualização: 02/10/2024
 */
-
-
 
 function em_producao() {
   const ui = SpreadsheetApp.getUi()
@@ -16,6 +14,7 @@ function registro_inde() {
 
   const ui = SpreadsheetApp.getUi();
   const data = Utilities.formatDate(new Date(), "GMT-3", "dd/MM/yyyy HH:mm");
+  const data_hoje = new Date();
   const ss_registro = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Registro de Processos");
   const ss_base = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Processos Indenizatórios");
   const ss_atualizacao = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("atualizacoes");
@@ -24,7 +23,9 @@ function registro_inde() {
   const range_registro = ss_registro.getRange('B5:T5');
   
   const entrada = ss_registro.getRange('F5').getDisplayValue();
+  const entrada_data = ss_registro.getRange('F5').getValue();
   const saida = ss_registro.getRange('G5').getDisplayValue();
+  const saida_data = ss_registro.getRange('G5').getValue();
   const valor = ss_registro.getRange('L5').getValue();
   const cnpj = ss_registro.getRange('H5').getValue();
   
@@ -44,7 +45,9 @@ function registro_inde() {
   const valores_registro = range_registro.getValues();
   const atualizacao = ss_base.getRange('U3');
   const processos = ss_base.getRange(3, 3, ss_base.getLastRow(), 1).getValues().flat();
-  const nproc = ss_registro.getRange('C5').getValue();
+  let nproc = ss_registro.getRange('C5').getValue();
+  nproc = nproc.replace(/\s+/g, ''); 
+  ss_registro.getRange('C5').setValue(nproc); 
   const regexdata = /^(\d{2})\/(\d{2})\/(\d{4})$/;
   const padraonumerico = /^\d+(\.\d+)?$/;
 
@@ -81,6 +84,16 @@ function registro_inde() {
     }
   }
 
+  if ((entrada_data > data_hoje) || (saida_data > data_hoje)) {
+    ui.alert("Data de entrada ou saída maior que a data de hoje. Por favor, insira uma data válida.");
+      return;
+  }
+
+  if (saida_data > entrada_data) {
+    ui.alert("Data de saída é maior que a data entrada. Por favor, insira uma de sáida (ou entrada) válida.");
+      return;
+  }
+
   // Verificação se o processo já existe
   if (processos.indexOf(nproc) >= 0) {
     ui.alert("Processo já consta na base!");
@@ -99,6 +112,7 @@ function registro_licit_emerg() {
 
   const ui = SpreadsheetApp.getUi();
   const data = Utilities.formatDate(new Date(), "GMT-3", "dd/MM/yyyy HH:mm");
+  const data_hoje = new Date();
   const ss_registro = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Registro de Processos");
   const ss_base = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Licitatório e Emergenciais");
   const ss_atualizacao = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("atualizacoes");
@@ -107,6 +121,7 @@ function registro_licit_emerg() {
   const range_registro = ss_registro.getRange('B11:N11');
   
   const abertura = ss_registro.getRange('J11').getDisplayValue();
+  const abertura_data = ss_registro.getRange('J11').getValue();
   const valor = ss_registro.getRange('I11').getValue();
   const tipo = ss_registro.getRange('G11').getValue();
   
@@ -125,7 +140,9 @@ function registro_licit_emerg() {
   const valores_registro = range_registro.getValues();
   const atualizacao = ss_base.getRange('O3');
   const processos = ss_base.getRange(3, 4, ss_base.getLastRow(), 1).getValues().flat();
-  const nproc = ss_registro.getRange('D11').getValue();
+  let nproc = ss_registro.getRange('D11').getValue();
+  nproc = nproc.replace(/\s+/g, '');
+  ss_registro.getRange('D11').setValue(nproc);
   const regexdata = /^(\d{2})\/(\d{2})\/(\d{4})$/;
   const padraonumerico = /^\d+(\.\d+)?$/;
 
@@ -146,6 +163,10 @@ function registro_licit_emerg() {
     return;
   }
   
+  if (abertura_data > data_hoje) {
+  ui.alert("Data de abertura maior que a data de hoje. Por favor, insira uma data válida.");
+    return;
+  }
 
   // Verificação se o processo já existe
   if (processos.indexOf(nproc) >= 0) {
@@ -165,6 +186,7 @@ function registro_gerais() {
 
   const ui = SpreadsheetApp.getUi();
   const data = Utilities.formatDate(new Date(), "GMT-3", "dd/MM/yyyy HH:mm");
+  const data_hoje = new Date();
   const ss_registro = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Registro de Processos");
   const ss_base = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Processos Gerais");
   const ss_atualizacao = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("atualizacoes");
@@ -173,6 +195,7 @@ function registro_gerais() {
   const range_registro = ss_registro.getRange('B17:Q17');
   
   const entrada = ss_registro.getRange('F17').getDisplayValue();
+  const entrada_data = ss_registro.getRange('F17').getValue();
   const saida = ss_registro.getRange('G17').getDisplayValue();
   const cnpj = ss_registro.getRange('H17').getValue();
   
@@ -192,7 +215,9 @@ function registro_gerais() {
   const valores_registro = range_registro.getValues();
   const atualizacao = ss_base.getRange('R3');
   const processos = ss_base.getRange(3, 3, ss_base.getLastRow(), 1).getValues().flat();
-  const nproc = ss_registro.getRange('C17').getValue();
+  let nproc = ss_registro.getRange('C17').getValue();
+  nproc = nproc.replace(/\s+/g, ''); 
+  ss_registro.getRange('C17').setValue(nproc);
   const regexdata = /^(\d{2})\/(\d{2})\/(\d{4})$/;
   const padraonumerico = /^\d+(\.\d+)?$/;
 
@@ -219,6 +244,13 @@ function registro_gerais() {
       return;
     }
   }
+
+
+ if (entrada_data > data_hoje) {
+  ui.alert("Data de entrada maior que a data de hoje. Por favor, insira uma data válida.");
+    return;
+  }
+
 
   // Verificação se o processo já existe
   if (processos.indexOf(nproc) >= 0) {
@@ -255,10 +287,10 @@ function registro_cnpj_cpf() {
     return;
   } 
 
-if (base_cnpj_cpf.indexOf(cnpj_cpf) > -1) {
-    ui.alert("Interessado já consta na base!");
-    return;
-  } 
+  if (base_cnpj_cpf.indexOf(cnpj_cpf) > -1) {
+      ui.alert("Interessado já consta na base!");
+      return;
+    } 
 
   if (!(regexCNPJ.test(cnpj_cpf)) && !(regexCPF.test(cnpj_cpf))) {
     ui.alert("Formato inválido de CNPJ ou CPF. Por favor, insira na formatação correta.");
