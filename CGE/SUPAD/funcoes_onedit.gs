@@ -22,7 +22,7 @@ function onEdit(event) {
     cel_mod.setValue(data);
 
 
-    if ((act_col = 12)) {
+    if ((act_col == 12)) {
       
 
       const padraonumerico = /^\d+(\.\d+)?$/;
@@ -34,10 +34,10 @@ function onEdit(event) {
         ui.alert("Formato inválido. Por favor, insira apenas números no campo 'Valor'.");
         return;
       }
-
+      
     }
 
-    if ((act_col = 6) || (act_col = 7)) {
+    if ((act_col == 6) || (act_col == 7)) {
       
 
       const cel_mod = sheet.getRange(act_row, act_col);
@@ -49,6 +49,7 @@ function onEdit(event) {
         return;
       }
 
+      return 
     }
   }
 
@@ -58,7 +59,7 @@ function onEdit(event) {
     const cel_mod = sheet.getRange(act_row, 15);
     cel_mod.setValue(data);
 
-    if ((act_col = 9)) {
+    if ((act_col == 9)) {
     
 
       const padraonumerico = /^\d+(\.\d+)?$/;
@@ -73,7 +74,7 @@ function onEdit(event) {
 
     } 
 
-    if ((act_col = 10)) {
+    if ((act_col == 10)) {
       
 
       const cel_mod = sheet.getRange(act_row, act_col);
@@ -97,7 +98,7 @@ function onEdit(event) {
 
 
 
-    if ((act_col = 6) || (act_col = 7)) {
+    if ((act_col == 6) || (act_col == 7)) {
       
 
       const cel_mod = sheet.getRange(act_row, act_col);
