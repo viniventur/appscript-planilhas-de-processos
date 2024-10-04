@@ -65,11 +65,7 @@ function registro_inde() {
     ui.alert("Formato inválido. Por favor, insira apenas números no campo 'Valor'.");
     return;
   }
-  
-  if (!(cnpj.toString().length == 18)) {
-    ui.alert("Formato inválido de CNPJ. Por favor, insira apenas 14 dígitos.");
-    return;
-  }
+
 
   // Verificação das datas
   if (saida != "") {
@@ -100,7 +96,7 @@ function registro_inde() {
     return;
   }
 
-  ss_base.insertRowsBefore(3, 1);
+  ss_base.getRange('B3:U3').insertCells(SpreadsheetApp.Dimension.ROWS);
   range_registro.copyTo(ss_base.getRange('B3'), SpreadsheetApp.CopyPasteType.PASTE_NORMAL, false);
   atualizacao.setValue(data);
   range_registro.clear({contentsOnly: true, skipFilteredRows: true});
@@ -174,7 +170,7 @@ function registro_licit_emerg() {
     return;
   }
 
-  ss_base.insertRowsBefore(3, 1);
+  ss_base.getRange('B3:O3').insertCells(SpreadsheetApp.Dimension.ROWS);
   range_registro.copyTo(ss_base.getRange('B3'), SpreadsheetApp.CopyPasteType.PASTE_NORMAL, false);
   atualizacao.setValue(data);
   range_registro.clear({contentsOnly: true, skipFilteredRows: true});
@@ -227,9 +223,6 @@ function registro_gerais() {
   } else if (obrigatorios.indexOf("") > -1) {
     ui.alert("Requisitos obrigatórios vazios!");
     return;
-  } else if (!(cnpj.toString().length == 18)) { 
-    ui.alert("Formato inválido de CNPJ. Por favor, insira apenas 14 dígitos.");
-    return;
   }
 
   // Verificação das datas
@@ -258,7 +251,7 @@ function registro_gerais() {
     return;
   }
 
-  ss_base.insertRowsBefore(3, 1);
+  ss_base.getRange('B3:R3').insertCells(SpreadsheetApp.Dimension.ROWS);
   range_registro.copyTo(ss_base.getRange('B3'), SpreadsheetApp.CopyPasteType.PASTE_NORMAL, false);
   atualizacao.setValue(data);
   range_registro.clear({contentsOnly: true, skipFilteredRows: true});
