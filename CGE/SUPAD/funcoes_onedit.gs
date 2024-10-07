@@ -15,6 +15,14 @@ function onEdit(event) {
   act_row = act_range.getRow();
   act_col = act_range.getColumn();
   
+  // Impedir mesclagem de células
+  var mergedRanges = sheet.getRange(act_range.getA1Notation()).getMergedRanges();
+  if (mergedRanges.length > 0) {
+    mergedRanges[0].breakApart();
+    ui.alert("Mesclagem de células não é permitida.");
+    return;
+  }
+  
 
   if ((act_row >= 3) & (sheet.getName() == 'Processos Indenizatórios')) {
 
@@ -113,4 +121,5 @@ function onEdit(event) {
     }
 
   }
+
 }
