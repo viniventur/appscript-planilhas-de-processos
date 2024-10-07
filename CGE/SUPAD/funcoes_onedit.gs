@@ -2,7 +2,7 @@
 ***************** FUNÇÕES onEdit *****************
 Olá! Código feito por Vinícius Ventura - Analista de dados SUPCIE/CGE/AL - Insta: @vinicius.ventura_ - Github: https://github.com/viniventur
 Código de Appscript do Planilhas Google (Google Sheets)
-Última atualização: 02/10/2024
+Última atualização: 07/10/2024
 */
 
 
