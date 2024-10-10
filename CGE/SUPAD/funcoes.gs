@@ -31,8 +31,8 @@ function registro_inde() {
   
   const obrigatorios_1 = ss_registro.getRange('B5:C5').getValues(); // SITUACAO - PROCESSO
   const obrigatorios_2 = ss_registro.getRange('F5').getValues(); // ENTRADA
-  const obrigatorios_3 = ss_registro.getRange('H5').getValues(); // CNPJ
-  const obrigatorios_4 = ss_registro.getRange('J5:M5').getValues(); // ASSUNTO A CONTRATAÇÃO
+  //const obrigatorios_3 = ss_registro.getRange('H5').getValues(); // CNPJ
+  const obrigatorios_4 = ss_registro.getRange('J5:L5').getValues(); // ASSUNTO A Valor
   const obrigatorios_5 = ss_registro.getRange('T5').getValues(); // Link SEI
   
   const obg = [obrigatorios_1, obrigatorios_2, obrigatorios_3, obrigatorios_4, obrigatorios_5];
