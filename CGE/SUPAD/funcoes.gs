@@ -2,7 +2,7 @@
 ***************** FUNÇÕES *****************
 Olá! Código feito por Vinícius Ventura - Analista de dados SUPCIE/CGE/AL - Insta: @vinicius.ventura_ - Github: https://github.com/viniventur
 Código de Appscript do Planilhas Google (Google Sheets)
-Última atualização: 02/10/2024
+Última atualização: 10/10/2024
 */
 
 function em_producao() {
@@ -46,8 +46,16 @@ function registro_inde() {
   const atualizacao = ss_base.getRange('U3');
   const processos = ss_base.getRange(3, 3, ss_base.getLastRow(), 1).getValues().flat();
   let nproc = ss_registro.getRange('C5').getValue();
+
+  if (typeof nproc !== 'string') {
+    ui.alert("Número de processo não está no formato correto (apenas números foram registrados)!");
+    return;
+  }
+
   nproc = nproc.replace(/\s+/g, ''); 
   ss_registro.getRange('C5').setValue(nproc); 
+  
+  
   const regexdata = /^(\d{2})\/(\d{2})\/(\d{4})$/;
   const padraonumerico = /^\d+(\.\d+)?$/;
 
@@ -137,8 +145,15 @@ function registro_licit_emerg() {
   const atualizacao = ss_base.getRange('O3');
   const processos = ss_base.getRange(3, 4, ss_base.getLastRow(), 1).getValues().flat();
   let nproc = ss_registro.getRange('D11').getValue();
+
+  if (typeof nproc !== 'string') {
+    ui.alert("Número de processo não está no formato correto (apenas números foram registrados)!");
+    return;
+  }
+
   nproc = nproc.replace(/\s+/g, '');
   ss_registro.getRange('D11').setValue(nproc);
+
   const regexdata = /^(\d{2})\/(\d{2})\/(\d{4})$/;
   const padraonumerico = /^\d+(\.\d+)?$/;
 
@@ -158,6 +173,12 @@ function registro_licit_emerg() {
     ui.alert("Formato inválido. Por favor, insira datas no formato dd/mm/yyyy.");
     return;
   }
+
+  if (verificarData(abertura_data) == false) {
+    ui.alert("Data de abertura inválida. Por favor, insira uma data válida.");
+    return;
+  }
+
   
   if (abertura_data > data_hoje) {
   ui.alert("Data de abertura maior que a data de hoje. Por favor, insira uma data válida.");
@@ -212,8 +233,15 @@ function registro_gerais() {
   const atualizacao = ss_base.getRange('R3');
   const processos = ss_base.getRange(3, 3, ss_base.getLastRow(), 1).getValues().flat();
   let nproc = ss_registro.getRange('C17').getValue();
+
+  if (typeof nproc !== 'string') {
+    ui.alert("Número de processo não está no formato correto (apenas números foram registrados)!");
+    return;
+  }
+  
   nproc = nproc.replace(/\s+/g, ''); 
   ss_registro.getRange('C17').setValue(nproc);
+
   const regexdata = /^(\d{2})\/(\d{2})\/(\d{4})$/;
   const padraonumerico = /^\d+(\.\d+)?$/;
 
@@ -281,7 +309,7 @@ function registro_cnpj_cpf() {
   } 
 
   if (base_cnpj_cpf.indexOf(cnpj_cpf) > -1) {
-      ui.alert("Interessado já consta na base!");
+      ui.alert("CNPJ ou CPF já consta na base!");
       return;
     } 
 
@@ -301,6 +329,39 @@ function registro_cnpj_cpf() {
   }
   
 }
+
+function registro_objeto() {
+
+  const ui = SpreadsheetApp.getUi();
+  const data = Utilities.formatDate(new Date(), "GMT-3", "dd/MM/yyyy HH:mm");
+  const ss_registro = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Registro de Objeto");
+  const ss_BIOS_registros = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("BIOS_registros");
+  const range_registro = ss_registro.getRange('D5');
+  const bios_registro = ss_BIOS_registros.getRange('B14');
+  
+  let objeto = ss_registro.getRange('D5').getValue();
+  const valores_registro = range_registro.getValues().flat();
+  const base_objeto = ss_registro.getRange(5, 2, ss_registro.getLastRow(), 1).getValues().flat();
+
+
+  if (valores_registro.indexOf("") > -1) {
+    ui.alert("Requisitos obrigatórios vazios!");
+    return;
+  } 
+
+  if (base_objeto.indexOf(objeto) > -1) {
+      ui.alert("Objeto já consta na base!");
+      return;
+    } 
+
+  ss_registro.getRange('B5').insertCells(SpreadsheetApp.Dimension.ROWS);
+  range_registro.copyTo(ss_registro.getRange('B5'), SpreadsheetApp.CopyPasteType.PASTE_NORMAL, false);
+  range_registro.clear({contentsOnly: true, skipFilteredRows: true});
+  bios_registro.copyTo(range_registro, SpreadsheetApp.CopyPasteType.PASTE_NORMAL, false);
+  ui.alert('Objeto adicionado com sucesso!');
+
+}
+
 
 
 // função de atualizar filtragem manual
@@ -407,4 +468,3 @@ function atualizarfiltromanual() {
     ui.alert("Planilha não permitida para a função");
   }
 };
-
