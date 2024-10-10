@@ -35,7 +35,7 @@ function registro_inde() {
   const obrigatorios_4 = ss_registro.getRange('J5:L5').getValues(); // ASSUNTO A Valor
   const obrigatorios_5 = ss_registro.getRange('T5').getValues(); // Link SEI
   
-  const obg = [obrigatorios_1, obrigatorios_2, obrigatorios_3, obrigatorios_4, obrigatorios_5];
+  const obg = [obrigatorios_1, obrigatorios_2, obrigatorios_4, obrigatorios_5];
   let obrigatorios = [];
   
   for (let i = 0; i < obg.length; i++) {
@@ -90,11 +90,6 @@ function registro_inde() {
 
   if ((entrada_data > data_hoje) || (saida_data > data_hoje)) {
     ui.alert("Data de entrada ou saída maior que a data de hoje. Por favor, insira uma data válida.");
-      return;
-  }
-
-  if (saida_data > entrada_data) {
-    ui.alert("Data de saída é maior que a data entrada. Por favor, insira uma de sáida (ou entrada) válida.");
       return;
   }
 
@@ -173,12 +168,12 @@ function registro_licit_emerg() {
     ui.alert("Formato inválido. Por favor, insira datas no formato dd/mm/yyyy.");
     return;
   }
-
+  /*
   if (verificarData(abertura_data) == false) {
     ui.alert("Data de abertura inválida. Por favor, insira uma data válida.");
     return;
   }
-
+  */
   
   if (abertura_data > data_hoje) {
   ui.alert("Data de abertura maior que a data de hoje. Por favor, insira uma data válida.");
