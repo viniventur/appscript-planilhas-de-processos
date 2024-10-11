@@ -2,7 +2,7 @@
 ***************** FUNÇÕES *****************
 Olá! Código feito por Vinícius Ventura - Analista de dados SUPCIE/CGE/AL - Insta: @vinicius.ventura_ - Github: https://github.com/viniventur
 Código de Appscript do Planilhas Google (Google Sheets)
-Última atualização: 10/10/2024
+Última atualização: 11/10/2024
 */
 
 function em_producao() {
@@ -19,32 +19,49 @@ function registro_inde() {
   const ss_base = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Processos Indenizatórios");
   const ss_atualizacao = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("atualizacoes");
   const ss_BIOS_registros = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("BIOS_registros");
-  const bios_registro = ss_BIOS_registros.getRange('B2:T2');
-  const range_registro = ss_registro.getRange('B5:T5');
+  const intervalo_registro_bios = 'B2:V2'
+  const intervalo_registro = 'B5:V5'
+  const intervalo_base = 'B3:W3'
+
+  const bios_registro = ss_BIOS_registros.getRange(intervalo_registro_bios);
+  const range_registro = ss_registro.getRange(intervalo_registro);
   
   const entrada = ss_registro.getRange('F5').getDisplayValue();
   const entrada_data = ss_registro.getRange('F5').getValue();
-  const saida = ss_registro.getRange('G5').getDisplayValue();
-  const saida_data = ss_registro.getRange('G5').getValue();
-  const valor = ss_registro.getRange('L5').getValue();
-  const cnpj = ss_registro.getRange('H5').getValue();
+  const entrada2 = ss_registro.getRange('G5').getDisplayValue();
+  const entrada2_data = ss_registro.getRange('G5').getValue();
+  const saida = ss_registro.getRange('H5').getDisplayValue();
+  const saida_data = ss_registro.getRange('H5').getValue();
+  const reinci = ss_registro.getRange('I5').getValue();
+  const valor = ss_registro.getRange('N5').getValue();
+  const cnpj = ss_registro.getRange('J5').getValue();
+
+  const registro_completo = ss_registro.getRange('B4:V5').getValues(); // Captura as duas linhas
+
+  const cabecalho = registro_completo[0]; // Linha de cabeçalhos (B4:V4)
+  const valores = registro_completo[1];   // Linha de valores (B5:V5)
+
+  // Cria um array para armazenar os valores correspondentes aos cabeçalhos com "*"
+  let valores_obrigatorios = [];
+
+  // Percorre o cabeçalho e os valores simultaneamente
+  for (let i = 0; i < cabecalho.length; i++) {
+    if (cabecalho[i].includes("*")) { // Verifica se o cabeçalho tem "*"
+      valores_obrigatorios.push(valores[i]); // Adiciona o valor correspondente ao array
+    }
+  }
   
-  const obrigatorios_1 = ss_registro.getRange('B5:C5').getValues(); // SITUACAO - PROCESSO
-  const obrigatorios_2 = ss_registro.getRange('F5').getValues(); // ENTRADA
-  //const obrigatorios_3 = ss_registro.getRange('H5').getValues(); // CNPJ
-  const obrigatorios_4 = ss_registro.getRange('J5:L5').getValues(); // ASSUNTO A Valor
-  const obrigatorios_5 = ss_registro.getRange('T5').getValues(); // Link SEI
-  
-  const obg = [obrigatorios_1, obrigatorios_2, obrigatorios_4, obrigatorios_5];
-  let obrigatorios = [];
-  
-  for (let i = 0; i < obg.length; i++) {
-    obrigatorios = obrigatorios.concat(obg[i][0]);
+  const valores_registro = range_registro.getValues();
+  const atualizacao = ss_base.getRange('W3');
+  const processos = ss_base.getRange(3, 3, ss_base.getLastRow(), 1).getValues().flat();
+
+  // VERIFICACOES
+
+  if (valores_obrigatorios.indexOf("") > -1) {
+    ui.alert("Requisitos obrigatórios vazios!");
+    return;
   }
 
-  const valores_registro = range_registro.getValues();
-  const atualizacao = ss_base.getRange('U3');
-  const processos = ss_base.getRange(3, 3, ss_base.getLastRow(), 1).getValues().flat();
   let nproc = ss_registro.getRange('C5').getValue();
 
   if (typeof nproc !== 'string') {
@@ -55,42 +72,55 @@ function registro_inde() {
   nproc = nproc.replace(/\s+/g, ''); 
   ss_registro.getRange('C5').setValue(nproc); 
   
-  
   const regexdata = /^(\d{2})\/(\d{2})\/(\d{4})$/;
   const padraonumerico = /^\d+(\.\d+)?$/;
-
-  if (nproc == "") {
-    ui.alert("Requisitos obrigatórios vazios!");
-    return;
-  }
-  
-  if (obrigatorios.indexOf("") > -1) {
-    ui.alert("Requisitos obrigatórios vazios!");
-    return;
-  }
   
   if (!(padraonumerico.test(valor))) {
     ui.alert("Formato inválido. Por favor, insira apenas números no campo 'Valor'.");
     return;
   }
 
+  if (!(padraonumerico.test(reinci))) {
+    ui.alert("Formato inválido. Por favor, insira apenas números no campo 'Reincidências'.");
+    return;
+  }
 
   // Verificação das datas
   if (saida != "") {
-    if (!(regexdata.test(entrada)) || !(regexdata.test(saida))) {
+    
+    if (!(regexdata.test(entrada)) || !(regexdata.test(entrada2)) || !(regexdata.test(saida))) {
       ui.alert("Formato inválido. Por favor, insira datas no formato dd/mm/yyyy.");
       return;
     }
+
+    if ((entrada_data > data_hoje) || (entrada2_data > data_hoje) || (saida_data > data_hoje)) {
+      ui.alert("Data de entrada ou saída maior que a data de hoje. Por favor, insira uma data válida.");
+      return;
+    }
+
+    if ((verificarData(entrada_data) == false) || (verificarData(entrada2_data) == false) || (verificarData(saida_data) == false)) {
+      ui.alert("Data inválida. Por favor, insira uma data válida");
+      return;
+    }
+
+
   } else {
-    if (!(regexdata.test(entrada))) {
+
+    if (!(regexdata.test(entrada))  || !(regexdata.test(entrada2))) {
       ui.alert("Formato inválido. Por favor, insira a data de entrada no formato dd/mm/yyyy.");
       return;
     }
-  }
 
-  if ((entrada_data > data_hoje) || (saida_data > data_hoje)) {
-    ui.alert("Data de entrada ou saída maior que a data de hoje. Por favor, insira uma data válida.");
+    if ((entrada_data > data_hoje) || (entrada2_data > data_hoje)) {
+      ui.alert("Data de entrada ou saída maior que a data de hoje. Por favor, insira uma data válida.");
       return;
+    }
+
+    if ((verificarData(entrada_data) == false) || (verificarData(entrada2_data) == false)) {
+      ui.alert("Data inválida. Por favor, insira uma data válida");
+      return;
+    }
+
   }
 
   // Verificação se o processo já existe
@@ -99,7 +129,7 @@ function registro_inde() {
     return;
   }
 
-  ss_base.getRange('B3:U3').insertCells(SpreadsheetApp.Dimension.ROWS);
+  ss_base.getRange(intervalo_base).insertCells(SpreadsheetApp.Dimension.ROWS);
   range_registro.copyTo(ss_base.getRange('B3'), SpreadsheetApp.CopyPasteType.PASTE_NORMAL, false);
   atualizacao.setValue(data);
   range_registro.clear({contentsOnly: true, skipFilteredRows: true});
@@ -168,6 +198,7 @@ function registro_licit_emerg() {
     ui.alert("Formato inválido. Por favor, insira datas no formato dd/mm/yyyy.");
     return;
   }
+  
   /*
   if (verificarData(abertura_data) == false) {
     ui.alert("Data de abertura inválida. Por favor, insira uma data válida.");
@@ -371,11 +402,11 @@ function atualizarfiltromanual() {
   if (nomeplanilha == 'FILTRAGEM - Processos Indenizatórios') {
 
     const sheet = spreadsheet.getSheetByName(nomeplanilha);
-    const header = sheet.getRange('B2:U2');
-    const dadosbase = spreadsheet.getRange('\'Processos Indenizatórios\'!B2:U')
-    const dadosfiltro = sheet.getRange('B2:U');
+    const header = sheet.getRange('B2:W2');
+    const dadosbase = spreadsheet.getRange('\'Processos Indenizatórios\'!B2:W')
+    const dadosfiltro = sheet.getRange('B2:W');
     const datacel = bios_atualizacao.getRange('B5');
-    const intev = sheet.getRange(3, 2, sheet.getLastRow(), 20);
+    const intev = sheet.getRange(3, 2, sheet.getLastRow(), 24);
 
     if (header.getFilter() == null) {
 
