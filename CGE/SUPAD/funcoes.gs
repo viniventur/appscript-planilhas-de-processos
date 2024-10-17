@@ -2,7 +2,7 @@
 ***************** FUNÇÕES *****************
 Olá! Código feito por Vinícius Ventura - Analista de dados SUPCIE/CGE/AL - Insta: @vinicius.ventura_ - Github: https://github.com/viniventur
 Código de Appscript do Planilhas Google (Google Sheets)
-Última atualização: 11/10/2024
+Última atualização: 17/10/2024
 */
 
 function em_producao() {
@@ -146,28 +146,37 @@ function registro_licit_emerg() {
   const ss_base = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Licitatório e Emergenciais");
   const ss_atualizacao = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("atualizacoes");
   const ss_BIOS_registros = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("BIOS_registros");
-  const bios_registro = ss_BIOS_registros.getRange('B5:N5');
-  const range_registro = ss_registro.getRange('B11:N11');
+  const intervalo_registro_bios = 'B5:O5'
+  const intervalo_registro = 'B11:O11'
+  const intervalo_base = 'B3:P3'
+  
+  const bios_registro = ss_BIOS_registros.getRange(intervalo_registro_bios);
+  const range_registro = ss_registro.getRange(intervalo_registro);
   
   const abertura = ss_registro.getRange('J11').getDisplayValue();
   const abertura_data = ss_registro.getRange('J11').getValue();
+  const finalizacao = ss_registro.getRange('L11').getDisplayValue();
+  const finalizacao_data = ss_registro.getRange('L11').getValue();
   const valor = ss_registro.getRange('I11').getValue();
   const tipo = ss_registro.getRange('G11').getValue();
   
-  const obrigatorios_1 = ss_registro.getRange('B11').getValues(); // SITUACAO
-  const obrigatorios_2 = ss_registro.getRange('D11').getValues(); // PROCESSO
-  const obrigatorios_3 = ss_registro.getRange('G11:J11').getValues(); // TIPO - ABERTURA
-  const obrigatorios_4 = ss_registro.getRange('L11:N11').getValues(); // LINK SEI A LINK SEI INDEN
-  const obg = [obrigatorios_1, obrigatorios_2, obrigatorios_3, obrigatorios_4];
-  
-  let obrigatorios = []; // let porque será modificado
-  
-  for (let i = 0; i < obg.length; i++) {
-    obrigatorios = obrigatorios.concat(obg[i][0]);
+  const registro_completo = ss_registro.getRange('B10:O11').getValues(); // Captura as duas linhas
+
+  const cabecalho = registro_completo[0]; // Linha de cabeçalhos (B4:V4)
+  const valores = registro_completo[1];   // Linha de valores (B5:V5)
+
+  // Cria um array para armazenar os valores correspondentes aos cabeçalhos com "*"
+  let valores_obrigatorios = [];
+
+  // Percorre o cabeçalho e os valores simultaneamente
+  for (let i = 0; i < cabecalho.length; i++) {
+    if (cabecalho[i].includes("*")) { // Verifica se o cabeçalho tem "*"
+      valores_obrigatorios.push(valores[i]); // Adiciona o valor correspondente ao array
+    }
   }
 
   const valores_registro = range_registro.getValues();
-  const atualizacao = ss_base.getRange('O3');
+  const atualizacao = ss_base.getRange('P3');
   const processos = ss_base.getRange(3, 4, ss_base.getLastRow(), 1).getValues().flat();
   let nproc = ss_registro.getRange('D11').getValue();
 
@@ -185,7 +194,7 @@ function registro_licit_emerg() {
   if (nproc == "") {
     ui.alert("Requisitos obrigatórios vazios!");
     return;
-  } else if (obrigatorios.indexOf("") > -1) {
+  } else if (valores_obrigatorios.indexOf("") > -1) {
     ui.alert("Requisitos obrigatórios vazios!");
     return;
   } else if (!(padraonumerico.test(valor))) {
@@ -194,20 +203,30 @@ function registro_licit_emerg() {
   }
 
   // Verificação das datas
-  if (!(regexdata.test(abertura))) {
+  if (!(regexdata.test(abertura)) || !(regexdata.test(finalizacao))) {
     ui.alert("Formato inválido. Por favor, insira datas no formato dd/mm/yyyy.");
     return;
   }
   
-  /*
-  if (verificarData(abertura_data) == false) {
-    ui.alert("Data de abertura inválida. Por favor, insira uma data válida.");
+  
+  if ((verificarData(abertura_data) == false) || (verificarData(finalizacao_data) == false)) {
+    ui.alert("Data inválida. Por favor, insira uma data válida.");
     return;
   }
-  */
   
+  if (finalizacao_data > data_hoje) {
+    ui.alert("Data de finalização maior que a data de hoje. Por favor, insira uma data válida.");
+    return;
+  }
+
+
   if (abertura_data > data_hoje) {
-  ui.alert("Data de abertura maior que a data de hoje. Por favor, insira uma data válida.");
+    ui.alert("Data de abertura maior que a data de hoje. Por favor, insira uma data válida.");
+    return;
+  }
+  
+  if (abertura_data > finalizacao_data) {
+    ui.alert("Data de finalização é maior que a data de abertura. Por favor, insira uma data válida.");
     return;
   }
 
@@ -217,7 +236,7 @@ function registro_licit_emerg() {
     return;
   }
 
-  ss_base.getRange('B3:O3').insertCells(SpreadsheetApp.Dimension.ROWS);
+  ss_base.getRange(intervalo_base).insertCells(SpreadsheetApp.Dimension.ROWS);
   range_registro.copyTo(ss_base.getRange('B3'), SpreadsheetApp.CopyPasteType.PASTE_NORMAL, false);
   atualizacao.setValue(data);
   range_registro.clear({contentsOnly: true, skipFilteredRows: true});
@@ -432,11 +451,11 @@ function atualizarfiltromanual() {
   } else if (nomeplanilha == 'FILTRAGEM - Licitatório e Emergenciais') { 
 
     const sheet = spreadsheet.getSheetByName(nomeplanilha);
-    const header = sheet.getRange('B2:O2');
-    const dadosbase = spreadsheet.getRange('\'Licitatório e Emergenciais\'!B2:U')
-    const dadosfiltro = sheet.getRange('B2:O');
+    const header = sheet.getRange('B2:P2');
+    const dadosbase = spreadsheet.getRange('\'Licitatório e Emergenciais\'!B2:P')
+    const dadosfiltro = sheet.getRange('B2:P');
     const datacel = bios_atualizacao.getRange('B6');
-    const intev = sheet.getRange(3, 2, sheet.getLastRow(), 14);
+    const intev = sheet.getRange(3, 2, sheet.getLastRow(), 15);
 
     if (header.getFilter() == null) {
 
