@@ -2,7 +2,7 @@
 ***************** FUNÇÕES onEdit *****************
 Olá! Código feito por Vinícius Ventura - Analista de dados SUPCIE/CGE/AL - Insta: @vinicius.ventura_ - Github: https://github.com/viniventur
 Código de Appscript do Planilhas Google (Google Sheets)
-Última atualização: 11/10/2024
+Última atualização: 17/10/2024
 */
 
 
@@ -16,7 +16,7 @@ function onEdit(event) {
   const act_col = act_range.getColumn();
   const valor_anterior = event.oldValue;
   
-  /*
+  
   // Impedir mesclagem de células
   var mergedRanges = sheet.getRange(act_range.getA1Notation()).getMergedRanges();
   if (mergedRanges.length > 0) {
@@ -24,7 +24,7 @@ function onEdit(event) {
     ui.alert("Mesclagem de células não é permitida.");
     return;
   }
-  */
+  
   
   if ((act_row >= 3) && (sheet.getName() == 'Processos Indenizatórios')) {
 
@@ -86,7 +86,7 @@ function onEdit(event) {
 
   if ((act_row >= 3) & (sheet.getName() == 'Licitatório e Emergenciais')) {
 
-    const cel_mod = sheet.getRange(act_row, 15);
+    const cel_mod = sheet.getRange(act_row, 16);
     cel_mod.setValue(data);
 
     if ((act_col == 9)) {
