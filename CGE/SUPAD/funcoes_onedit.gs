@@ -2,7 +2,7 @@
 ***************** FUNÇÕES onEdit *****************
 Olá! Código feito por Vinícius Ventura - Analista de dados SUPCIE/CGE/AL - Insta: @vinicius.ventura_ - Github: https://github.com/viniventur
 Código de Appscript do Planilhas Google (Google Sheets)
-Última atualização: 17/10/2024
+Última atualização: 18/10/2024
 */
 
 
@@ -122,6 +122,66 @@ function onEdit(event) {
     }
 
     
+    
+    if ((act_col == 2)) {
+
+      const regexdata = /^(\d{2})\/(\d{2})\/(\d{4})$/;
+      const data_hoje = new Date();
+      const cel_mod = sheet.getRange(act_row, act_col);
+      valor = cel_mod.getValue(); 
+
+      if (valor == 'Finalizado') {
+
+        let data_finalizacao = '';
+        let data_valida = false; // Flag para verificar se a data é válida
+
+        while (!data_valida) {  // O loop continua até que a data seja válida
+
+          const data_finalizacao_input = ui.prompt('Insira a data de finalização (dd/mm/yyyy)', ui.ButtonSet.OK);
+          data_finalizacao = data_finalizacao_input.getResponseText();
+
+          if (data_finalizacao.trim() === '') {
+            ui.alert("O campo não pode ficar vazio. Por favor, insira a data de finalização.");
+            continue; // Reabre o input
+          }
+
+          // Validação do formato da data
+          if (!regexdata.test(data_finalizacao)) {
+            ui.alert("Formato inválido. Por favor, insira datas no formato dd/mm/yyyy.");
+            continue; // Reabre o input
+          }
+
+          // Converter a data finalização para o formato Date
+          const partes_data = data_finalizacao.split('/');
+          const data_finalizacao_convertida = new Date(partes_data[2], partes_data[1] - 1, partes_data[0]);
+
+          // Verificar se a data é maior que a data de hoje
+          if (data_finalizacao_convertida > data_hoje) {
+            ui.alert("Data de finalização maior que a data de hoje. Por favor, insira uma data válida.");
+            continue; // Reabre o input
+          }
+
+          // verificar se a data é valida
+          if (verificarData(data_finalizacao_convertida)) {
+            ui.alert("Data inválida. Por favor, insira uma data válida.");
+            continue; // Reabre o input
+          }
+
+          // Se passar por todas as validações, a data é considerada válida
+          data_valida = true;
+        
+        }
+
+        if (data_valida = true) {
+
+          const cel_finalizacao = sheet.getRange(act_row, 12);
+          cel_finalizacao.setValue(data_finalizacao)
+
+        }
+
+      }
+    }
+
   }
 
   if ((act_row >= 3) & (sheet.getName() == 'Processos Gerais')) {
