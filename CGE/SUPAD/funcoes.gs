@@ -252,6 +252,12 @@ function registro_licit_emerg() {
       return;
     }
 
+    const situacao = ss_registro.getRange('B11').getValue();
+    if (situacao == "Finalizado") {
+      ui.alert("O processo consta como finalizado. Insira a data de finalização.");
+      return;
+    }
+
   }
 
   if (abertura_data > data_hoje) {
