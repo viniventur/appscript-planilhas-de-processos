@@ -162,7 +162,7 @@ function onEdit(event) {
           }
 
           // verificar se a data é valida
-          if (verificarData(data_finalizacao_convertida)) {
+          if (verificarData(data_finalizacao_convertida) == false) {
             ui.alert("Data inválida. Por favor, insira uma data válida.");
             continue; // Reabre o input
           }
