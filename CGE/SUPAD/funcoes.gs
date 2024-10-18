@@ -69,9 +69,14 @@ function registro_inde() {
     return;
   }
 
-  nproc = nproc.replace(/\s+/g, ''); 
+  nproc = nproc.replace(/\s+/g, '');
   ss_registro.getRange('C5').setValue(nproc); 
   
+  if (nproc.length !== 23) {
+    ui.alert("Número de processo não está no formato correto (não possui 23 caracteres)! Por favor confira novamente.");
+    return;
+  }
+
   const regexdata = /^(\d{2})\/(\d{2})\/(\d{4})$/;
   const padraonumerico = /^\d+(\.\d+)?$/;
   
@@ -102,7 +107,6 @@ function registro_inde() {
       ui.alert("Data inválida. Por favor, insira uma data válida");
       return;
     }
-
 
   } else {
 
@@ -187,6 +191,11 @@ function registro_licit_emerg() {
 
   nproc = nproc.replace(/\s+/g, '');
   ss_registro.getRange('D11').setValue(nproc);
+    
+  if (nproc.length !== 23) {
+    ui.alert("Número de processo não está no formato correto (não possui 23 caracteres)! Por favor confira novamente.");
+    return;
+  }
 
   const regexdata = /^(\d{2})\/(\d{2})\/(\d{4})$/;
   const padraonumerico = /^\d+(\.\d+)?$/;
@@ -282,17 +291,19 @@ function registro_gerais() {
   const saida = ss_registro.getRange('G17').getDisplayValue();
   const cnpj = ss_registro.getRange('H17').getValue();
   
-  const obrigatorios_1 = ss_registro.getRange('B17:C17').getValues(); // SITUACAO - PROCESSO
-  const obrigatorios_2 = ss_registro.getRange('F17').getValues(); // ENTRADA
-  const obrigatorios_3 = ss_registro.getRange('H17').getValues(); // CNPJ
-  const obrigatorios_4 = ss_registro.getRange('J17').getValues(); // ASSUNTO
-  const obrigatorios_5 = ss_registro.getRange('Q17').getValues(); // Link SEI
-  
-  const obg = [obrigatorios_1, obrigatorios_2, obrigatorios_3, obrigatorios_4, obrigatorios_5];
-  let obrigatorios = [];
-  
-  for (let i = 0; i < obg.length; i++) {
-    obrigatorios = obrigatorios.concat(obg[i][0]);
+  const registro_completo = ss_registro.getRange('B16:Q17').getValues(); // Captura as duas linhas
+
+  const cabecalho = registro_completo[0]; // Linha de cabeçalhos (B4:V4)
+  const valores = registro_completo[1];   // Linha de valores (B5:V5)
+
+  // Cria um array para armazenar os valores correspondentes aos cabeçalhos com "*"
+  let valores_obrigatorios = [];
+
+  // Percorre o cabeçalho e os valores simultaneamente
+  for (let i = 0; i < cabecalho.length; i++) {
+    if (cabecalho[i].includes("*")) { // Verifica se o cabeçalho tem "*"
+      valores_obrigatorios.push(valores[i]); // Adiciona o valor correspondente ao array
+    }
   }
 
   const valores_registro = range_registro.getValues();
@@ -314,28 +325,47 @@ function registro_gerais() {
   if (nproc == "") {
     ui.alert("Requisitos obrigatórios vazios!");
     return;
-  } else if (obrigatorios.indexOf("") > -1) {
+  } else if (valores_obrigatorios.indexOf("") > -1) {
     ui.alert("Requisitos obrigatórios vazios!");
     return;
   }
 
   // Verificação das datas
   if (saida != "") {
+
     if (!(regexdata.test(entrada)) || !(regexdata.test(saida))) {
       ui.alert("Formato inválido. Por favor, insira datas no formato dd/mm/yyyy.");
       return;
     }
+  
+    if ((verificarData(entrada_data) == false) || (verificarData(saida) == false)) {
+     ui.alert("Data inválida. Por favor, insira uma data válida.");
+    return;
+    }
+
   } else {
+
     if (!(regexdata.test(entrada))) {
       ui.alert("Formato inválido. Por favor, insira a data de entrada no formato dd/mm/yyyy.");
       return;
     }
+
+    if (verificarData(entrada_data) == false) {
+     ui.alert("Data inválida. Por favor, insira uma data válida.");
+      return;
+    }
+
   }
 
 
  if (entrada_data > data_hoje) {
   ui.alert("Data de entrada maior que a data de hoje. Por favor, insira uma data válida.");
     return;
+  }
+
+  if (verificarData(entrada_data) == false) {
+   ui.alert("Data inválida. Por favor, insira uma data válida.");
+   return;
   }
 
 
