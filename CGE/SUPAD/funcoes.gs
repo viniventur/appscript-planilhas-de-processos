@@ -2,7 +2,7 @@
 ***************** FUNÇÕES *****************
 Olá! Código feito por Vinícius Ventura - Analista de dados SUPCIE/CGE/AL - Insta: @vinicius.ventura_ - Github: https://github.com/viniventur
 Código de Appscript do Planilhas Google (Google Sheets)
-Última atualização: 17/10/2024
+Última atualização: 18/10/2024
 */
 
 function em_producao() {
@@ -202,33 +202,54 @@ function registro_licit_emerg() {
     return;
   }
 
-  // Verificação das datas
-  if (!(regexdata.test(abertura)) || !(regexdata.test(finalizacao))) {
-    ui.alert("Formato inválido. Por favor, insira datas no formato dd/mm/yyyy.");
-    return;
-  }
-  
-  
-  if ((verificarData(abertura_data) == false) || (verificarData(finalizacao_data) == false)) {
-    ui.alert("Data inválida. Por favor, insira uma data válida.");
-    return;
-  }
-  
-  if (finalizacao_data > data_hoje) {
-    ui.alert("Data de finalização maior que a data de hoje. Por favor, insira uma data válida.");
-    return;
-  }
 
+
+  if (finalizacao != "") {
+    
+
+    // Verificação das datas
+    if (!(regexdata.test(abertura)) || !(regexdata.test(finalizacao))) {
+      ui.alert("Formato inválido. Por favor, insira datas no formato dd/mm/yyyy.");
+      return;
+    }
+    
+    
+    if ((verificarData(abertura_data) == false) || (verificarData(finalizacao_data) == false)) {
+      ui.alert("Data inválida. Por favor, insira uma data válida.");
+      return;
+    }
+    
+    if (finalizacao_data > data_hoje) {
+      ui.alert("Data de finalização maior que a data de hoje. Por favor, insira uma data válida.");
+      return;
+    }
+    
+    if (abertura_data > finalizacao_data) {
+      ui.alert("Data de finalização é maior que a data de abertura. Por favor, insira uma data válida.");
+      return;
+    }
+
+  } else {
+
+   // Verificação das datas
+    if (!(regexdata.test(abertura))) {
+      ui.alert("Formato inválido. Por favor, insira datas no formato dd/mm/yyyy.");
+      return;
+    }
+    
+    
+    if ((verificarData(abertura_data) == false)) {
+      ui.alert("Data inválida. Por favor, insira uma data válida.");
+      return;
+    }
+
+  }
 
   if (abertura_data > data_hoje) {
     ui.alert("Data de abertura maior que a data de hoje. Por favor, insira uma data válida.");
     return;
   }
-  
-  if (abertura_data > finalizacao_data) {
-    ui.alert("Data de finalização é maior que a data de abertura. Por favor, insira uma data válida.");
-    return;
-  }
+
 
   // Verificação se o processo já existe
   if (processos.indexOf(nproc) >= 0) {
