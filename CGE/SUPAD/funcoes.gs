@@ -2,7 +2,7 @@
 ***************** FUNÇÕES *****************
 Olá! Código feito por Vinícius Ventura - Analista de dados SUPCIE/CGE/AL - Insta: @vinicius.ventura_ - Github: https://github.com/viniventur
 Código de Appscript do Planilhas Google (Google Sheets)
-Última atualização: 18/10/2024
+Última atualização: 31/10/2024
 */
 
 function em_producao() {
@@ -295,6 +295,7 @@ function registro_gerais() {
   const entrada = ss_registro.getRange('F17').getDisplayValue();
   const entrada_data = ss_registro.getRange('F17').getValue();
   const saida = ss_registro.getRange('G17').getDisplayValue();
+  const saida_data = ss_registro.getRange('G17').getValue();
   const cnpj = ss_registro.getRange('H17').getValue();
   
   const registro_completo = ss_registro.getRange('B16:Q17').getValues(); // Captura as duas linhas
@@ -344,7 +345,7 @@ function registro_gerais() {
       return;
     }
   
-    if ((verificarData(entrada_data) == false) || (verificarData(saida) == false)) {
+    if ((verificarData(entrada_data) == false) || (verificarData(saida_data) == false)) {
      ui.alert("Data inválida. Por favor, insira uma data válida.");
     return;
     }
