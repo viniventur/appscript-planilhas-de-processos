@@ -60,7 +60,7 @@ function registro_geral() {
   let portaria = ss_registro.getRange('D5').getValue();
 
   if (typeof portaria !== 'string') {
-    ui.alert("Número de processo não está no formato correto (apenas números foram registrados)!");
+    ui.alert("Portaria não está no formato correto (apenas números foram registrados)!");
     return;
   }
 
@@ -70,7 +70,7 @@ function registro_geral() {
   
   // verificação portaria
   if (validarPortaria(portaria) == false) {
-    ui.alert("O dado de portaria não está no formato correto. Registre no formado (n/YYYY).");
+    ui.alert("Portaria não está no formato correto. Registre no formado (n/YYYY).");
     return;
   }
 
@@ -118,6 +118,24 @@ function registro_processos() {
   const range_registro = ss_registro.getRange('E5:F5');
   
   let processo = ss_registro.getRange('E5').getValue();
+  let portaria = ss_registro.getRange('F5').getValue();
+
+  if (typeof processo !== 'string') {
+    ui.alert("Número de processo não está no formato correto (apenas números foram registrados)!");
+    return;
+  }
+
+  if (typeof portaria !== 'string') {
+    ui.alert("Portaria não está no formato correto (apenas números foram registrados)!");
+    return;
+  }
+
+  // retirar espaços
+  processo.replace(/\s+/g, '');
+  portaria.replace(/\s+/g, '');
+  ss_registro.getRange('E5').setValue(processo);
+  ss_registro.getRange('F5').setValue(portaria);  
+
   const valores_registro = range_registro.getValues().flat();
   const base_processos = ss_registro.getRange(5, 2, ss_registro.getLastRow(), 1).getValues().flat();
 
@@ -130,6 +148,12 @@ function registro_processos() {
     ui.alert("Processo já consta na base!");
     return;
   } 
+
+  // verificação portaria
+  if (validarPortaria(portaria) == false) {
+    ui.alert("O dado de portaria não está no formato correto. Registre no formado (n/YYYY).");
+    return;
+  }
 
   if (processo.length !== 23) {
     ui.alert("Processo com formato errado!");
@@ -167,7 +191,7 @@ function atualizarfiltromanual() {
 
     if (header.getFilter() == null) {
 
-      intev.clear({contentsOnly: false, skipFilteredRows: false});
+      intev.clear({contentsOnly: true, skipFilteredRows: false});
       //intev.clearConditionalFormatRules();
       dadosbase.copyTo(header, SpreadsheetApp.CopyPasteType.PASTE_VALUES, false);
       dadosbase.copyTo(header, SpreadsheetApp.CopyPasteType.PASTE_FORMAT, false);
@@ -177,7 +201,7 @@ function atualizarfiltromanual() {
     } else {
 
       spreadsheet.getActiveSheet().getFilter().remove();
-      intev.clear({contentsOnly: false, skipFilteredRows: false});
+      intev.clear({contentsOnly: true, skipFilteredRows: false});
       //intev.clearConditionalFormatRules();
       dadosbase.copyTo(header, SpreadsheetApp.CopyPasteType.PASTE_VALUES, false);
       dadosbase.copyTo(header, SpreadsheetApp.CopyPasteType.PASTE_FORMAT, false);
