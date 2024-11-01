@@ -16,7 +16,7 @@ function onEdit(event) {
   const act_col = act_range.getColumn();
   const valor_anterior = event.oldValue;
   
-
+  
   // Impedir mesclagem de células
   var mergedRanges = sheet.getRange(act_range.getA1Notation()).getMergedRanges();
   if (mergedRanges.length > 0) {
@@ -26,7 +26,7 @@ function onEdit(event) {
   }
   
   
-  if ((act_row >= 3) && (sheet.getName() == 'Base do Portal da Transparência')) {
+  if ((act_row >= 3) && (sheet.getName() == 'Base Correição')) {
 
     const cel_mod = sheet.getRange(act_row, 9);
     cel_mod.setValue(data);
