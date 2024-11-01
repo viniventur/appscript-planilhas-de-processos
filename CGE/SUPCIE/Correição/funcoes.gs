@@ -17,7 +17,7 @@ function registro_geral() {
   const data = Utilities.formatDate(new Date(), "GMT-3", "dd/MM/yyyy HH:mm");
   const data_hoje = new Date();
   const ss_registro = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Registro Geral");
-  const ss_base = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Base do Portal da Transparência");
+  const ss_base = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Base Correição");
   const ss_atualizacao = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("atualizacoes");
   const ss_BIOS_registros = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("BIOS_registros");
   const intervalo_registro_bios = 'B2:H2'
@@ -33,8 +33,8 @@ function registro_geral() {
 
   const registro_completo = ss_registro.getRange('B4:H5').getValues(); // Captura as duas linhas
 
-  const cabecalho = registro_completo[0]; // Linha de cabeçalhos (B4:V4)
-  const valores = registro_completo[1];   // Linha de valores (B5:V5)
+  const cabecalho = registro_completo[0]; // Linha de cabeçalhos
+  const valores = registro_completo[1];   // Linha de valores
 
   // Cria um array para armazenar os valores correspondentes aos cabeçalhos com "*"
   let valores_obrigatorios = [];
@@ -160,7 +160,7 @@ function atualizarfiltromanual() {
 
     const sheet = spreadsheet.getSheetByName(nomeplanilha);
     const header = sheet.getRange('B2:I2');
-    const dadosbase = spreadsheet.getRange('\'Base do Portal da Transparência\'!B2:I')
+    const dadosbase = spreadsheet.getRange('\'Base Correição\'!B2:I')
     const dadosfiltro = sheet.getRange('B2:I');
     const datacel = bios_atualizacao.getRange('B3');
     const intev = sheet.getRange(3, 2, sheet.getLastRow(), 8);
