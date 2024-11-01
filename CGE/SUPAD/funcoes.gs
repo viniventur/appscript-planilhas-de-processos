@@ -2,7 +2,7 @@
 ***************** FUNÇÕES *****************
 Olá! Código feito por Vinícius Ventura - Analista de dados SUPCIE/CGE/AL - Insta: @vinicius.ventura_ - Github: https://github.com/viniventur
 Código de Appscript do Planilhas Google (Google Sheets)
-Última atualização: 31/10/2024
+Última atualização: 01/11/2024
 */
 
 function em_producao() {
@@ -487,7 +487,7 @@ function atualizarfiltromanual() {
 
     if (header.getFilter() == null) {
 
-      intev.clear({contentsOnly: false, skipFilteredRows: false});
+      intev.clear({contentsOnly: true, skipFilteredRows: false});
       //intev.clearConditionalFormatRules();
       dadosbase.copyTo(header, SpreadsheetApp.CopyPasteType.PASTE_VALUES, false);
       dadosbase.copyTo(header, SpreadsheetApp.CopyPasteType.PASTE_FORMAT, false);
@@ -497,7 +497,7 @@ function atualizarfiltromanual() {
     } else {
 
       spreadsheet.getActiveSheet().getFilter().remove();
-      intev.clear({contentsOnly: false, skipFilteredRows: false});
+      intev.clear({contentsOnly: true, skipFilteredRows: false});
       //intev.clearConditionalFormatRules();
       dadosbase.copyTo(header, SpreadsheetApp.CopyPasteType.PASTE_VALUES, false);
       dadosbase.copyTo(header, SpreadsheetApp.CopyPasteType.PASTE_FORMAT, false);
@@ -517,7 +517,7 @@ function atualizarfiltromanual() {
 
     if (header.getFilter() == null) {
 
-      intev.clear({contentsOnly: false, skipFilteredRows: false});
+      intev.clear({contentsOnly: true, skipFilteredRows: false});
       //intev.clearConditionalFormatRules();
       dadosbase.copyTo(header, SpreadsheetApp.CopyPasteType.PASTE_VALUES, false);
       dadosbase.copyTo(header, SpreadsheetApp.CopyPasteType.PASTE_FORMAT, false);
@@ -527,7 +527,7 @@ function atualizarfiltromanual() {
     } else {
 
       spreadsheet.getActiveSheet().getFilter().remove();
-      intev.clear({contentsOnly: false, skipFilteredRows: false});
+      intev.clear({contentsOnly: true, skipFilteredRows: false});
       //intev.clearConditionalFormatRules();
       dadosbase.copyTo(header, SpreadsheetApp.CopyPasteType.PASTE_VALUES, false);
       dadosbase.copyTo(header, SpreadsheetApp.CopyPasteType.PASTE_FORMAT, false);
@@ -547,7 +547,7 @@ function atualizarfiltromanual() {
 
     if (header.getFilter() == null) {
 
-      intev.clear({contentsOnly: false, skipFilteredRows: false});
+      intev.clear({contentsOnly: true, skipFilteredRows: false});
       //intev.clearConditionalFormatRules();
       dadosbase.copyTo(header, SpreadsheetApp.CopyPasteType.PASTE_VALUES, false);
       dadosbase.copyTo(header, SpreadsheetApp.CopyPasteType.PASTE_FORMAT, false);
@@ -557,7 +557,7 @@ function atualizarfiltromanual() {
     } else {
 
       spreadsheet.getActiveSheet().getFilter().remove();
-      intev.clear({contentsOnly: false, skipFilteredRows: false});
+      intev.clear({contentsOnly: true, skipFilteredRows: false});
       //intev.clearConditionalFormatRules();
       dadosbase.copyTo(header, SpreadsheetApp.CopyPasteType.PASTE_VALUES, false);
       dadosbase.copyTo(header, SpreadsheetApp.CopyPasteType.PASTE_FORMAT, false);
