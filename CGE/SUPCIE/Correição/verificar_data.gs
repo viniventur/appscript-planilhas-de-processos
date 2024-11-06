@@ -13,7 +13,17 @@ function verificarData(data) {
 
         return true;
 
+      } else {
+
+       return false
+
       }
+
+
+    } else {
+
+      return false
+
     }
 
   } else {
