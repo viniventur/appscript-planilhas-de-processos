@@ -1,4 +1,4 @@
-# Repositório de Automações de Planilhas Google (Apps Script)
+# Automações de Planilhas Google (Apps Script)
 
 Os scripts contidos são de automações diversas como:
 
