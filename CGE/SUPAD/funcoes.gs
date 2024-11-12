@@ -2,7 +2,7 @@
 ***************** FUNÇÕES *****************
 Olá! Código feito por Vinícius Ventura - Analista de dados SUPCIE/CGE/AL - Insta: @vinicius.ventura_ - Github: https://github.com/viniventur
 Código de Appscript do Planilhas Google (Google Sheets)
-Última atualização: 01/11/2024
+Última atualização: 12/11/2024
 */
 
 function em_producao() {
@@ -223,7 +223,7 @@ function registro_licit_emerg() {
     }
     
     
-    if ((verificarData(abertura_data) == false) || (verificarData(finalizacao_data) == false)) {
+    if ((verificarData(abertura) == false) || (verificarData(finalizacao) == false)) {
       ui.alert("Data inválida. Por favor, insira uma data válida.");
       return;
     }
@@ -247,7 +247,7 @@ function registro_licit_emerg() {
     }
     
     
-    if ((verificarData(abertura_data) == false)) {
+    if ((verificarData(abertura) == false)) {
       ui.alert("Data inválida. Por favor, insira uma data válida.");
       return;
     }
