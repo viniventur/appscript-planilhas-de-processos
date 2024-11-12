@@ -2,7 +2,7 @@
 ***************** FUNÇÕES *****************
 Olá! Código feito por Vinícius Ventura - Analista de dados SUPCIE/CGE/AL - Insta: @vinicius.ventura_ - Github: https://github.com/viniventur
 Código de Appscript do Planilhas Google (Google Sheets)
-Última atualização: 01/11/2024
+Última atualização: 12/11/2024
 */
 
 function em_producao() {
@@ -87,7 +87,7 @@ function registro_geral() {
     return;
   }
 
-  if ((verificarData(data_diario_value) == false)) {
+  if ((verificarData(data_diario) == false)) {
     ui.alert("Data inválida. Por favor, insira uma data válida");
     return;
   }
