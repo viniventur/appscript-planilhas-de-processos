@@ -2,7 +2,7 @@
 ***************** FUNÇÕES *****************
 Olá! Código feito por Vinícius Ventura - Analista de dados SUPCIE/CGE/AL - Insta: @vinicius.ventura_ - Github: https://github.com/viniventur
 Código de Appscript do Planilhas Google (Google Sheets)
-Última atualização: 12/11/2024
+Última atualização: 13/11/2024
 */
 
 function em_producao() {
@@ -103,7 +103,7 @@ function registro_inde() {
       return;
     }
 
-    if ((verificarData(entrada_data) == false) || (verificarData(entrada2_data) == false) || (verificarData(saida_data) == false)) {
+    if ((verificarData(entrada) == false) || (verificarData(entrada2) == false) || (verificarData(saida) == false)) {
       ui.alert("Data inválida. Por favor, insira uma data válida");
       return;
     }
@@ -120,7 +120,7 @@ function registro_inde() {
       return;
     }
 
-    if ((verificarData(entrada_data) == false) || (verificarData(entrada2_data) == false)) {
+    if ((verificarData(entrada) == false) || (verificarData(entrada2) == false)) {
       ui.alert("Data inválida. Por favor, insira uma data válida");
       return;
     }
@@ -345,7 +345,7 @@ function registro_gerais() {
       return;
     }
   
-    if ((verificarData(entrada_data) == false) || (verificarData(saida_data) == false)) {
+    if ((verificarData(entrada) == false) || (verificarData(saida) == false)) {
      ui.alert("Data inválida. Por favor, insira uma data válida.");
     return;
     }
@@ -357,7 +357,7 @@ function registro_gerais() {
       return;
     }
 
-    if (verificarData(entrada_data) == false) {
+    if (verificarData(entrada) == false) {
      ui.alert("Data inválida. Por favor, insira uma data válida.");
       return;
     }
@@ -368,11 +368,6 @@ function registro_gerais() {
  if (entrada_data > data_hoje) {
   ui.alert("Data de entrada maior que a data de hoje. Por favor, insira uma data válida.");
     return;
-  }
-
-  if (verificarData(entrada_data) == false) {
-   ui.alert("Data inválida. Por favor, insira uma data válida.");
-   return;
   }
 
 
