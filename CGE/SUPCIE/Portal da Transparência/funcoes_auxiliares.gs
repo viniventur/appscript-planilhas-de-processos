@@ -1,9 +1,20 @@
 // FUNCOES AUXILIARES
 
+
+/**
+ * Mostra um alerta (pop-up)
+ * 
+ * @param {str} Mensagem;
+ */
 function capturarValoresObrigatorios(cabecalho, valores) {
   return cabecalho.map((cabecalho, i) => cabecalho.includes("*") ? valores[i] : null).filter(Boolean);
 }
 
+/**
+ * Mostra um alerta (pop-up)
+ * 
+ * @param {str} Mensagem;
+ */
 function mostrarAlerta(mensagem) {
   UI.alert(mensagem);
 }
@@ -16,43 +27,49 @@ function mostrarAlerta(mensagem) {
  * @return {bool} validação de data;
  */
 function verificarData(data) {
-
-  const data_verif = new Date(data);
-
-  const data_hoje = new Date()
-  const ano_hoje = data_hoje.getFullYear()
-
-  if (data_verif.getFullYear() > 2000 && data_verif.getFullYear() <= ano_hoje) {
-
-    if (data_verif.getMonth() > 0 && data_verif.getMonth() <= 12) {
-
-      if (data_verif.getDate() > 0 && data_verif.getDate() <= 31) {
-
-        return true;
-
-      } else {
-
-       return false
-
-      }
-
-
-    } else {
-
-      return false
-
-    }
-
-  } else {
-
-    return false
- 
+  
+  // Expressão regular para verificar o formato DD/MM/YYYY
+  const regex = /^(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[0-2])\/(\d{4})$/;
+  if (!regex.test(data)) {
+      return false;
   }
 
+  // Separar a data em dia, mês e ano
+  const partes = data.split('/');
+  const dia = parseInt(partes[0], 10);
+  const mes = parseInt(partes[1], 10);
+  const ano = parseInt(partes[2], 10);
+
+  // Obter o ano atual
+  const anoAtual = new Date().getFullYear();
+
+  // Verificar se o ano está entre 2000 e o ano atual
+  if (ano < 2000 || ano > anoAtual) {
+      return false;
+  }
+
+  // Verificar se o mês é válido
+  if (mes < 1 || mes > 12) {
+      return false;
+  }
+
+  // Verificar se o dia é válido para o mês
+  const diasPorMes = [31, 28 + (ano % 4 === 0 && (ano % 100 !== 0 || ano % 400 === 0) ? 1 : 0), 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+  if (dia < 1 || dia > diasPorMes[mes - 1]) {
+      return false;
+  }
+
+  return true;
 }
 
 
-function validarPortaria(str) {
+/**
+ * Valida com base no padrao n/yyyy.
+ * 
+ * @param {str} String de verificacao;
+ * @param {bool} string válida;
+*/
+function validar_n(str) {
   // Ajusta a regex para permitir opcionalmente um ponto (ou múltiplos) antes da barra
   const regex = /^\d+(\.\d+)*\/\d{4}$/; 
   if (!regex.test(str)) {
