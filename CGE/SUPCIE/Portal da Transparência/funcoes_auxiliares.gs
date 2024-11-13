@@ -6,8 +6,8 @@
  * 
  * @param {str} Mensagem;
  */
-function capturarValoresObrigatorios(cabecalho, valores) {
-  return cabecalho.map((cabecalho, i) => cabecalho.includes("*") ? valores[i] : null).filter(Boolean);
+function verif_val_obrig(cabecalho, valores) {
+  return cabecalho.map((cabecalho, i) => cabecalho.includes("*") ? valores[i] : null).filter(value => value !== null);;
 }
 
 /**
@@ -26,12 +26,12 @@ function mostrarAlerta(mensagem) {
  * @param {date} Data;
  * @return {bool} validação de data;
  */
-function verificarData(data) {
+function verificar_data(data) {
   
   // Expressão regular para verificar o formato DD/MM/YYYY
   const regex = /^(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[0-2])\/(\d{4})$/;
   if (!regex.test(data)) {
-      return false;
+   return false;
   }
 
   // Separar a data em dia, mês e ano
@@ -45,18 +45,18 @@ function verificarData(data) {
 
   // Verificar se o ano está entre 2000 e o ano atual
   if (ano < 2000 || ano > anoAtual) {
-      return false;
+    return false;
   }
 
   // Verificar se o mês é válido
   if (mes < 1 || mes > 12) {
-      return false;
+    return false;
   }
 
   // Verificar se o dia é válido para o mês
   const diasPorMes = [31, 28 + (ano % 4 === 0 && (ano % 100 !== 0 || ano % 400 === 0) ? 1 : 0), 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
   if (dia < 1 || dia > diasPorMes[mes - 1]) {
-      return false;
+    return false;
   }
 
   return true;
@@ -69,7 +69,7 @@ function verificarData(data) {
  * @param {str} String de verificacao;
  * @param {bool} string válida;
 */
-function validar_n(str) {
+function validar_n_yyyy(str) {
   // Ajusta a regex para permitir opcionalmente um ponto (ou múltiplos) antes da barra
   const regex = /^\d+(\.\d+)*\/\d{4}$/; 
   if (!regex.test(str)) {
@@ -99,7 +99,7 @@ function validar_n(str) {
  * @param {str} intervalo_base - Intervalo da base;
  * @param {bool} transposto - Colagem transposta;
  */
-function adicionarRegistro(ss_base, intervalo_bios_registro, range_registro, intervalo_base, transposto) {
+function adicionar_registro(ss_base, intervalo_bios_registro, range_registro, intervalo_base, transposto) {
 
   if (transposto === false) {
     
