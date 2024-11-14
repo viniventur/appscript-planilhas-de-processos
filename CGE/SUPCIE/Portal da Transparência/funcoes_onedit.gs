@@ -14,14 +14,14 @@ function onEdit(event) {
   const act_col = act_range.getColumn();
   const valor_anterior = event.oldValue;
   
-  /*
+  
   // Impedir mesclagem de células
   var mergedRanges = SS_EVENT.getRange(act_range.getA1Notation()).getMergedRanges();
   if (mergedRanges.length > 0) {
     mergedRanges[0].breakApart();
     mostrarAlerta("Mesclagem de células não é permitida.");
     return;
-  }*/
+  }
   
   
   /*
