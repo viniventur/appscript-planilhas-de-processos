@@ -1,4 +1,9 @@
-// FUNCOES AUXILIARES
+/* 
+***************** FUNCOES AUXILIARES *****************
+Olá! Código feito por Vinícius Ventura - Analista de dados SUPCIE/CGE/AL - Insta: @vinicius.ventura_ - Github: https://github.com/viniventur
+Código de Appscript do Planilhas Google (Google Sheets)
+Última atualização: 14/11/2024
+*/
 
 
 /**
@@ -107,7 +112,7 @@ function adicionar_registro(ss_base, intervalo_bios_registro, range_registro, in
     SS_REGISTRO.getRange(range_registro).copyTo(ss_base.getRange('B3'), SpreadsheetApp.CopyPasteType.PASTE_NORMAL, transposto);
     SS_REGISTRO.getRange(range_registro).clear({contentsOnly: true, skipFilteredRows: true});
     SS_BIOS_REGISTRO.getRange(intervalo_bios_registro).copyTo(SS_REGISTRO.getRange(range_registro), SpreadsheetApp.CopyPasteType.PASTE_NORMAL, false);
-    ss_base.getRange(intervalo_base.split(':')[1]).setValue(DATA_FORMAT);
+    ss_base.getRange(intervalo_base.split(':')[1]).setValue(DATA_HJ_FORMAT);
     UI.alert('Processo adicionado com sucesso!');
 
   } else if (transposto === true) {
@@ -117,7 +122,7 @@ function adicionar_registro(ss_base, intervalo_bios_registro, range_registro, in
     SS_REGISTRO.getRange(range_registro).copyTo(ss_base.getRange('B3'), SpreadsheetApp.CopyPasteType.PASTE_NORMAL, transposto);
     SS_REGISTRO.getRange(range_registro).clear({contentsOnly: true, skipFilteredRows: true});
     SS_BIOS_REGISTRO.getRange(intervalo_bios_registro).copyTo(SS_REGISTRO.getRange(range_registro), SpreadsheetApp.CopyPasteType.PASTE_NORMAL, false);
-    ss_base.getRange(intervalo_base.split(':')[1]).setValue(DATA_FORMAT);
+    ss_base.getRange(intervalo_base.split(':')[1]).setValue(DATA_HJ_FORMAT);
     UI.alert('Processo adicionado com sucesso!');
 
   } else {
@@ -126,5 +131,53 @@ function adicionar_registro(ss_base, intervalo_bios_registro, range_registro, in
 
 
   }
+
+}
+
+
+/**
+ * Atualiza o registro manual
+ * 
+ * @param {str} nomeplanilha_original - Nome da planilha original;
+ * @param {str} dadosbase_range - Range dos dados da base original (Xn:Y);
+ * @param {str} datacel_range - Range da celula para dado de atualizacao (Yn);
+ * @param {int} num_ult_col - Número referente ao index da última coluna dos dados do filtro;
+ */
+function filtragem_manual(nomeplanilha, dadosbase_range, datacel_range, num_ult_col) {
+
+
+  const header_int = dadosbase_range + '2';
+  const startIndex = nomeplanilha.indexOf(" - ") + 3; // Localiza o índice após " - "
+  const nomeplanilha_original = nomeplanilha.substring(startIndex);
+
+  const ss_filtro = SS.getSheetByName(nomeplanilha);
+  const ss_original = SS.getSheetByName(nomeplanilha_original);
+  
+  const dados_filtro = ss_filtro.getRange(3, 2, ss_filtro.getLastRow(), num_ult_col);
+  const dados_original = ss_original.getRange(dadosbase_range)
+  const header = ss_filtro.getRange(header_int);
+  const bios_atualizacao = SS.getSheetByName('atualizacoes');
+  const datacel = bios_atualizacao.getRange(datacel_range);
+
+
+  if (header.getFilter() == null) {
+
+    dados_filtro.clear({contentsOnly: true, skipFilteredRows: false});
+    dados_original.copyTo(header, SpreadsheetApp.CopyPasteType.PASTE_VALUES, false);
+    dados_original.copyTo(header, SpreadsheetApp.CopyPasteType.PASTE_FORMAT, false);
+    header.createFilter();
+    datacel.setValue(DATA_HJ_FORMAT);
+
+  } else {
+
+    SS.getActiveSheet().getFilter().remove();
+    dados_filtro.clear({contentsOnly: true, skipFilteredRows: false});
+    dados_original.copyTo(header, SpreadsheetApp.CopyPasteType.PASTE_VALUES, false);
+    dados_original.copyTo(header, SpreadsheetApp.CopyPasteType.PASTE_FORMAT, false);
+    header.createFilter();
+    datacel.setValue(DATA_HJ_FORMAT);
+  
+  }
+
 
 }
