@@ -2,16 +2,16 @@
 ***************** REGISTRO CONTRATACAO DIRETA *****************
 Olá! Código feito por Vinícius Ventura - Analista de dados SUPCIE/CGE/AL - Insta: @vinicius.ventura_ - Github: https://github.com/viniventur
 Código de Appscript do Planilhas Google (Google Sheets)
-Última atualização: 13/11/2024
+Última atualização: 18/11/2024
 */
 
 function registro_contrat_direta() { 
 
   // constantes
   const ss_base = SS.getSheetByName("Contratação Direta");
-  const intervalo_registro = 'F4:F19';
-  const intervalo_base = 'B3:R3';
-  const intervalo_bios_registro = 'F2:F17';
+  const intervalo_registro = 'F4:F20';
+  const intervalo_base = 'B3:S3';
+  const intervalo_bios_registro = 'F2:F18';
   const ss_registro = SS.getSheetByName("Registro Geral");
 
   // Captura dos dados das colunas E e F - cabecalhos e valores
@@ -61,8 +61,8 @@ function registro_contrat_direta() {
 
   // Validação de datas
 
-  const data_insercao = ss_registro.getRange('F16').getDisplayValue();
-  const data_ultima_alimentacao = ss_registro.getRange('F17').getDisplayValue();
+  const data_insercao = ss_registro.getRange('F17').getDisplayValue();
+  const data_ultima_alimentacao = ss_registro.getRange('F18').getDisplayValue();
 
   if ((verificar_data(data_insercao) === false) || (verificar_data(data_ultima_alimentacao) === false)) {
     return mostrarAlerta("Data inválida. Por favor, insira uma data válida.");
