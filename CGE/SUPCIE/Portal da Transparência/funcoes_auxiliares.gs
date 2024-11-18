@@ -2,7 +2,7 @@
 ***************** FUNCOES AUXILIARES *****************
 Olá! Código feito por Vinícius Ventura - Analista de dados SUPCIE/CGE/AL - Insta: @vinicius.ventura_ - Github: https://github.com/viniventur
 Código de Appscript do Planilhas Google (Google Sheets)
-Última atualização: 14/11/2024
+Última atualização: 18/11/2024
 */
 
 
@@ -133,6 +133,40 @@ function adicionar_registro(ss_base, intervalo_bios_registro, range_registro, in
   }
 
 }
+
+
+/**
+ * Transfere os dados do registro para a base - específico para processo mae.
+ * 
+ * @param {range} ss_base - Planilha da base;
+ * @param {str} intervalo_bios_registro_1 - Intervalo da BIOS do registro 1;
+ * @param {str} intervalo_bios_registro_2 - Intervalo da BIOS do registro 2;
+ * @param {str} range_registro_1 - Intervalo do registro 1;
+ * @param {str} range_registro_2 - Intervalo do registro 2;
+ * @param {str} formulas_BIOS - Intervalo das formulas na base;
+ * @param {str} range_formulas - Range das formulas na base;
+ * @param {str} intervalo_base - Intervalo da base;
+ */
+function adicionar_registro_proc_mae(ss_base, intervalo_bios_registro_1, intervalo_bios_registro_2, range_registro_1, range_registro_2, formulas_BIOS, range_formulas, intervalo_base) {
+
+  const ss_registro_pm = SS.getSheetByName("Registro de Processo Mãe");
+
+  ss_base.getRange(intervalo_base).insertCells(SpreadsheetApp.Dimension.ROWS);
+  ss_registro_pm.getRange(range_registro_1).copyTo(ss_base.getRange('B3'), SpreadsheetApp.CopyPasteType.PASTE_NORMAL, false);
+  ss_registro_pm.getRange(range_registro_2).copyTo(ss_base.getRange('H3'), SpreadsheetApp.CopyPasteType.PASTE_NORMAL, false);
+  SS_BIOS_REGISTRO.getRange(formulas_BIOS).copyTo(ss_base.getRange(range_formulas), SpreadsheetApp.CopyPasteType.PASTE_FORMULA, false);
+
+  ss_registro_pm.getRange(range_registro_1).clear({contentsOnly: true, skipFilteredRows: true});
+  ss_registro_pm.getRange(range_registro_2).clear({contentsOnly: true, skipFilteredRows: true});
+
+  SS_BIOS_REGISTRO.getRange(intervalo_bios_registro_1).copyTo(ss_registro_pm.getRange(range_registro_1), SpreadsheetApp.CopyPasteType.PASTE_NORMAL, false);
+  SS_BIOS_REGISTRO.getRange(intervalo_bios_registro_2).copyTo(ss_registro_pm.getRange(range_registro_2), SpreadsheetApp.CopyPasteType.PASTE_NORMAL, false);
+  ss_base.getRange(intervalo_base.split(':')[1]).setValue(DATA_HJ_FORMAT);
+  UI.alert('Processo mãe adicionado com sucesso!');
+
+}
+
+
 
 
 /**
