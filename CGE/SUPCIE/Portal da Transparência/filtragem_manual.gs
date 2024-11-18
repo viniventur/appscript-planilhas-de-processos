@@ -21,6 +21,10 @@ function atualizarfiltromanual() {
 
     filtragem_manual(nomeplanilha, 'B2:M', 'B7', 12);
 
+  } else if (nomeplanilha == 'FILTRAGEM - Processos Mãe') {
+
+    filtragem_manual(nomeplanilha, 'B2:I', 'B8', 8);
+
   } else {
 
     mostrarAlerta("Planilha não permitida para a função");
