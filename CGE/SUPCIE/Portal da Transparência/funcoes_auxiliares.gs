@@ -190,6 +190,7 @@ function filtragem_manual(nomeplanilha, dadosbase_range, datacel_range, num_ult_
   const dados_filtro = ss_filtro.getRange(3, 2, ss_filtro.getLastRow(), num_ult_col);
   const dados_original = ss_original.getRange(dadosbase_range)
   const header = ss_filtro.getRange(header_int);
+  const header_dados_filtro = ss_filtro.getRange(2, 2, ss_filtro.getLastRow(), num_ult_col);
   const bios_atualizacao = SS.getSheetByName('atualizacoes');
   const datacel = bios_atualizacao.getRange(datacel_range);
 
@@ -199,7 +200,7 @@ function filtragem_manual(nomeplanilha, dadosbase_range, datacel_range, num_ult_
     dados_filtro.clear({contentsOnly: true, skipFilteredRows: false});
     dados_original.copyTo(header, SpreadsheetApp.CopyPasteType.PASTE_VALUES, false);
     dados_original.copyTo(header, SpreadsheetApp.CopyPasteType.PASTE_FORMAT, false);
-    header.createFilter();
+    header_dados_filtro.createFilter();
     datacel.setValue(DATA_HJ_FORMAT);
 
   } else {
@@ -208,7 +209,7 @@ function filtragem_manual(nomeplanilha, dadosbase_range, datacel_range, num_ult_
     dados_filtro.clear({contentsOnly: true, skipFilteredRows: false});
     dados_original.copyTo(header, SpreadsheetApp.CopyPasteType.PASTE_VALUES, false);
     dados_original.copyTo(header, SpreadsheetApp.CopyPasteType.PASTE_FORMAT, false);
-    header.createFilter();
+    header_dados_filtro.createFilter();
     datacel.setValue(DATA_HJ_FORMAT);
   
   }
