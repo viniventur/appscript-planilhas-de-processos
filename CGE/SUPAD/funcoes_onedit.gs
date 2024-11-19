@@ -2,7 +2,7 @@
 ***************** FUNÇÕES onEdit *****************
 Olá! Código feito por Vinícius Ventura - Analista de dados SUPCIE/CGE/AL - Insta: @vinicius.ventura_ - Github: https://github.com/viniventur
 Código de Appscript do Planilhas Google (Google Sheets)
-Última atualização: 18/10/2024
+Última atualização: 19/11/2024
 */
 
 
@@ -68,7 +68,7 @@ function onEdit(event) {
       const regexdata = /^(\d{2})\/(\d{2})\/(\d{4})$/;
       const cel_mod = sheet.getRange(act_row, act_col);
       const data = cel_mod.getDisplayValue(); 
-      
+    
       if (data != '') { 
         
         if (!(regexdata.test(data))) {
@@ -78,6 +78,12 @@ function onEdit(event) {
         
         }
       }
+    
+      ui.alert("Atualize a situação do processo.");
+      return;
+    
+    
+    
     }
 
   
