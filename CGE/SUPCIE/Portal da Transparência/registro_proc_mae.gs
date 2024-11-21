@@ -2,7 +2,7 @@
 ***************** REGISTRO PROCESSO MAE *****************
 Olá! Código feito por Vinícius Ventura - Analista de dados SUPCIE/CGE/AL - Insta: @vinicius.ventura_ - Github: https://github.com/viniventur
 Código de Appscript do Planilhas Google (Google Sheets)
-Última atualização: 18/11/2024
+Última atualização: 21/11/2024
 */
 
 function registro_proc_mae() { 
@@ -10,13 +10,10 @@ function registro_proc_mae() {
   // constantes
   const ss_base = SS.getSheetByName("Processos Mãe");
   const ss_registro = SS.getSheetByName("Registro de Processo Mãe");
-  const intervalo_registro = 'B5:H5';
-  const intervalo_base = 'B3:I3';
-  const intervalo_bios_registro = 'K2:Q2';
 
   // Captura dos dados das colunas E e F - cabecalhos e valores
-  const cabecalhos_dados = ss_registro.getRange('B4:H4').getValues().flat();
-  const valores_dados = ss_registro.getRange('B5:H5').getValues().flat();
+  const cabecalhos_dados = ss_registro.getRange('B4:F4').getValues().flat();
+  const valores_dados = ss_registro.getRange('B5:F5').getValues().flat();
   const registro_completo = [cabecalhos_dados, valores_dados];
 
   const cabecalho = registro_completo[0];
@@ -55,15 +52,25 @@ function registro_proc_mae() {
   if (base_processos_mae.indexOf(proc_mae) > -1) {
     return mostrarAlerta( "Processo mãe já consta na base!");
   } 
+  
 
+  // Validação de datas
+
+  const data_insercao = ss_registro.getRange('E5').getDisplayValue();
+
+  if ((verificar_data(data_insercao) === false)) {
+    return mostrarAlerta("Data inválida. Por favor, insira uma data válida.");
+  }
 
   // insercao 
   const intervalo_registro_1 = 'B5:C5';
-  const intervalo_registro_2 = 'D5';
+  const intervalo_registro_2 = 'D5:F5';
   const formula_bios = 'M2:P2';
   const range_formula = 'D3:G3';
   const intervalo_bios_registro_1 = 'K2:L2';
-  const intervalo_bios_registro_2 = 'Q2';
+  const intervalo_bios_registro_2 = 'Q2:S2';
+  const intervalo_base = 'B3:K3';
+
   adicionar_registro_proc_mae(ss_base, intervalo_bios_registro_1, intervalo_bios_registro_2, intervalo_registro_1, intervalo_registro_2, formula_bios, range_formula, intervalo_base);
 
 
