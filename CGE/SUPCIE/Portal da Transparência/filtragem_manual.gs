@@ -2,7 +2,7 @@
 ***************** FILTRAGEM MANUAL *****************
 Olá! Código feito por Vinícius Ventura - Analista de dados SUPCIE/CGE/AL - Insta: @vinicius.ventura_ - Github: https://github.com/viniventur
 Código de Appscript do Planilhas Google (Google Sheets)
-Última atualização: 18/11/2024
+Última atualização: 21/11/2024
 */
 
 function atualizarfiltromanual() {
@@ -23,7 +23,7 @@ function atualizarfiltromanual() {
 
   } else if (nomeplanilha == 'FILTRAGEM - Processos Mãe') {
 
-    filtragem_manual(nomeplanilha, 'B2:I', 'B8', 8);
+    filtragem_manual(nomeplanilha, 'B2:K', 'B8', 10);
 
   } else {
 
