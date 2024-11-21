@@ -2,7 +2,7 @@
 ***************** FUNÇÕES onEdit *****************
 Olá! Código feito por Vinícius Ventura - Analista de dados SUPCIE/CGE/AL - Insta: @vinicius.ventura_ - Github: https://github.com/viniventur
 Código de Appscript do Planilhas Google (Google Sheets)
-Última atualização: 18/11/2024
+Última atualização: 21/11/2024
 */
 
 
@@ -14,14 +14,14 @@ function onEdit(event) {
   const act_col = act_range.getColumn();
   const valor_anterior = event.oldValue;
   
- 
+  /*
   // Impedir mesclagem de células
   var mergedRanges = SS_EVENT.getRange(act_range.getA1Notation()).getMergedRanges();
   if (mergedRanges.length > 0) {
     mergedRanges[0].breakApart();
     mostrarAlerta("Mesclagem de células não é permitida.");
     return;
-  }
+  }*/
   
   
   /*
@@ -180,7 +180,7 @@ function onEdit(event) {
 
   if ((act_row >= 3) && (SS_EVENT.getName() == 'Processos Mãe')) {
 
-    const cel_mod = SS_EVENT.getRange(act_row, 9);
+    const cel_mod = SS_EVENT.getRange(act_row, 11);
     cel_mod.setValue(DATA_HJ_FORMAT);
 
 
@@ -197,9 +197,24 @@ function onEdit(event) {
       }
     
     }
+  
+  
+    // verificacao de formatacao de datas
+    if (act_col == 09) {
+      
+      const regexdata = /^(\d{2})\/(\d{2})\/(\d{4})$/;
+      const cel_mod = SS_EVENT.getRange(act_row, act_col);
+      const data = cel_mod.getDisplayValue(); 
+
+      if (!(regexdata.test(data))) {
+
+        mostrarAlerta("Formato inválido. Por favor, insira datas no formato dd/mm/yyyy.");
+        return;
+
+      }
+    }  
+    
+  
   }
-
-
-
 
 }
