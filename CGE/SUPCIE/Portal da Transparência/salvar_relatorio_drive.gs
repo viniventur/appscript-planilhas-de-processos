@@ -34,8 +34,33 @@ function salvar_relatorio_drive() {
   });
 
   // Salva o arquivo PDF no Google Drive
-  const arquivo = pasta_relatorios.createFile(response.getBlob()).setName(`Painel de Monitoramento - ${periodo}.pdf`);
+  const nome_arquivo = `Painel de Monitoramento - ${periodo}.pdf`
+  const salvar_arquivo = pasta_relatorios.createFile(response.getBlob()).setName(nome_arquivo);
 
-  //console.log(`PDF salvo: ${arquivo.getUrl()}`);
+
+  // Enviar email
+  const arquivo = drive.getFilesByName(nome_arquivo).next();
+  
+
+  const bios = SS.getSheetByName("BIOS");
+
+  // Obter o intervalo de valores
+  const usuarios = bios.getRange("AD2:AE").getDisplayValues()
+    .filter(row => row[0].trim() !== "" && row[1].trim() !== ""); // Filtra linhas com e-mails e nomes preenchidos
+
+  // Loop para enviar e-mails personalizados
+  usuarios.forEach(usuario => {
+   
+    const email = usuario[0];
+    const nome = usuario[1];
+  
+    
+    GmailApp.sendEmail(
+      email,
+      `Script de Salvamento do relatório concluído! - referente a ${periodo}`, `Olá, ${nome}! Segue o relatório de monitoramento do período ${periodo} salvo em anexo.`, 
+      {attachments: [arquivo.getAs(MimeType.PDF)]}
+    )
+
+  })
 
 }
