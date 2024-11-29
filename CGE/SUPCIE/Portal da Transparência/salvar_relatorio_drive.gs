@@ -54,13 +54,19 @@ function salvar_relatorio_drive() {
    
     const email = usuario[0];
     const nome = usuario[1];
-  
-    
-    GmailApp.sendEmail(
-      email,
-      `Script de Salvamento do relatório concluído! - referente a ${periodo}`, `Olá, ${nome}! Segue o relatório de monitoramento do período ${periodo} salvo em anexo.`, 
-      {attachments: [arquivo.getAs(MimeType.PDF)]}
-    )
+    const assunto = `Salvamento do relatório do portal da transparência realizado! - referente a ${periodo}`
+
+
+    const html = `<p>Olá, ${nome}! Segue o relatório de monitoramento do período ${periodo} salvo em anexo.\nLink da pasta consolidada: https://drive.google.com/drive/folders/1u3s257UHEGCkQ4T0kgtc50bXQzXd2VI3?usp=drive_link</p><br>Atenção: Esta é uma mensagem automática.</br>`
+
+    MailApp.sendEmail({
+      name: "Relatório - Portal da transparência",
+      to: email,
+      subject: assunto,
+      htmlBody: html,
+      attachments: [arquivo.getAs(MimeType.PDF)]
+    }); 
+
 
   })
 
