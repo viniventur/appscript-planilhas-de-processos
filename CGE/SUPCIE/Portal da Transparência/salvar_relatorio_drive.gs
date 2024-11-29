@@ -8,11 +8,12 @@ Código de Appscript do Planilhas Google (Google Sheets)
 
 function salvar_relatorio_drive() {
 
+  const SS = SpreadsheetApp.getActiveSpreadsheet();
   const sheet = SS.getSheetByName('Painel de Monitoramento');
   const drive = DriveApp;
 
   // pegar período
-  const periodo = sheet.getRange('H2').getDisplayValue()
+  const periodo = sheet.getRange('H2').getDisplayValue();
 
   // Configurações do PDF
   const range = "A1:N40";
