@@ -2,7 +2,7 @@
 ***************** REGISTRO PROCESSO MAE *****************
 Olá! Código feito por Vinícius Ventura - Analista de dados SUPCIE/CGE/AL - Insta: @vinicius.ventura_ - Github: https://github.com/viniventur
 Código de Appscript do Planilhas Google (Google Sheets)
-Última atualização: 21/11/2024
+Última atualização: 02/12/2024
 */
 
 function registro_proc_mae() { 
@@ -12,8 +12,8 @@ function registro_proc_mae() {
   const ss_registro = SS.getSheetByName("Registro de Processo Mãe");
 
   // Captura dos dados das colunas E e F - cabecalhos e valores
-  const cabecalhos_dados = ss_registro.getRange('B4:F4').getValues().flat();
-  const valores_dados = ss_registro.getRange('B5:F5').getValues().flat();
+  const cabecalhos_dados = ss_registro.getRange('B4:G4').getValues().flat();
+  const valores_dados = ss_registro.getRange('B5:G5').getValues().flat();
   const registro_completo = [cabecalhos_dados, valores_dados];
 
   const cabecalho = registro_completo[0];
@@ -64,12 +64,12 @@ function registro_proc_mae() {
 
   // insercao 
   const intervalo_registro_1 = 'B5:C5';
-  const intervalo_registro_2 = 'D5:F5';
+  const intervalo_registro_2 = 'D5:G5';
   const formula_bios = 'M2:P2';
   const range_formula = 'D3:G3';
   const intervalo_bios_registro_1 = 'K2:L2';
-  const intervalo_bios_registro_2 = 'Q2:S2';
-  const intervalo_base = 'B3:K3';
+  const intervalo_bios_registro_2 = 'Q2:T2';
+  const intervalo_base = 'B3:L3';
 
   adicionar_registro_proc_mae(ss_base, intervalo_bios_registro_1, intervalo_bios_registro_2, intervalo_registro_1, intervalo_registro_2, formula_bios, range_formula, intervalo_base);
 
