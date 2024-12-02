@@ -2,7 +2,7 @@
 ***************** FUNÇÕES onEdit *****************
 Olá! Código feito por Vinícius Ventura - Analista de dados SUPCIE/CGE/AL - Insta: @vinicius.ventura_ - Github: https://github.com/viniventur
 Código de Appscript do Planilhas Google (Google Sheets)
-Última atualização: 21/11/2024
+Última atualização: 02/12/2024
 */
 
 
@@ -180,7 +180,7 @@ function onEdit(event) {
 
   if ((act_row >= 3) && (SS_EVENT.getName() == 'Processos Mãe')) {
 
-    const cel_mod = SS_EVENT.getRange(act_row, 11);
+    const cel_mod = SS_EVENT.getRange(act_row, 12);
     cel_mod.setValue(DATA_HJ_FORMAT);
 
 
