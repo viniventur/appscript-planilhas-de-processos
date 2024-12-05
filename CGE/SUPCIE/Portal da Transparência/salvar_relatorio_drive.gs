@@ -2,7 +2,7 @@
 ***************** AUTOMAÇÃO DE SALVAMENTO DO RELATÓRIO EM PDF *****************
 Olá! Código feito por Vinícius Ventura - Analista de dados SUPCIE/CGE/AL - Insta: @vinicius.ventura_ - Github: https://github.com/viniventur
 Código de Appscript do Planilhas Google (Google Sheets)
-Última atualização: 29/11/2024
+Última atualização: 05/12/2024
 */
 
 
@@ -28,6 +28,8 @@ function salvar_relatorio_drive() {
   // Pasta no Google Drive para salvar o arquivo
   const nome_pasta_relatorios = "Relatórios - Portal da Transparência";
   const pasta_relatorios = drive.getFoldersByName(nome_pasta_relatorios).next();
+  const pasta_diarios = pasta_relatorios.getFoldersByName('Diários').next();
+  const pasta_semanal = pasta_relatorios.getFoldersByName('Semanais').next();
   
   // Faz a solicitação para baixar o PDF
   const response = UrlFetchApp.fetch(pdfUrl, {
@@ -36,7 +38,22 @@ function salvar_relatorio_drive() {
 
   // Salva o arquivo PDF no Google Drive
   const nome_arquivo = `Painel de Monitoramento - ${periodo}.pdf`
-  const salvar_arquivo = pasta_relatorios.createFile(response.getBlob()).setName(nome_arquivo);
+
+  const hoje = new Date();
+  
+  // Verifica se o dia da semana é sexta-feira (5) e salva na pasta semanal
+  
+  if (hoje.getDay() === 5) {
+    
+    const salvar_arquivo_semanal = pasta_semanal.createFile(response.getBlob()).setName(nome_arquivo);
+    const salvar_arquivo_diario = pasta_diarios.createFile(response.getBlob()).setName(nome_arquivo);
+
+  
+  } else {
+
+    const salvar_arquivo_diario = pasta_diarios.createFile(response.getBlob()).setName(nome_arquivo);
+
+  }
 
 
   // Enviar email
