@@ -2,7 +2,7 @@
 ***************** FUNCOES AUXILIARES *****************
 Olá! Código feito por Vinícius Ventura - Analista de dados SUPCIE/CGE/AL - Insta: @vinicius.ventura_ - Github: https://github.com/viniventur
 Código de Appscript do Planilhas Google (Google Sheets)
-Última atualização: 21/11/2024
+Última atualização: 05/12/2024
 */
 
 
@@ -172,7 +172,7 @@ function adicionar_registro_proc_mae(ss_base, intervalo_bios_registro_1, interva
 /**
  * Atualiza o registro manual
  * 
- * @param {str} nomeplanilha_original - Nome da planilha original;
+ * @param {str} nomeplanilha - Nome da planilha do filtro;
  * @param {str} dadosbase_range - Range dos dados da base original (Xn:Y);
  * @param {str} datacel_range - Range da celula para dado de atualizacao (Yn);
  * @param {int} num_ult_col - Número referente ao index da última coluna dos dados do filtro;
@@ -190,7 +190,7 @@ function filtragem_manual(nomeplanilha, dadosbase_range, datacel_range, num_ult_
   const dados_filtro = ss_filtro.getRange(3, 2, ss_filtro.getLastRow(), num_ult_col);
   const dados_original = ss_original.getRange(dadosbase_range)
   const header = ss_filtro.getRange(header_int);
-  const header_dados_filtro = ss_filtro.getRange(2, 2, ss_filtro.getLastRow(), num_ult_col);
+  const header_dados_filtro = ss_filtro.getRange(dadosbase_range);
   const bios_atualizacao = SS.getSheetByName('atualizacoes');
   const datacel = bios_atualizacao.getRange(datacel_range);
 
