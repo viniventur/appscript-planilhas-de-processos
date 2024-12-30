@@ -2,7 +2,7 @@
 ***************** AUTOMAÇÃO DE SALVAMENTO DO RELATÓRIO EM PDF *****************
 Olá! Código feito por Vinícius Ventura - Analista de dados SUPCIE/CGE/AL - Insta: @vinicius.ventura_ - Github: https://github.com/viniventur
 Código de Appscript do Planilhas Google (Google Sheets)
-Última atualização: 10/12/2024
+Última atualização: 30/12/2024
 */
 
 
@@ -96,7 +96,7 @@ function salvar_relatorio_drive() {
       
         const email = usuario[0];
         const nome = usuario[1];
-        const assunto = `Salvamento do relatório do portal da transparência realizado! - referente a ${periodo_painel}`
+        const assunto = `Relatório do portal da transparência salvo com sucesso! - ${periodo_painel}`
 
 
         const html = `<p>Olá, ${nome}! Segue o relatório de monitoramento do período ${periodo_painel} salvo em anexo.\nLink da pasta consolidada: https://drive.google.com/drive/folders/1u3s257UHEGCkQ4T0kgtc50bXQzXd2VI3?usp=drive_link</p><br>Atenção: Esta é uma mensagem automática.</br>`
@@ -128,7 +128,7 @@ function salvar_relatorio_drive() {
     
         const email = usuario[0];
         const nome = usuario[1];
-        const assunto = `Salvamento do relatório do portal da transparência realizado! - referente a ${periodo_painel}`
+        const assunto = `Relatório do portal da transparência salvo com sucesso! - ${periodo_painel}`
 
 
         const html = `<p>Olá, ${nome}! Segue o relatório de monitoramento do período ${periodo_painel} salvo em anexo.\nLink da pasta consolidada: https://drive.google.com/drive/folders/1u3s257UHEGCkQ4T0kgtc50bXQzXd2VI3?usp=drive_link</p><br>Atenção: Esta é uma mensagem automática.</br>`
