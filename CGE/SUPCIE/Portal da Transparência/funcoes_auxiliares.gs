@@ -2,7 +2,7 @@
 ***************** FUNCOES AUXILIARES *****************
 Olá! Código feito por Vinícius Ventura - Analista de dados SUPCIE/CGE/AL - Insta: @vinicius.ventura_ - Github: https://github.com/viniventur
 Código de Appscript do Planilhas Google (Google Sheets)
-Última atualização: 05/12/2024
+Última atualização: 17/01/2024
 */
 
 
@@ -216,3 +216,38 @@ function filtragem_manual(nomeplanilha, dadosbase_range, datacel_range, num_ult_
 
 
 }
+
+
+/**
+ * Função genérica para verificar se alguma função está em execução.
+ * @param {string} funcaoNome - Nome da função que está chamando.
+ * @param {number} tempoExpiracao - Tempo (em segundos) para expiração do estado.
+ * @return {boolean} - Retorna `true` se nenhuma função estiver em execução, e registra o estado atual.
+ */
+function verificarExecucao(funcaoNome, tempoExpiracao) {
+  const cache = CacheService.getScriptCache();
+  const estadoGlobal = cache.get("funcaoRodando");
+  
+  if (estadoGlobal) {
+    Logger.log(`A função ${estadoGlobal} está em execução. Abortando ${funcaoNome}.`);
+    return false; // Indica que já existe uma função rodando
+  }
+  
+  // Define o estado atual como "em execução"
+  cache.put("funcaoRodando", funcaoNome, tempoExpiracao); // Expira após o tempo especificado
+  return true;
+}
+
+/**
+ * Função genérica para liberar o estado de execução.
+ * Deve ser chamada no final da execução da função original.
+ */
+function liberarExecucao() {
+  const cache = CacheService.getScriptCache();
+  cache.remove("funcaoRodando");
+  Logger.log("Execução liberada.");
+}
+
+
+
+
