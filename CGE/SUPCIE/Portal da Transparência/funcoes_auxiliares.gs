@@ -2,7 +2,7 @@
 ***************** FUNCOES AUXILIARES *****************
 Olá! Código feito por Vinícius Ventura - Analista de dados SUPCIE/CGE/AL - Insta: @vinicius.ventura_ - Github: https://github.com/viniventur
 Código de Appscript do Planilhas Google (Google Sheets)
-Última atualização: 17/01/2024
+Última atualização: 17/01/2025
 */
 
 
