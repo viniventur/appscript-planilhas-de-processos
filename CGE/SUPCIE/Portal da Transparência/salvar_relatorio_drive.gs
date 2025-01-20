@@ -2,7 +2,7 @@
 ***************** AUTOMAÇÃO DE SALVAMENTO DO RELATÓRIO EM PDF *****************
 Olá! Código feito por Vinícius Ventura - Analista de dados SUPCIE/CGE/AL - Insta: @vinicius.ventura_ - Github: https://github.com/viniventur
 Código de Appscript do Planilhas Google (Google Sheets)
-Última atualização: 30/12/2024
+Última atualização: 20/01/2024
 */
 
 
@@ -40,7 +40,7 @@ function salvar_relatorio_drive() {
                   `&size=A4&portrait=false&gridlines=false&gid=${sheetId_painel}` +
                   `&range=${range_painel}`;
 
-    // Painel
+    // Relatorio
     const range_rela = "A1:I25";
     const sheetId_rela = sheet_rela.getSheetId();
     const spreadsheetId_rela = SS.getId();
