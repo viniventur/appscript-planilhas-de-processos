@@ -1,6 +1,6 @@
 function import_csv_andamento_licit() {
-  const nomeArquivo = "licit_supad_cge_raspagem_andamento_sei";  // Substitua pelo nome do arquivo
-  const idPasta = "1A0n1EfcB2YrB6MlwzWOzpJjFRls2KV0V";  // Substitua pelo nome da pasta
+  const nomeArquivo = "licit_supad_cge_raspagem_andamento_sei";  // Nome do arquivo
+  const idPasta = "1FTZlcYWj_PjkCwgUBOTv_IC8t1fFFJ2o";  // Id da pasta
   const planilhaDados = SpreadsheetApp.getActiveSpreadsheet()
   const ss_base = planilhaDados.getSheetByName('Acompanhamento Licitatórios');
   const data = Utilities.formatDate(new Date(), "GMT-3", "dd/MM/yyyy HH:mm");
