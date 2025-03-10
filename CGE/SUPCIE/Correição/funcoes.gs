@@ -49,6 +49,8 @@ function registro_geral() {
   const valores_registro = range_registro.getValues();
   const atualizacao = ss_base.getRange('I3');
   const portarias = ss_base.getRange(3, 4, ss_base.getLastRow(), 1).getValues().flat();
+  const orgaos = ss_base.getRange(3, 2, ss_base.getLastRow(), 1).getValues().flat();
+  const orgao_portaria_lista = orgaos.map((orgao, index) => `${orgao}/${portarias[index]}`);
 
   // VERIFICACOES
 
@@ -58,6 +60,7 @@ function registro_geral() {
   }
 
   let portaria = ss_registro.getRange('D5').getValue();
+  const orgao = ss_registro.getRange('B5').getValue();
 
   if (typeof portaria !== 'string') {
     ui.alert("Portaria não está no formato correto (apenas números foram registrados)!");
@@ -92,9 +95,11 @@ function registro_geral() {
     return;
   }
 
+  const orgao_portaria = `${orgao}/${portaria}`;
+
   // Verificação se o processo já existe
-  if (portarias.indexOf(portaria) >= 0) {
-    ui.alert("Portaria já consta na base!");
+  if (orgao_portaria_lista.indexOf(orgao_portaria) >= 0) {
+    ui.alert("Portaria desse órgão já consta na base!");
     return;
   }
 
