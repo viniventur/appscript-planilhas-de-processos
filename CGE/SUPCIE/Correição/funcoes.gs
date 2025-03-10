@@ -2,7 +2,7 @@
 ***************** FUNÇÕES *****************
 Olá! Código feito por Vinícius Ventura - Analista de dados SUPCIE/CGE/AL - Insta: @vinicius.ventura_ - Github: https://github.com/viniventur
 Código de Appscript do Planilhas Google (Google Sheets)
-Última atualização: 12/11/2024
+Última atualização: 10/03/2024
 */
 
 function em_producao() {
@@ -48,7 +48,7 @@ function registro_geral() {
   
   const valores_registro = range_registro.getValues();
   const atualizacao = ss_base.getRange('I3');
-  const portarias = ss_base.getRange(3, 3, ss_base.getLastRow(), 1).getValues().flat();
+  const portarias = ss_base.getRange(3, 4, ss_base.getLastRow(), 1).getValues().flat();
 
   // VERIFICACOES
 
@@ -97,6 +97,7 @@ function registro_geral() {
     ui.alert("Portaria já consta na base!");
     return;
   }
+
 
   ss_base.getRange(intervalo_base).insertCells(SpreadsheetApp.Dimension.ROWS);
   range_registro.copyTo(ss_base.getRange('B3'), SpreadsheetApp.CopyPasteType.PASTE_NORMAL, false);
