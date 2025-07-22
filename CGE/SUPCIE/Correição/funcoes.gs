@@ -2,7 +2,7 @@
 ***************** FUNÇÕES *****************
 Olá! Código feito por Vinícius Ventura - Analista de dados SUPCIE/CGE/AL - Insta: @vinicius.ventura_ - Github: https://github.com/viniventur
 Código de Appscript do Planilhas Google (Google Sheets)
-Última atualização: 10/03/2024
+Última atualização: 22/07/2025
 */
 
 function em_producao() {
@@ -12,7 +12,6 @@ function em_producao() {
 
 function registro_geral() {
 
-  // variaveis iniciais
   const ui = SpreadsheetApp.getUi();
   const data = Utilities.formatDate(new Date(), "GMT-3", "dd/MM/yyyy HH:mm");
   const data_hoje = new Date();
@@ -24,35 +23,36 @@ function registro_geral() {
   const intervalo_registro = 'B5:H5'
   const intervalo_base = 'B3:I3'
 
-  // intervalo de registro
   const bios_registro = ss_BIOS_registros.getRange(intervalo_registro_bios);
   const range_registro = ss_registro.getRange(intervalo_registro);
 
   const data_diario = ss_registro.getRange('E5').getDisplayValue();
   const data_diario_value = ss_registro.getRange('E5').getValue();
 
-  const registro_completo = ss_registro.getRange('B4:H5').getValues(); // Captura as duas linhas
+  const registro_completo = ss_registro.getRange('B4:H5').getValues();
 
-  const cabecalho = registro_completo[0]; // Linha de cabeçalhos
-  const valores = registro_completo[1];   // Linha de valores
+  const cabecalho = registro_completo[0];
+  const valores = registro_completo[1];
 
-  // Cria um array para armazenar os valores correspondentes aos cabeçalhos com "*"
   let valores_obrigatorios = [];
 
-  // Percorre o cabeçalho e os valores simultaneamente
   for (let i = 0; i < cabecalho.length; i++) {
-    if (cabecalho[i].includes("*")) { // Verifica se o cabeçalho tem "*"
-      valores_obrigatorios.push(valores[i]); // Adiciona o valor correspondente ao array
+    if (cabecalho[i].includes("*")) {
+      valores_obrigatorios.push(valores[i]);
     }
   }
-  
-  const valores_registro = range_registro.getValues();
-  const atualizacao = ss_base.getRange('I3');
-  const portarias = ss_base.getRange(3, 4, ss_base.getLastRow(), 1).getValues().flat();
-  const orgaos = ss_base.getRange(3, 2, ss_base.getLastRow(), 1).getValues().flat();
-  const orgao_portaria_lista = orgaos.map((orgao, index) => `${orgao}/${portarias[index]}`);
 
-  // VERIFICACOES
+  // const valores_registro = range_registro.getValues(); // This variable is not used
+  const atualizacao = ss_base.getRange('I3');
+  
+  // Get all relevant data from 'Base Correição'
+  const baseData = ss_base.getRange(3, 2, ss_base.getLastRow() - 2, 8).getValues(); // Get B3 to I (last row), 8 columns
+
+  // Extract 'Orgão', 'Portaria/Decreto', and 'Processos' for checking
+  // Assuming 'Orgão' is column B (index 0), 'Portaria/Decreto' is column D (index 2), 'Processos' is column F (index 4)
+  // in the baseData array (which starts from column B in the sheet).
+  const existingRecords = baseData.map(row => `${row[0]}/${row[2]}/${row[4]}`); // Orgão/Portaria/Processos
+
 
   if (valores_obrigatorios.indexOf("") > -1) {
     ui.alert("Requisitos obrigatórios vazios!");
@@ -61,25 +61,23 @@ function registro_geral() {
 
   let portaria = ss_registro.getRange('D5').getValue();
   const orgao = ss_registro.getRange('B5').getValue();
+  let processos = ss_registro.getRange('F5').getValue(); // Get the Processes value from F5
 
   if (typeof portaria !== 'string') {
     ui.alert("Portaria não está no formato correto (apenas números foram registrados)!");
     return;
   }
 
-  // retirar espaços
   portaria = portaria.replace(/\s+/g, '');
   ss_registro.getRange('D5').setValue(portaria); 
-  
-  // verificação portaria
+
   if (validarPortaria(portaria) == false) {
     ui.alert("Portaria não está no formato correto. Registre no formado (n/YYYY).");
     return;
   }
 
   const regexdata = /^(\d{2})\/(\d{2})\/(\d{4})$/;
-  const padraonumerico = /^\d+(\.\d+)?$/;
-  
+
   if (!(regexdata.test(data_diario))) {
     ui.alert("Formato inválido. Por favor, insira a data no formato dd/mm/yyyy.");
     return;
@@ -94,26 +92,29 @@ function registro_geral() {
     ui.alert("Data inválida. Por favor, insira uma data válida");
     return;
   }
+  
+  // Normalize processos value for comparison (remove spaces if it's a string)
+  processos = typeof processos === 'string' ? processos.replace(/\s+/g, '') : processos;
 
-  const orgao_portaria = `${orgao}/${portaria}`;
+  // Construct the unique key for the current entry
+  const currentRecordKey = `${orgao}/${portaria}/${processos}`;
 
-  // Verificação se o processo já existe
-  if (orgao_portaria_lista.indexOf(orgao_portaria) >= 0) {
-    ui.alert("Portaria desse órgão já consta na base!");
+  // Check if this specific combination of Orgão, Portaria, and Processos already exists
+  if (existingRecords.indexOf(currentRecordKey) >= 0) {
+    ui.alert("Esta combinação de Órgão, Portaria e Processo já consta na base!");
     return;
   }
-
 
   ss_base.getRange(intervalo_base).insertCells(SpreadsheetApp.Dimension.ROWS);
   range_registro.copyTo(ss_base.getRange('B3'), SpreadsheetApp.CopyPasteType.PASTE_NORMAL, false);
   atualizacao.setValue(data);
   range_registro.clear({contentsOnly: true, skipFilteredRows: true});
   bios_registro.copyTo(range_registro, SpreadsheetApp.CopyPasteType.PASTE_NORMAL, false);
-  ui.alert('Portaria adicionada com sucesso!')
-
+  ui.alert('Portaria adicionada com sucesso!');
 }
 
-  
+
+
 function registro_processos() {
 
   const ui = SpreadsheetApp.getUi();
@@ -126,43 +127,42 @@ function registro_processos() {
   let processo = ss_registro.getRange('E5').getValue();
   let portaria = ss_registro.getRange('F5').getValue();
 
-  if (typeof processo !== 'string') {
-    ui.alert("Número de processo não está no formato correto (apenas números foram registrados)!");
-    return;
-  }
-
   if (typeof portaria !== 'string') {
     ui.alert("Portaria não está no formato correto (apenas números foram registrados)!");
     return;
   }
 
-  // retirar espaços
-  processo.replace(/\s+/g, '');
-  portaria.replace(/\s+/g, '');
+  processo = typeof processo === 'string' ? processo.replace(/\s+/g, '') : processo;
+  portaria = portaria.replace(/\s+/g, '');
   ss_registro.getRange('E5').setValue(processo);
   ss_registro.getRange('F5').setValue(portaria);  
 
-  const valores_registro = range_registro.getValues().flat();
-  const base_processos = ss_registro.getRange(5, 2, ss_registro.getLastRow(), 1).getValues().flat();
-
-  if (valores_registro.indexOf("") > -1) {
-    ui.alert("Requisitos obrigatórios vazios!");
-    return;
-  } 
-
-  if (base_processos.indexOf(processo) > -1) {
-    ui.alert("Processo já consta na base!");
-    return;
-  } 
-
-  // verificação portaria
-  if (validarPortaria(portaria) == false) {
-    ui.alert("O dado de portaria não está no formato correto. Registre no formado (n/YYYY).");
+  if (portaria === "") {
+    ui.alert("O campo 'Portaria' é obrigatório!");
     return;
   }
 
-  if (processo.length !== 23) {
-    ui.alert("Processo com formato errado!");
+  const base_processos = ss_registro.getRange(5, 2, ss_registro.getLastRow(), 1).getValues().flat();
+
+  if (processo !== "") {
+    if (typeof processo !== 'string') {
+      ui.alert("Número de processo não está no formato correto (apenas números foram registrados)!");
+      return;
+    }
+
+    if (base_processos.indexOf(processo) > -1) {
+      ui.alert("Processo já consta na base!");
+      return;
+    }
+
+    if (processo.length !== 23) {
+      ui.alert("Processo com formato errado!");
+      return;
+    }
+  }
+
+  if (validarPortaria(portaria) == false) {
+    ui.alert("O dado de portaria não está no formato correto. Registre no formado (n/YYYY).");
     return;
   }
 
@@ -172,11 +172,7 @@ function registro_processos() {
   bios_registro.copyTo(range_registro, SpreadsheetApp.CopyPasteType.PASTE_NORMAL, false);
 
   ui.alert('Processo adicionado com sucesso!');
-
 }
-
-
-// função de atualizar filtragem manual
 
 function atualizarfiltromanual() {
 
@@ -184,7 +180,6 @@ function atualizarfiltromanual() {
   const data = Utilities.formatDate(new Date(), "GMT-3", "dd/MM/yyyy HH:mm");
   const nomeplanilha = spreadsheet.getSheetName();
   const bios_atualizacao = spreadsheet.getSheetByName('atualizacoes');
-
 
   if (nomeplanilha == 'FILTRAGEM') {
 
@@ -196,29 +191,22 @@ function atualizarfiltromanual() {
     const intev = sheet.getRange(3, 2, sheet.getLastRow(), 8);
 
     if (header.getFilter() == null) {
-
       intev.clear({contentsOnly: true, skipFilteredRows: false});
-      //intev.clearConditionalFormatRules();
       dadosbase.copyTo(header, SpreadsheetApp.CopyPasteType.PASTE_VALUES, false);
       dadosbase.copyTo(header, SpreadsheetApp.CopyPasteType.PASTE_FORMAT, false);
       dadosfiltro.createFilter();
       datacel.setValue(data);
-
     } else {
-
       spreadsheet.getActiveSheet().getFilter().remove();
       intev.clear({contentsOnly: true, skipFilteredRows: false});
-      //intev.clearConditionalFormatRules();
       dadosbase.copyTo(header, SpreadsheetApp.CopyPasteType.PASTE_VALUES, false);
       dadosbase.copyTo(header, SpreadsheetApp.CopyPasteType.PASTE_FORMAT, false);
       dadosfiltro.createFilter();
       datacel.setValue(data);
-
     }
 
-    
   } else {
     const ui = SpreadsheetApp.getUi();
     ui.alert("Planilha não permitida para a função");
   }
-};
+}
