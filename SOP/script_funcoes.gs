@@ -2,7 +2,7 @@
 ***************** FUNÇÕES NORMAIS *****************
 Olá! Código feito por Vinícius Ventura - Estagiário SOP/SEPLAG/AL - Insta: @vinicius.ventura_ - Github: https://github.com/viniventur
 Código de Appscript do Planilhas Google (Google Sheets)
-Última atualização: 12/09/2023
+Última atualização: 19/02/2026
 */
 
 /** @OnlyCurrentDoc */
@@ -196,18 +196,19 @@ function atualizarresumolimite() {
   var ss = spreadsheet.getSheetByName('Texto Atualização Publicados');
   var ss_base = spreadsheet.getSheetByName('rascunho resumo publi');
   var dados = ss_base.getRange(2, 1, ss_base.getLastRow()-1, 5);
-  var dados_filtro = ss.getRange('E3:I100');
+  var campo_clear = ss.getRange('E3:I1000');
+  var dados_filtro = ss.getRange('E3');
   var dados_data_base = ss_base.getRange('F2:F3');
   var dados_data = ss.getRange('L2:L3');
   var data = Utilities.formatDate(new Date(), "GMT-3", "dd/MM/yyyy HH:mm:ss");
   var datacel = ss.getRange('Q2');
 
-  dados_filtro.clear({contentsOnly: true});
+  campo_clear.clear({contentsOnly: true});
   dados_data.clear({contentsOnly: true});
   dados.copyTo(dados_filtro, {contentsOnly: true});
   dados_data_base.copyTo(dados_data, {contentsOnly: true});
   datacel.setValue(data);
-  dados_filtro.sort(7);
+  
 }
 
 function registrarnota() {
